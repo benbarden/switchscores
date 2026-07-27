@@ -61,6 +61,7 @@ class AsReviewsManagerTest extends TestCase
         $this->doPageTest('/staff/reviews/feed-links');
         $this->doPageTest('/staff/reviews/feed-links/add');
         $this->doPageTest('/staff/reviews/feed-links/edit/1');
+        $this->doPageTest('/staff/reviews/feed-links/probe');
     }
 
     public function testReviewLinks()

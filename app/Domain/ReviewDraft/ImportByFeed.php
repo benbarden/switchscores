@@ -69,9 +69,22 @@ class ImportByFeed
 
     public function setPartnerDetails(PartnerFeedLink $partnerFeedLink)
     {
-        $this->partnerFeedLink = $partnerFeedLink;
+        $this->setFeedLink($partnerFeedLink);
         $siteId = $this->partnerFeedLink->site_id;
         $this->reviewSite = $this->repoReviewSite->find($siteId);
+    }
+
+    /**
+     * Sets just the feed link, without looking up the site it belongs to.
+     *
+     * For callers that only want the item builders (buildFromRss / buildFromAtom), which read
+     * the feed link for its parse mode and nothing else. The feed probe uses this to read an
+     * unsaved feed link that has no site yet, so it can report on a feed before any records
+     * exist for it.
+     */
+    public function setFeedLink(PartnerFeedLink $partnerFeedLink)
+    {
+        $this->partnerFeedLink = $partnerFeedLink;
     }
 
     public function runImport()

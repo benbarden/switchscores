@@ -7,9 +7,12 @@ use App\Models\PartnerFeedLink;
 
 class Repository
 {
+    /**
+     * @return PartnerFeedLink The created record, for callers that need its id.
+     */
     public function create($values)
     {
-        PartnerFeedLink::create($values);
+        return PartnerFeedLink::create($values);
     }
 
     public function edit(

@@ -1,0 +1,337 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <p class="text-muted">
+            Paste a partner's feed URL. The feed is read once and the settings below are filled in
+            from what it contains. Everything stays editable - nothing is created until you submit.
+        </p>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <label for="probe_feed_url" class="col-md-2 col-form-label">Feed URL</label>
+    <div class="col-md-7">
+        <input id="probe_feed_url" type="text" class="form-control" placeholder="https://example.com/reviews/feed"
+               autofocus>
+    </div>
+    <div class="col-md-3">
+        <button id="run-probe" type="button" class="btn btn-primary">Read the feed</button>
+    </div>
+</div>
+
+<div id="probe-messages"></div>
+
+<div id="probe-output" style="display: none;">
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <h3>What the feed says</h3>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th scope="col" style="width: 20%;">Setting</th>
+                        <th scope="col" style="width: 25%;">Detected</th>
+                        <th scope="col" style="width: 55%;">Why</th>
+                    </tr>
+                    </thead>
+                    <tbody id="detections-body"></tbody>
+                </table>
+            </div>
+            <p><small class="text-muted">Sample titles: <span id="sample-titles"></span></small></p>
+        </div>
+    </div>
+
+    {% include 'ui/components/alerts/form-errors.twig' %}
+
+    <form role="form" method="post" action="{{ route('staff.reviews.feedLinks.probe.create') }}">
+        {{ csrf_field() }}
+
+        <h3>Review site</h3>
+
+        <div class="row mb-3">
+            <div class="col-md-8 offset-md-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="site_mode" id="site_mode_new"
+                           value="new" checked>
+                    <label class="form-check-label" for="site_mode_new">Create a new site</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="site_mode" id="site_mode_existing"
+                           value="existing">
+                    <label class="form-check-label" for="site_mode_existing">Add to an existing site</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="existing-site-fields" style="display: none;">
+            <div class="row mb-3">
+                <label for="site_id" class="col-md-2 col-form-label">Review site</label>
+                <div class="col-md-6">
+                    <select id="site_id" class="form-select" name="site_id">
+                        <option value="">&nbsp;</option>
+                        {% for item in ReviewSiteList %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-text">For a site that already exists, e.g. adding a second feed.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="new-site-fields">
+            <div class="row mb-3">
+                <label for="name" class="col-md-2 col-form-label">Name</label>
+                <div class="col-md-6">
+                    <input id="name" name="name" type="text" class="form-control" maxlength="100">
+                    <div class="form-text">
+                        Taken from the feed title, which is often the name of the <em>feed</em> rather than
+                        the site. Check it.
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="link_title" class="col-md-2 col-form-label">Link title</label>
+                <div class="col-md-6">
+                    <input id="link_title" name="link_title" type="text" class="form-control" maxlength="100">
+                    <div class="form-text">Used in public URLs, so it is awkward to change later.</div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="website_url" class="col-md-2 col-form-label">Site URL</label>
+                <div class="col-md-6">
+                    <input id="website_url" name="website_url" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="rating_scale" class="col-md-2 col-form-label">Rating scale</label>
+                <div class="col-md-2">
+                    <input id="rating_scale" name="rating_scale" type="text" class="form-control"
+                           size="5" maxlength="3">
+                </div>
+            </div>
+        </div>
+
+        <h3>Feed link</h3>
+
+        <div class="row mb-3">
+            <label for="feed_url" class="col-md-2 col-form-label">Feed URL</label>
+            <div class="col-md-6">
+                <input id="feed_url" name="feed_url" type="text" class="form-control" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="feed_status" class="col-md-2 col-form-label">Feed status</label>
+            <div class="col-md-4">
+                <select id="feed_status" class="form-select" name="feed_status" required>
+                    {% for key,item in FeedStatusList %}
+                        <option value="{{ key }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text">
+                    Live means the overnight import picks the feed up (04:30). Any draft that comes out
+                    complete - game matched and score present - is <strong>published as a review at
+                    04:45</strong>, with no further check, and moves that game's rating average. Confirm
+                    the title rule matches the right games on the next screen before then.
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="data_type" class="col-md-2 col-form-label">Parse mode</label>
+            <div class="col-md-4">
+                <select id="data_type" class="form-select" name="data_type" required>
+                    {% for key,item in DataTypeList %}
+                        <option value="{{ key }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="item_node" class="col-md-2 col-form-label">Item node</label>
+            <div class="col-md-4">
+                <select id="item_node" class="form-select" name="item_node" required>
+                    {% for key,item in ItemNodeList %}
+                        <option value="{{ key }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="title_match_rule_pattern" class="col-md-2 col-form-label">Title match rule</label>
+            <div class="col-md-6">
+                <input id="title_match_rule_pattern" name="title_match_rule_pattern" type="text"
+                       class="form-control" style="font-family: monospace;">
+                <div class="form-text">
+                    A starting point only. Refine it on the title rule tester, which opens next.
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input id="title_match_rule_index" name="title_match_rule_index" type="text"
+                       class="form-control" size="5" maxlength="2" placeholder="index">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="feed_url_prefix" class="col-md-2 col-form-label">Feed URL prefix</label>
+            <div class="col-md-6">
+                <input id="feed_url_prefix" name="feed_url_prefix" type="text" class="form-control"
+                       maxlength="50">
+                <div class="form-text">Optional. Not derivable from the feed.</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="allow_historic_content" class="col-md-2 col-form-label">Allow historic content</label>
+            <div class="col-md-6">
+                <div class="form-check form-switch">
+                    <input type="checkbox" id="allow_historic_content" name="allow_historic_content"
+                           class="form-check-input mt-0">
+                </div>
+                <div class="form-text">
+                    Reviews older than 30 days are skipped unless this is on. Turn it on to backfill a
+                    partner's back catalogue - but note the whole backfill publishes in a single night,
+                    so a title rule that matches the wrong game gets it wrong at scale rather than once.
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-8 offset-md-2">
+                <button type="submit" class="btn btn-primary">Create site and feed link</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    var probeUrl = "{{ route('staff.reviews.feedLinks.probe.run') }}";
+    var csrfToken = "{{ csrf_token() }}";
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) return '';
+        return String(value)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Bootstrap 5.1 here (see theme/staff-b5/base.twig) - text-bg-* is 5.2+ and would render
+    // as white text on no background.
+    function alertClass(severity) {
+        if (severity === 'error') return 'alert-danger';
+        if (severity === 'warning') return 'alert-warning';
+        return 'alert-info';
+    }
+
+    function setValue(id, value) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (value === null || value === undefined) {
+            el.value = '';
+            return;
+        }
+        el.value = value;
+    }
+
+    function renderDetections(rows) {
+        var html = '';
+        rows.forEach(function (row) {
+            html += '<tr>'
+                + '<td><small>' + escapeHtml(row.label) + '</small></td>'
+                + '<td><code>' + escapeHtml(row.value) + '</code></td>'
+                + '<td><small class="text-muted">' + escapeHtml(row.evidence) + '</small></td>'
+                + '</tr>';
+        });
+        document.getElementById('detections-body').innerHTML = html;
+    }
+
+    function renderWarnings(warnings, itemCount) {
+        var html = '<div class="alert alert-success">Read ' + itemCount + ' item(s) from the feed.</div>';
+        (warnings || []).forEach(function (warning) {
+            html += '<div class="alert ' + alertClass(warning.severity) + '">'
+                + escapeHtml(warning.message) + '</div>';
+        });
+        document.getElementById('probe-messages').innerHTML = html;
+    }
+
+    function applyValues(values, feedUrl) {
+        setValue('feed_url', feedUrl);
+        Object.keys(values).forEach(function (field) {
+            setValue(field, values[field]);
+        });
+    }
+
+    function runProbe() {
+        var button = document.getElementById('run-probe');
+        var feedUrl = document.getElementById('probe_feed_url').value;
+
+        button.disabled = true;
+        document.getElementById('probe-messages').innerHTML =
+            '<div class="alert alert-info">Reading the feed...</div>';
+
+        var body = new URLSearchParams();
+        body.append('feed_url', feedUrl);
+        body.append('_token', csrfToken);
+
+        fetch(probeUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-TOKEN': csrfToken},
+            body: body.toString()
+        })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            button.disabled = false;
+
+            if (data.ok === false) {
+                document.getElementById('probe-output').style.display = 'none';
+                document.getElementById('probe-messages').innerHTML =
+                    '<div class="alert alert-danger">' + escapeHtml(data.error) + '</div>';
+                return;
+            }
+
+            renderWarnings(data.warnings, data.item_count);
+            renderDetections(data.detections);
+            applyValues(data.values, data.feed_url);
+
+            document.getElementById('sample-titles').textContent =
+                (data.sample_titles || []).slice(0, 5).join('  |  ');
+
+            document.getElementById('probe-output').style.display = '';
+        })
+        .catch(function (error) {
+            button.disabled = false;
+            document.getElementById('probe-messages').innerHTML =
+                '<div class="alert alert-danger">Could not read the feed: '
+                + escapeHtml(error.message) + '</div>';
+        });
+    }
+
+    function refreshSiteMode() {
+        var isExisting = document.getElementById('site_mode_existing').checked;
+        document.getElementById('existing-site-fields').style.display = isExisting ? '' : 'none';
+        document.getElementById('new-site-fields').style.display = isExisting ? 'none' : '';
+    }
+
+    document.getElementById('run-probe').addEventListener('click', runProbe);
+
+    document.getElementById('probe_feed_url').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            runProbe();
+        }
+    });
+
+    document.getElementById('site_mode_new').addEventListener('change', refreshSiteMode);
+    document.getElementById('site_mode_existing').addEventListener('change', refreshSiteMode);
+
+    refreshSiteMode();
+</script>
+
+{% endblock page_inner %}
