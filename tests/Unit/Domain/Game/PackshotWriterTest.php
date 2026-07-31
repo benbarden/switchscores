@@ -46,6 +46,19 @@ class PackshotWriterTest extends TestCase
         return $path;
     }
 
+    /**
+     * A real 1x1 PNG. The extension fallback sniffs the bytes, so it needs a file that finfo
+     * will actually recognise - 'image-bytes' reads as text/plain.
+     */
+    private function tempImageFile(string $name): string
+    {
+        $path = storage_path('/tmp/') . $name;
+        file_put_contents($path, base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+        ));
+        return $path;
+    }
+
     public function test_defaults_to_legacy_when_config_is_unset()
     {
         config(['packshots.default_location' => null]);
@@ -173,6 +186,86 @@ class PackshotWriterTest extends TestCase
             $resolver->targetFilename($game, 'hdr-9999-test-game-260720.jpg'),
             $written
         );
+    }
+
+    /**
+     * The defect this covers: Nintendo serves packshot URLs with no extension, so the source
+     * name had none either, and the object went into Spaces as a bare `{id}-{slug}` key. Six
+     * games arrived that way on 31 Jul 2026 before it was caught. The images displayed fine
+     * (Content-Type is sniffed from the bytes), so nothing broke visibly - the damage was that
+     * a later re-download from a URL that DID carry an extension would resolve to a different
+     * key, writing a second object and orphaning the first.
+     */
+    public function test_extension_is_recovered_from_the_bytes_when_the_source_url_has_none()
+    {
+        Storage::fake('packshots');
+        config(['packshots.default_location' => 'spaces']);
+
+        $game = $this->makeGame();
+
+        $filename = $this->writer()->store(
+            $game, ImageResolver::TYPE_HEADER, $this->tempImageFile('hdr-1-test-game'), 'hdr-1-test-game'
+        );
+
+        $this->assertEquals("{$game->id}-test-game.png", $filename);
+        Storage::disk('packshots')->assertExists("switch-2/header/{$filename}");
+    }
+
+    /**
+     * Images::generateDestFilename() appends '.' . $fileExt unconditionally, so an
+     * extension-less source URL yields a trailing-dot name. pathinfo() reads that back as no
+     * extension - the exact shape the six affected games were written under.
+     */
+    public function test_a_trailing_dot_source_name_still_gets_a_real_extension()
+    {
+        Storage::fake('packshots');
+        config(['packshots.default_location' => 'spaces']);
+
+        $game = $this->makeGame();
+
+        $filename = $this->writer()->store(
+            $game, ImageResolver::TYPE_HEADER, $this->tempImageFile('hdr-1-test-game.'), 'hdr-1-test-game.'
+        );
+
+        $this->assertEquals("{$game->id}-test-game.png", $filename);
+    }
+
+    /**
+     * The source name must keep winning over the sniff. A game downloaded before this change
+     * and re-downloaded after it has to resolve to the same key, or the re-download duplicates
+     * the object instead of replacing it - the very leak this whole convention exists to stop.
+     */
+    public function test_an_extension_in_the_source_name_is_not_overridden_by_sniffing()
+    {
+        Storage::fake('packshots');
+        config(['packshots.default_location' => 'spaces']);
+
+        $game = $this->makeGame();
+
+        $filename = $this->writer()->store(
+            $game, ImageResolver::TYPE_HEADER, $this->tempImageFile('hdr-1-test-game.jpg'), 'hdr-1-test-game.jpg'
+        );
+
+        $this->assertEquals("{$game->id}-test-game.jpg", $filename);
+    }
+
+    /**
+     * An unrecognised type is left alone rather than guessed at. Today's behaviour for those -
+     * extension-less key, Content-Type still sniffed correctly by Flysystem - is strictly better
+     * than inventing an extension that contradicts what the CDN serves.
+     */
+    public function test_an_unrecognised_file_type_is_left_without_an_extension()
+    {
+        Storage::fake('packshots');
+        config(['packshots.default_location' => 'spaces']);
+
+        $game = $this->makeGame();
+
+        $filename = $this->writer()->store(
+            $game, ImageResolver::TYPE_HEADER, $this->tempFile('hdr-1-test-game'), 'hdr-1-test-game'
+        );
+
+        $this->assertEquals("{$game->id}-test-game", $filename);
     }
 
     public function test_legacy_write_moves_the_file_and_sets_the_column()

@@ -127,10 +127,16 @@ class ImageResolver
      * dated vs undated). The bucket key already encodes type, so no prefix is needed. The
      * dated suffix is dropped: it only existed to bust Cloudflare's 1-year cache on the legacy
      * path, and spacesUrl() cache-busts with ?v={updated_at} instead.
+     *
+     * $extension lets a caller that holds the actual downloaded bytes override what the source
+     * name implies. Ingestion needs this: Nintendo serves plenty of packshot URLs with no
+     * extension at all, and the source name is then extension-less too, which silently produced
+     * extension-less object keys (games 18185-18190, 31 Jul 2026). The backfill has no such
+     * problem - it copies real files off disk - so it keeps passing the source name alone.
      */
-    public function targetFilename($game, string $sourceFilename): string
+    public function targetFilename($game, string $sourceFilename, ?string $extension = null): string
     {
-        $extension = pathinfo($sourceFilename, PATHINFO_EXTENSION);
+        $extension = $extension ?: pathinfo($sourceFilename, PATHINFO_EXTENSION);
 
         return $extension
             ? "{$game->id}-{$game->link_title}.{$extension}"

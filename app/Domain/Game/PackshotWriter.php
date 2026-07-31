@@ -36,6 +36,18 @@ class PackshotWriter
         ImageResolver::TYPE_HEADER => '/img/ps-header/',
     ];
 
+    /**
+     * Sniffed MIME type -> the extension we store it under. Deliberately only the formats
+     * packshots actually arrive in; anything else is left extension-less rather than guessed at.
+     */
+    const MIME_EXTENSIONS = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/gif'  => 'gif',
+        'image/webp' => 'webp',
+        'image/avif' => 'avif',
+    ];
+
     public function __construct(private ImageResolver $resolver)
     {
     }
@@ -97,7 +109,9 @@ class PackshotWriter
 
     private function storeToSpaces(Game $game, string $type, string $tempPath, string $sourceName): string
     {
-        $filename = $this->resolver->targetFilename($game, $sourceName);
+        $filename = $this->resolver->targetFilename(
+            $game, $sourceName, $this->resolveExtension($tempPath, $sourceName)
+        );
         $key = $this->resolver->storageKey($game, $type, $filename);
 
         Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($tempPath));
@@ -109,6 +123,42 @@ class PackshotWriter
         $this->recordSpacesRow($game, $type, $filename);
 
         return $filename;
+    }
+
+    /**
+     * Decide the extension the object is stored under.
+     *
+     * The source name wins when it has one - it is what the legacy path used, so a game
+     * downloaded before and after this change keeps the same key and gets overwritten rather
+     * than duplicated. Only when it has none do we sniff the bytes.
+     *
+     * Sniffing rather than parsing the URL is the point. Nintendo serves packshots from URLs
+     * with no extension, with a query string after one, and behind redirects; every one of those
+     * shapes defeats pathinfo(), and Images::generateDestFilename() then appends a bare '.' that
+     * pathinfo() reads back as no extension at all. The bytes are unambiguous in all three cases.
+     *
+     * finfo is also exactly what Flysystem uses to set the object's Content-Type
+     * (AwsS3V3Adapter::write -> FinfoMimeTypeDetector), so the extension we store and the
+     * Content-Type the CDN serves are derived from the same evidence and cannot disagree.
+     *
+     * Returns null when the type isn't one we recognise, which preserves today's behaviour
+     * (extension-less key, correct Content-Type) rather than inventing a wrong extension.
+     */
+    private function resolveExtension(string $tempPath, string $sourceName): ?string
+    {
+        $extension = strtolower(pathinfo($sourceName, PATHINFO_EXTENSION));
+
+        if ($extension !== '') {
+            return $extension;
+        }
+
+        if (!file_exists($tempPath)) {
+            return null;
+        }
+
+        $mimeType = (new \finfo(FILEINFO_MIME_TYPE))->file($tempPath);
+
+        return self::MIME_EXTENSIONS[$mimeType] ?? null;
     }
 
     /**
