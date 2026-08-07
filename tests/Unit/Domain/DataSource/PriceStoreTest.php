@@ -63,6 +63,20 @@ class PriceStoreTest extends TestCase
         return $result;
     }
 
+    /**
+     * A discount end date that is still in the future whenever the suite runs.
+     *
+     * These tests used to hard-code `2026-08-04T22:59:59Z`. That is a live window right
+     * up until it isn't: on 2026-08-05 `hasLiveDiscount()` started returning false and
+     * testStoresDiscountWindow failed on every run, describing a real expiry rather than
+     * a real bug. A discount that is meant to be live has to be expressed relative to
+     * now - the same way testAnExpiredDiscountIsNotLive already expresses an expired one.
+     */
+    private function liveDiscountEnd(): string
+    {
+        return Carbon::now()->addDays(7)->toIso8601String();
+    }
+
     private function price(
         string $nsuid,
         ?string $regular,
@@ -155,7 +169,7 @@ class PriceStoreTest extends TestCase
         $store = $this->store();
         $store->store($this->resultWith($this->price(self::NSUID_OTHER, '24.99')), 2);
         $outcome = $store->store($this->resultWith(
-            $this->price(self::NSUID_OTHER, '24.99', '14.99', '2026-08-04T22:59:59Z')
+            $this->price(self::NSUID_OTHER, '24.99', '14.99', $this->liveDiscountEnd())
         ), 2);
 
         $history = DataSourcePriceHistory::where('nsuid', self::NSUID_OTHER)->first();
@@ -174,7 +188,7 @@ class PriceStoreTest extends TestCase
     {
         $store = $this->store();
         $store->store($this->resultWith(
-            $this->price(self::NSUID_OTHER, '24.99', '14.99', '2026-08-04T22:59:59Z')
+            $this->price(self::NSUID_OTHER, '24.99', '14.99', $this->liveDiscountEnd())
         ), 2);
         $outcome = $store->store($this->resultWith($this->price(self::NSUID_OTHER, '24.99')), 2);
 
@@ -189,7 +203,7 @@ class PriceStoreTest extends TestCase
     public function testStoresDiscountWindow()
     {
         $this->store()->store($this->resultWith(
-            $this->price(self::NSUID_OTHER, '24.99', '14.99', '2026-08-04T22:59:59Z')
+            $this->price(self::NSUID_OTHER, '24.99', '14.99', $this->liveDiscountEnd())
         ), 2);
 
         $row = DataSourcePrice::where('nsuid', self::NSUID_OTHER)->first();
