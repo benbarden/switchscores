@@ -33,7 +33,10 @@ class GameImagesDashboardController extends Controller
 
         $totalWithImages = $this->repoGameImage->countGamesWithImages();
         $totalInSpaces = $this->repoGameImage->countInSpaces();
-        $totalLegacy = max(0, $totalWithImages - $totalInSpaces);
+        // Counted, not derived. The old `max(0, $totalWithImages - $totalInSpaces)` had to
+        // clamp because the two counts came from different populations - and the clamp is
+        // what let the page report a confident 0 while the percentage climbed past 100.
+        $totalLegacy = $this->repoGameImage->countLegacyOnly();
 
         // Game image stats section
         $bindings['TotalWithImages'] = $totalWithImages;
@@ -163,6 +166,7 @@ class GameImagesDashboardController extends Controller
     {
         $withImages = $this->repoGameImage->withImagesByConsole();
         $inSpaces = $this->repoGameImage->inSpacesByConsole();
+        $legacyOnly = $this->repoGameImage->legacyOnlyByConsole();
 
         $consoles = [
             Console::ID_SWITCH_1 => Console::DESC_SWITCH_1,
@@ -177,7 +181,7 @@ class GameImagesDashboardController extends Controller
                 'name' => $name,
                 'total' => $total,
                 'spaces' => $spaces,
-                'legacy' => max(0, $total - $spaces),
+                'legacy' => $legacyOnly[$consoleId] ?? 0,
                 'percent' => $this->percent($spaces, $total),
             ];
         }
