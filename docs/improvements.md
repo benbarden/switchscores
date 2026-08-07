@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 135**
+**Next ID: 136**
 
 ---
 
@@ -134,6 +134,7 @@ The history was always being stored (`gsc_page_snapshots` had 220 daily snapshot
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
+| 135 | Single-game add tool (weekly update pipeline for one game) | Medium | Build on top of #130 weekly update tool | Occasionally a game is found that was missed from being added - the root cause is fixed, so this is a low-volume, ad-hoc need, not a recurring batch. It can be done today via the Release Hub, but that means assembling the game by hand. Wanted: something closer to the #130 weekly update flow but scoped to a single game - paste or enter one Nintendo URL (or title), then run the same steps the batch pipeline runs (Nintendo page fetch, LQ check, packshot collection, category assignment, import) with the same defaults and validation, ending in one imported game. Value is consistency: a game added this way should be indistinguishable from one that came through the weekly batch, rather than depending on remembering which fields to set manually. Open questions: whether it reuses the `weekly_batch_*` tables as a batch-of-one (cheapest, keeps one code path, but pollutes batch reporting) or gets a separate lightweight path; and whether `sort_order` / `eshop_europe_order` can be derived sensibly for a single game outside a listing. |
 | 132 | Steam-backed news content (editorial auto-generation) | Medium | Builds on #90 Steam infrastructure + existing feature queue system | New `unranked-steam-gem` bucket: selects games with 0–2 Switch Scores reviews + Steam `review_score >= 8`. Extends `features:enqueue` to use Steam priority signal. Auto-generates `/news` draft on cadence via existing `generateBucketDraft()`. Staff dashboard link to trigger. See `docs/tasks/132-steam-backed-news-content.md`. |
 | 133 | Insights: date picker to view an earlier snapshot | Low | Depends on #134 to be genuinely useful | Let `/staff/insights` show the tables for any past `snapshot_date` rather than only the latest (the repo currently hard-codes `max('snapshot_date')`). The data is already there - 220 daily snapshots since 2025-12-13. Caveat that makes this low value on its own: with the current rolling-window fetch, going back one day shows the same 28-day window shifted by one, overlapping the previous by 27 days, not that day's traffic. If built before #134, the UI must say "28 days ending X" and never "traffic on X". Note you cannot recover daily figures by differencing consecutive snapshots - the delta is (day added) minus (day dropped 30 days back), which is one equation with two unknowns. |
 | 128 | Review and clean up data sources | Medium | Do before adding new sources | Audit source IDs 1–5: update names (ID 2 is nintendo.com/en-gb not .co.uk), assess what to keep vs retire, clean up ~3k orphaned Wikipedia rows (ID 4), document what each source is before adding US Nintendo site or others. |
