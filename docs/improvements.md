@@ -2,7 +2,21 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 136**
+**Next ID: 140**
+
+## Numbering rule (added 2026-08-07)
+
+**Always take the number from "Next ID" above, then increment it in the same edit.** Never pick a
+number by eyeballing the tables - IDs are spread across five sections plus the Done list, so the
+highest number visible in any one section is not the highest in use.
+
+**Every item gets a number, including work that ships straight away.** A Session Log entry is not a
+record - it has no ID, so it never reaches the tables or Asana. If something is built and done,
+give it an ID and put it in the Done section (see #139).
+
+Three collisions were found and fixed on 2026-08-07 (132, 133 and 134 had each been used twice).
+The duplicates were renumbered to 136, 137 and 138; the originals kept their numbers because the
+check-in logs already reference them.
 
 ---
 
@@ -135,7 +149,7 @@ The history was always being stored (`gsc_page_snapshots` had 220 daily snapshot
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
 | 135 | Single-game add tool (weekly update pipeline for one game) | Medium | Build on top of #130 weekly update tool | Occasionally a game is found that was missed from being added - the root cause is fixed, so this is a low-volume, ad-hoc need, not a recurring batch. It can be done today via the Release Hub, but that means assembling the game by hand. Wanted: something closer to the #130 weekly update flow but scoped to a single game - paste or enter one Nintendo URL (or title), then run the same steps the batch pipeline runs (Nintendo page fetch, LQ check, packshot collection, category assignment, import) with the same defaults and validation, ending in one imported game. Value is consistency: a game added this way should be indistinguishable from one that came through the weekly batch, rather than depending on remembering which fields to set manually. Open questions: whether it reuses the `weekly_batch_*` tables as a batch-of-one (cheapest, keeps one code path, but pollutes batch reporting) or gets a separate lightweight path; and whether `sort_order` / `eshop_europe_order` can be derived sensibly for a single game outside a listing. |
-| 132 | Steam-backed news content (editorial auto-generation) | Medium | Builds on #90 Steam infrastructure + existing feature queue system | New `unranked-steam-gem` bucket: selects games with 0–2 Switch Scores reviews + Steam `review_score >= 8`. Extends `features:enqueue` to use Steam priority signal. Auto-generates `/news` draft on cadence via existing `generateBucketDraft()`. Staff dashboard link to trigger. See `docs/tasks/132-steam-backed-news-content.md`. |
+| 136 | Steam-backed news content (editorial auto-generation) | Medium | Builds on #90 Steam infrastructure + existing feature queue system. **Renumbered from 132 on 2026-08-07** (clashed with the S1 price mismatch item). Stage 1 is BUILT AND SHIPPED - `FeatureQueueBucket::UNRANKED_STEAM_GEM`, `FeatureQueueEnqueue --min-steam-score/--category-id`, staff news dashboard + bucket views. Outstanding vs the task doc: decision 5's dedicated `/staff/news/steam-gems` page (currently the generic `staff.news.bucket` route), and the stage 2 parent-category fallback. | New `unranked-steam-gem` bucket: selects games with 0–2 Switch Scores reviews + Steam `review_score >= 8`. Extends `features:enqueue` to use Steam priority signal. Auto-generates `/news` draft on cadence via existing `generateBucketDraft()`. Staff dashboard link to trigger. See `docs/tasks/132-steam-backed-news-content.md`. |
 | 133 | Insights: date picker to view an earlier snapshot | Low | Depends on #134 to be genuinely useful | Let `/staff/insights` show the tables for any past `snapshot_date` rather than only the latest (the repo currently hard-codes `max('snapshot_date')`). The data is already there - 220 daily snapshots since 2025-12-13. Caveat that makes this low value on its own: with the current rolling-window fetch, going back one day shows the same 28-day window shifted by one, overlapping the previous by 27 days, not that day's traffic. If built before #134, the UI must say "28 days ending X" and never "traffic on X". Note you cannot recover daily figures by differencing consecutive snapshots - the delta is (day added) minus (day dropped 30 days back), which is one equation with two unknowns. |
 | 128 | Review and clean up data sources | Medium | Do before adding new sources | Audit source IDs 1–5: update names (ID 2 is nintendo.com/en-gb not .co.uk), assess what to keep vs retire, clean up ~3k orphaned Wikipedia rows (ID 4), document what each source is before adding US Nintendo site or others. |
 | 129 | Remove Genres from Differences section | Low | Genres never map cleanly | Remove Genres diff link from DS dashboard, remove associated controller/query logic and route. Genres from API are reference only, not for copying over. |
@@ -175,8 +189,8 @@ The history was always being stored (`gsc_page_snapshots` had 220 daily snapshot
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
 | 2 | Bulk add tag to games with search string (e.g. Solitaire) | Medium | No bulk tag UI - needs new controller/view | Explore using Claude for mass tagging instead of building UI |
-| 133 | Check if the legacy staff nav is still needed | Low | `theme/wos/staff/nav-top/` still exists alongside `theme/staff-b5/nav-top/` | Staff appears fully migrated to Bootstrap 5. Confirm nothing renders the old `wos` staff nav, then delete it. New nav links currently only added to the B5 version. |
-| 134 | Staff-specific error/404 page template | Low | Related to #32 (public 404). Needs an auth-aware error view | Hitting the public 404/error layout while logged in as staff is jarring. Show a staff-flavoured error page (staff layout + links back into admin) when an authenticated staff user hits an error. |
+| 137 | Check if the legacy staff nav is still needed | Low | **Renumbered from 133 on 2026-08-07** (clashed with the Insights date picker item). `theme/wos/staff/nav-top/` still exists alongside `theme/staff-b5/nav-top/` | Staff appears fully migrated to Bootstrap 5. Confirm nothing renders the old `wos` staff nav, then delete it. New nav links currently only added to the B5 version. |
+| 138 | Staff-specific error/404 page template | Low | **Renumbered from 134 on 2026-08-07** (clashed with the GSC daily-figures item). Related to #32 (public 404). Needs an auth-aware error view | Hitting the public 404/error layout while logged in as staff is jarring. Show a staff-flavoured error page (staff layout + links back into admin) when an authenticated staff user hits an error. |
 | 13 | Slow queries: stats on Browse by date page | Medium | Heavy stats queries - needs caching/indexes | From pre-Cloudflare logging. May be less urgent now. Could add Redis caching for big queries. Review needed. |
 | 16 | Ones to watch: show a list in admin and public | Medium | `one_to_watch` field exists - need views | Manual flag on games. Placement TBD - Members, homepage, or /switch-1/ landing pages. Includes #21. |
 | 20 | Move Stats dashboard to Staff dashboard | Low | Stats dashboard exists; reuse queries in staff view | Consolidation - not much on stats dashboard currently. |
@@ -239,6 +253,7 @@ The history was always being stored (`gsc_page_snapshots` had 220 daily snapshot
 
 | # | Idea | Status | Date | Notes |
 |---|------|--------|------|-------|
+| 139 | Insights: per-URL history page | Done | 2026-07-26 | `/staff/insights/page?url=...` - full snapshot history for a single page URL. Chart of impressions/clicks/avg position, comparisons against 7 and 28 snapshots back (counted in snapshots, not days, with the actual date shown), full snapshot table with top queries. "History" links added to the insights index tables. **Number assigned retrospectively on 2026-08-07** - the work shipped with a Session Log entry but no ID, so it was invisible to the tables and to Asana. Carries a prominent caveat that each snapshot is a trailing 28-day window (see #134). |
 | 90 | Link to Steam and reviews | Done | 2026-05-04 | Staff screen to track Steam status per game (not checked / linked / not on Steam). Auto-sync Steam review summary on link. Weekly cron (`game:sync-steam-reviews`). Public game page shows Steam review summary with colour-coded sentiment. LQ games excluded throughout. |
 | 127 | Smarter Nintendo.co.uk import | Done | 2026-04-23 | Upsert approach with content hashing. Detects new/changed/delisted games. Full audit log (`data_source_import_log`) with event types added/updated/delisted/conflict. Import run tracking (`data_source_import_runs`). Staff dashboard shows 21-day run history; detail page shows paginated log entries with filter by event type. Closes #113. |
 | 96 | Allow games companies to update contact details | Done | 2026-04-23 | Edit profile page allows updating email, URL, and social links. |
