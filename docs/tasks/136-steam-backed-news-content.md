@@ -1,4 +1,6 @@
-# #132 — Steam-backed News Content (Editorial Auto-generation)
+# #136 - Steam-backed News Content (Editorial Auto-generation)
+
+*(Renumbered from #132 on 2026-08-07 - that number clashed with the Switch 1 price mismatch item.)*
 
 ## Overview
 

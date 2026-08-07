@@ -39,7 +39,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
 // Game
 Route::get('/game/get-by-exact-title-match', 'Api\Game\TitleMatch@getByExactTitleMatch');
-Route::get('/game/get-unlinked-data-source-item', 'Api\Game\TitleMatch@getUnlinkedDataSourceItem');
 
 Route::get('/game/find-by-title', 'Api\Game\GameController@findByTitle');
 

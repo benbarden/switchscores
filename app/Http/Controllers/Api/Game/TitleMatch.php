@@ -52,25 +52,6 @@ class TitleMatch
         return response()->json(['gameId' => null], 200);
     }
 
-    public function getUnlinkedDataSourceItem()
-    {
-        $request = request();
-
-        $title = $request->title;
-
-        if (!$title) {
-            return response()->json(['error' => 'Missing data: title'], 400);
-        }
-
-        $dsTitleItem = $this->repoDataSource->getUnlinkedByTitle($title);
-
-        if ($dsTitleItem) {
-            return response()->json(['dsItemId' => $dsTitleItem->id], 200);
-        } else {
-            return response()->json(['dsItemId' => null], 200);
-        }
-    }
-
     public function getByTitle()
     {
         $request = request();

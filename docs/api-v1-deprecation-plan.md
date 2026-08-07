@@ -1,8 +1,38 @@
 # API V1 Deprecation & Usage Tracking Plan
 
-Status: Phase 0+1 DONE (2026-07-14). Phases 2-3 proposed. Created 2026-07-14.
+Status: Phase 0+1 DONE (2026-07-14). **Phase 3 is now evidence-backed and ready to run** (see
+2026-08-07 below). Phase 2 still proposed. Created 2026-07-14.
 
 ## Progress
+
+- **2026-08-07 - logging reviewed after ~3.5 weeks. Result: zero traffic.**
+  The only requests recorded against the logged V1 endpoints are Ben's own two
+  tests on 2026-07-14. Nothing since.
+
+  **This is enough to run Phase 3 now.** Three independent lines of evidence agree:
+  zero internal callers (verified in code - the only references to the four
+  controller methods are the route definitions themselves), the one known external
+  consumer stopped and went unresponsive, and 3.5 weeks of logged silence.
+  **Waiting longer does not change the decision, it only delays it** - and because
+  410s are still logged, retiring the endpoints *is* the ongoing measurement.
+
+  **Gap found while reviewing:** `log.api` wraps only the four V1 game endpoints.
+  The seven other non-`/v2` routes are unlogged - and, more importantly, are
+  **unauthenticated**. `routes/api.php` carries only `throttle:api` + `bindings`,
+  so `/game/get-by-exact-title-match`, `/game/find-by-title`,
+  `/partner/games-company/search`, `/review/site`, `/url/link-text` and
+  `/url/news-url` are callable by anyone, despite being staff tooling (several sit
+  under an `/* Admin */` comment). Each has one or two call sites in staff views,
+  so `auth.staff` is a low-risk fix. Logged as **#152**.
+
+  Also confirmed: **`/game/get-unlinked-data-source-item` has no callers at all**
+  and is genuinely dead, unlike its six siblings. Being removed under **#67**. This
+  corrects the assumption below that all three sibling routes are live staff tooling.
+
+  Related items raised: **#151** (extend logging to the remaining routes and to V2 -
+  the middleware's version marker was built for exactly this, and a V2 baseline is
+  cheapest to establish now while traffic is near zero) and **#153** (retention /
+  prune for `api_request_log`, which currently grows forever).
 
 - **Phase 0+1 shipped 2026-07-14.** `/api/game/list` now returns 410 Gone;
   logging middleware records the four public V1 game endpoints. Verified on

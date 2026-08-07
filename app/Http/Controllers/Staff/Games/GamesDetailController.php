@@ -164,12 +164,6 @@ class GamesDetailController extends Controller
                 //'note' => $game->category ? '' : 'None',
                 'href' => route('staff.games.edit', ['gameId' => $game->id])
             ],
-            [
-                'label' => 'Tags verif.',
-                'status' => $game->tagss_verification ? 'ok' : 'fail',
-                //'note' => $game->category ? '' : 'None',
-                'href' => route('staff.games.edit', ['gameId' => $game->id])
-            ],
         ];
 
         $bindings['Checks'] = $checks;
