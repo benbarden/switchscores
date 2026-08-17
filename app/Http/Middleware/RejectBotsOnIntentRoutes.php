@@ -21,9 +21,22 @@ class RejectBotsOnIntentRoutes
             return $next($request);
         }
 
-        // Check if the request is from a known bot
+        // Check if the request is from a known bot.
+        // Match tokens explicitly rather than on a bare 'google' or 'bing' - some in-app and
+        // mobile browser user agents contain those words, and a false positive would 410 a real
+        // guest partway through the signup-intent flow these routes exist to serve.
         $userAgent = strtolower($request->userAgent() ?? '');
-        $bots = ['googlebot', 'bingbot', 'yandex', 'baiduspider', 'duckduckbot', 'slurp', 'msnbot'];
+        $bots = [
+            // Google crawls intent URLs under several agents, and only 'googlebot' was matched
+            // before. GoogleOther fetches were getting a login redirect instead of the 410, which
+            // filed those URLs under "Page with redirect" in GSC rather than removing them, and
+            // Google-InspectionTool is what GSC's "Test Live URL" uses - so live-testing an intent
+            // URL reported a redirect and not the 410 it actually serves to Googlebot.
+            'googlebot', 'googleother', 'google-inspectiontool', 'google-extended',
+            'adsbot-google', 'google-safety',
+            'bingbot', 'bingpreview', 'msnbot',
+            'yandex', 'baiduspider', 'duckduckbot', 'slurp',
+        ];
 
         foreach ($bots as $bot) {
             if (str_contains($userAgent, $bot)) {
