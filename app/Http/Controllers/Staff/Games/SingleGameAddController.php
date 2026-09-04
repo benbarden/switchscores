@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Games;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as Controller;
 
@@ -304,6 +305,16 @@ class SingleGameAddController extends Controller
 
         $game = $result['game'];
 
+        // These are games the weekly run missed, so the release date is usually already
+        // past. Nothing marks a game released automatically - it is the Release Hub
+        // toggle by hand - so without this the game would import as upcoming and stay
+        // that way until someone noticed.
+        $released = false;
+        if (Carbon::parse($validated['release_date'])->startOfDay()->isPast()) {
+            $this->repoGame->markAsReleased($game);
+            $released = true;
+        }
+
         $warnings = [];
         if ($data->packshotUrl && !$result['packshot_ok']) {
             $warnings[] = 'the packshot could not be downloaded';
@@ -313,7 +324,8 @@ class SingleGameAddController extends Controller
         }
 
         $redirect = redirect('/staff/games/detail/'.$game->id.'?lastaction=add&lastgameid='.$game->id)
-            ->with('success', "\"{$game->title}\" imported.");
+            ->with('success', "\"{$game->title}\" imported"
+                .($released ? ' and marked as released.' : ', and left as upcoming.'));
 
         if ($warnings) {
             $redirect->with('warning', 'Imported, but '.implode(' and ', $warnings).'.');
