@@ -12,7 +12,7 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatch\CategorySuggester;
 use App\Domain\WeeklyBatch\ParseService;
-use App\Domain\WeeklyBatch\GameImporter;
+use App\Domain\GameImport\GameImporter;
 use App\Domain\WeeklyBatch\NintendoPageFetcher;
 use App\Domain\WeeklyBatchExclusion\Repository as WeeklyBatchExclusionRepository;
 use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
@@ -950,7 +950,7 @@ class WeeklyBatchListController extends Controller
             $eshopOrder = $eshopOrderMap[$item->id] ?? null;
 
             try {
-                $result = $this->gameImporter->importItem($item, $eshopOrder);
+                $result = $this->gameImporter->importItem($item->toImportGameData(), $eshopOrder);
                 $this->repoItem->markImported($item, $result['game']->id);
                 $imported++;
 

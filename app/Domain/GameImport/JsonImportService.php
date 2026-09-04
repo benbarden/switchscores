@@ -255,8 +255,7 @@ class JsonImportService
             $game->category_verification = 1;
         }
 
-        // Prioritise for crawling
-        $game->crawl_priority = true;
+        // Crawl priority is set by PrioritiseNewGameForCrawl on the GameCreated event.
 
         // Save post-creation changes
         $game->save();

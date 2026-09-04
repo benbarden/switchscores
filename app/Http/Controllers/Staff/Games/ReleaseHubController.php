@@ -14,6 +14,7 @@ use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\GameTitleHash\HashGenerator as HashGeneratorRepository;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\Url\LinkTitle as LinkTitleGenerator;
+use App\Events\GameCreated;
 use App\Models\Console;
 use App\Models\Game;
 use App\Domain\GameLists\Repository as GameListsRepository;
@@ -191,6 +192,10 @@ class ReleaseHubController extends Controller
 
         // Download image
         $this->downloadPackshotHelper->downloadForGame($game);
+
+        // Trigger event — this path did not fire it, so games added here were skipped
+        // by everything hanging off game creation (improvement #147).
+        event(new GameCreated($game));
 
         // Return HTML for the new table row
         return response()->json([

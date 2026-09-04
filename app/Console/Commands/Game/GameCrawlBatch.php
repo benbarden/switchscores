@@ -482,21 +482,7 @@ class GameCrawlBatch extends Command
      */
     private function isSoft404(string $finalUrl): bool
     {
-        // Nintendo's 404 page URL patterns
-        $soft404Patterns = [
-            '/404.html',
-            '/404',
-            '/en-gb/404',
-            '/en-gb/404.html',
-        ];
-
-        foreach ($soft404Patterns as $pattern) {
-            if (str_contains($finalUrl, $pattern)) {
-                return true;
-            }
-        }
-
-        return false;
+        return \App\Domain\Scraper\NintendoPageStatus::isSoft404($finalUrl);
     }
 
     /**

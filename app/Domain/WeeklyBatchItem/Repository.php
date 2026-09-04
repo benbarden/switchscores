@@ -348,10 +348,14 @@ class Repository
      * Look up the most commonly assigned category for a publisher across previous batches.
      * Returns the category name or null if no history found.
      */
-    public function getCategoryHistory(string $publisherNormalised, int $excludeBatchId): ?string
+    /**
+     * $excludeBatchId is null when the caller has no batch of its own to exclude,
+     * e.g. the single-game add tool - then all history counts.
+     */
+    public function getCategoryHistory(string $publisherNormalised, ?int $excludeBatchId): ?string
     {
         $row = WeeklyBatchItem::where('publisher_normalised', $publisherNormalised)
-            ->where('batch_id', '!=', $excludeBatchId)
+            ->when($excludeBatchId !== null, fn($q) => $q->where('batch_id', '!=', $excludeBatchId))
             ->whereNotNull('category')
             ->where('category', '!=', '')
             ->selectRaw('category, count(*) as total')
@@ -405,10 +409,10 @@ class Repository
             ->update(['item_status' => WeeklyBatchItem::STATUS_LOW_QUALITY]);
     }
 
-    public function getCategoryHistoryByCollection(string $collection, int $excludeBatchId): ?string
+    public function getCategoryHistoryByCollection(string $collection, ?int $excludeBatchId): ?string
     {
         $row = WeeklyBatchItem::where('collection', $collection)
-            ->where('batch_id', '!=', $excludeBatchId)
+            ->when($excludeBatchId !== null, fn($q) => $q->where('batch_id', '!=', $excludeBatchId))
             ->whereNotNull('category')
             ->where('category', '!=', '')
             ->selectRaw('category, count(*) as total')

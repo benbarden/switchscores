@@ -3,7 +3,11 @@
 namespace App\Domain\GameImport;
 
 /**
- * Value object representing a single game from the JSON import file.
+ * Value object representing a single game about to be created.
+ *
+ * Originally built for the JSON import file, now also the input to GameImporter, so a
+ * game can be imported without a weekly batch behind it (improvement #135). Sources
+ * build one of these; nothing downstream needs to know where it came from.
  */
 class ImportGameData
 {
@@ -20,6 +24,7 @@ class ImportGameData
         public readonly ?string $series,
         public readonly string $consoleSlug,
         public readonly ?string $sourceFile,
+        public readonly ?string $description = null,
     ) {
     }
 
@@ -38,6 +43,7 @@ class ImportGameData
             series: $data['series'] ?? null,
             consoleSlug: $data['console_slug'] ?? 'switch-1',
             sourceFile: $data['source_file'] ?? null,
+            description: $data['description'] ?? null,
         );
     }
 

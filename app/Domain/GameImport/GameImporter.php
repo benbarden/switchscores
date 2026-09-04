@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\WeeklyBatch;
+namespace App\Domain\GameImport;
 
 use App\Construction\Game\GameBuilder;
 use App\Construction\Game\GameDirector;
@@ -8,8 +8,6 @@ use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Game\QualityFilter as GameQualityFilter;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameCollection\Repository as GameCollectionRepository;
-use App\Domain\GameImport\HeaderImageScraper;
-use App\Domain\GameImport\SquareImageDownloader;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameTitleHash\HashGenerator;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
@@ -18,7 +16,6 @@ use App\Domain\Url\LinkTitle;
 use App\Events\GameCreated;
 use App\Models\Console;
 use App\Models\Game;
-use App\Models\WeeklyBatchItem;
 
 class GameImporter
 {
@@ -36,7 +33,12 @@ class GameImporter
     ) {}
 
     /**
-     * Import a single ready WeeklyBatchItem into the games table.
+     * Import a single game into the games table.
+     *
+     * Takes a value object rather than a weekly batch item, so any source can use it -
+     * the weekly batch calls WeeklyBatchItem::toImportGameData() (improvement #135).
+     * One game per call: callers that import a listing work out eshop_europe_order
+     * across the whole listing first, which is not this class's business.
      *
      * Returns an array:
      *   'game'           => Game
@@ -44,31 +46,31 @@ class GameImporter
      *   'packshot_ok'    => bool
      *   'header_ok'      => bool
      */
-    public function importItem(WeeklyBatchItem $item, ?int $eshopOrder = null): array
+    public function importItem(ImportGameData $data, ?int $eshopOrder = null): array
     {
-        $consoleId = $item->console === 'switch-2' ? Console::ID_SWITCH_2 : Console::ID_SWITCH_1;
+        $consoleId = $data->consoleSlug === 'switch-2' ? Console::ID_SWITCH_2 : Console::ID_SWITCH_1;
 
-        $category  = $this->repoCategory->getByName($item->category);
-        $linkTitle = (new LinkTitle())->generate($item->title);
-        $titleHash = $this->hashGenerator->generateHash($item->title);
+        $category  = $this->repoCategory->getByName($data->category);
+        $linkTitle = (new LinkTitle())->generate($data->title);
+        $titleHash = $this->hashGenerator->generateHash($data->title);
 
         $params = [
-            'title'                       => $item->title,
+            'title'                       => $data->title,
             'link_title'                  => $linkTitle,
             'console_id'                  => $consoleId,
             'category_id'                 => $category?->id,
-            'eu_release_date'             => $item->release_date?->format('Y-m-d'),
-            'price_eshop'                 => $item->price_gbp,
-            'players'                     => $item->players,
-            'nintendo_store_url_override' => $item->nintendo_url,
+            'eu_release_date'             => $data->releaseDate,
+            'price_eshop'                 => $data->priceGbp === null ? null : number_format($data->priceGbp, 2, '.', ''),
+            'players'                     => $data->players,
+            'nintendo_store_url_override' => $data->url,
         ];
 
         if ($eshopOrder !== null) {
             $params['eshop_europe_order'] = $eshopOrder;
         }
 
-        if ($item->collection) {
-            $collection = $this->repoGameCollection->getByLinkTitle($item->collection);
+        if ($data->collection) {
+            $collection = $this->repoGameCollection->getByLinkTitle($data->collection);
             if ($collection) {
                 $params['collection_id'] = $collection->id;
             }
@@ -84,20 +86,20 @@ class GameImporter
             $game->category_verification = 1;
         }
 
-        if ($item->description) {
-            $game->nintendo_description = $this->cleanNintendoDescription($item->description);
+        if ($data->description) {
+            $game->nintendo_description = $this->cleanNintendoDescription($data->description);
         }
 
-        $game->crawl_priority = true;
+        // Crawl priority is set by PrioritiseNewGameForCrawl on the GameCreated event.
         $game->save();
         $gameId = $game->id;
 
         // Title hash
-        $this->repoTitleHash->create($item->title, $titleHash, $gameId, $consoleId);
+        $this->repoTitleHash->create($data->title, $titleHash, $gameId, $consoleId);
 
         // Publisher — link to existing record (created in the Publishers step)
-        if ($item->publisher_normalised) {
-            $company = $this->repoGamesCompany->findByNameCaseInsensitive($item->publisher_normalised);
+        if ($data->publisher) {
+            $company = $this->repoGamesCompany->findByNameCaseInsensitive($data->publisher);
             if ($company) {
                 $this->repoGamePublisher->create($gameId, $company->id);
                 $this->gameQualityFilter->updateGame($game, $company);
@@ -106,14 +108,14 @@ class GameImporter
 
         // Packshot (square image)
         $packshotOk = false;
-        if ($item->packshot_url) {
-            $packshotOk = $this->squareImageDownloader->download($game, $item->packshot_url);
+        if ($data->packshotUrl) {
+            $packshotOk = $this->squareImageDownloader->download($game, $data->packshotUrl);
         }
 
         // Header image from Nintendo store page
         $headerOk = false;
-        if ($item->nintendo_url) {
-            $headerOk = $this->headerImageScraper->downloadFromStorePage($game, $item->nintendo_url);
+        if ($data->url) {
+            $headerOk = $this->headerImageScraper->downloadFromStorePage($game, $data->url);
         }
 
         event(new GameCreated($game));

@@ -1,0 +1,447 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<style>
+    /* Read-only summary rather than a data table, so it gets room to breathe */
+    #from-the-store th,
+    #from-the-store td {
+        padding: 0.75rem 1rem;
+        vertical-align: middle;
+    }
+</style>
+
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+{% if session('error') %}
+    <div class="alert alert-danger">{{ session('error') }}</div>
+{% endif %}
+
+<p class="text-muted" style="max-width: 720px;">
+    For a game missed by the weekly run. Select the game on the Nintendo store search
+    results, copy it, and paste it below - the same paste the weekly update takes. This
+    reads the row, fetches the game page behind it, and runs the same low quality checks
+    and category suggestion the weekly pipeline runs before importing.
+</p>
+
+<div class="row">
+    <div class="col-lg-8">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <label class="form-label" for="paste_box">Paste the game from the store search results</label>
+                <textarea class="form-control" id="paste_box" rows="4"
+                          placeholder="Paste here - or type a store URL if you only have the link"></textarea>
+                <input type="hidden" id="raw_html">
+                <div class="small mt-1 text-muted" id="paste_status"
+                     data-default="Pasting the store row also brings the square packshot and the price, which the game page does not carry.">
+                    Pasting the store row also brings the square packshot and the price, which the game page does not carry.
+                </div>
+
+                <div class="row g-2 align-items-end mt-2">
+                    <div class="col-md-4">
+                        <label class="form-label" for="console_id">Console</label>
+                        <select class="form-select" id="console_id">
+                            <option value="">Detect from the paste</option>
+                        {% for console in ConsoleList %}
+                            <option value="{{ console.id }}">{{ console.name }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary w-100" id="analyse-button">Read it</button>
+                    </div>
+                </div>
+
+                <div id="analyse-error" class="alert alert-danger mt-3 d-none"></div>
+
+                <div id="candidate-picker" class="mt-3 d-none">
+                    <div class="alert alert-info mb-2">
+                        <strong>More than one game in that paste.</strong> Pick the one to add.
+                    </div>
+                    <div id="candidate-list" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" action="{{ route('staff.games.single-game-add.import') }}" id="import-form" class="d-none">
+            {{ csrf_field() }}
+            <input type="hidden" name="console_id" id="form_console_id">
+            <input type="hidden" name="nintendo_url" id="form_nintendo_url">
+            <input type="hidden" name="publisher" id="form_publisher">
+            <input type="hidden" name="players" id="form_players">
+            <input type="hidden" name="description" id="form_description">
+            <input type="hidden" name="collection" id="form_collection">
+
+            <div id="analyse-warnings"></div>
+
+            <div class="card mb-3">
+                <div class="card-header">From the store</div>
+                <table class="table mb-0" id="from-the-store">
+                    <tr><th style="width: 30%;">Title</th><td id="show_title"></td></tr>
+                    <tr><th>Console</th><td id="show_console"></td></tr>
+                    <tr><th>Publisher</th><td id="show_publisher"></td></tr>
+                    <tr><th>Players</th><td id="show_players"></td></tr>
+                    <tr><th>Genres</th><td id="show_genres"></td></tr>
+                    <tr><th>Collection</th><td id="show_collection"></td></tr>
+                    <tr><th>NSUID</th><td id="show_nsuid"></td></tr>
+                    <tr><th>Packshot</th><td id="show_packshot"></td></tr>
+                </table>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">Check and complete</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="title">Title</label>
+                        <input type="text" class="form-control" name="title" id="title" required>
+                        <div class="form-text">Normalised from the store title. Edit if it came out wrong.</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="release_date">Release date</label>
+                            <input type="date" class="form-control" name="release_date" id="release_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="price_gbp">Price (GBP)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" name="price_gbp" id="price_gbp">
+                            <div class="form-text" id="price_note"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="flex-grow-1">
+                                <label class="form-label" for="category">Suggested category</label>
+                                <select class="form-select" name="category" id="category">
+                                    <option value="">— Select category —</option>
+                                {% for group in CategoryGroups %}
+                                    <optgroup label="{{ group.parent }}">
+                                        {% if group.children|length == 0 %}
+                                            <option value="{{ group.parent }}">{{ group.parent }}</option>
+                                        {% else %}
+                                            {% for child in group.children %}
+                                                <option value="{{ child.name }}">{{ child.name }}</option>
+                                            {% endfor %}
+                                            <option value="{{ group.parent }}">{{ group.parent }} (top-level)</option>
+                                        {% endif %}
+                                    </optgroup>
+                                {% endfor %}
+                                </select>
+                                <div class="form-text" id="category_reason"></div>
+                            </div>
+
+                            {# Confidence shown the way the weekly category screen shows it #}
+                            <div class="text-center d-none" id="confidence_block" style="min-width: 84px;">
+                                <label class="form-label d-block">Confidence</label>
+                                <span class="badge fs-6" id="confidence_badge">—</span>
+                                <br><small class="text-muted" id="confidence_word"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="packshot_url">Packshot URL (square)</label>
+                        <input type="url" class="form-control" name="packshot_url" id="packshot_url">
+                        <div class="form-text">
+                            From the pasted row. The header image is scraped from the game page.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success" id="import-button">Import game</button>
+        </form>
+
+    </div>
+
+    {# Packshot preview, in the gutter alongside "From the store" #}
+    <div class="col-lg-4 d-none" id="preview-col">
+        <div class="card">
+            <div class="card-header">Square packshot</div>
+            <div class="card-body text-center">
+                <img id="packshot_preview" src="" alt="Square packshot"
+                     class="img-fluid border rounded" style="max-width: 260px;">
+                <p class="text-muted small mb-0 mt-2 d-none" id="packshot_preview_note"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock page_inner %}
+
+{% block page_body %}
+{{ parent() }}
+<script>
+(function () {
+    const CSRF_TOKEN  = '{{ csrf_token() }}';
+    const ANALYSE_URL = '{{ route('staff.games.single-game-add.analyse') }}';
+
+    const pasteBox      = document.getElementById('paste_box');
+    const rawHtmlField  = document.getElementById('raw_html');
+    const pasteStatus   = document.getElementById('paste_status');
+    const consoleSelect = document.getElementById('console_id');
+    const analyseButton = document.getElementById('analyse-button');
+    const errorBox      = document.getElementById('analyse-error');
+    const picker        = document.getElementById('candidate-picker');
+    const candidateList = document.getElementById('candidate-list');
+    const form          = document.getElementById('import-form');
+    const warningsBox   = document.getElementById('analyse-warnings');
+
+    // ---- Rich-HTML paste capture ----
+    // Same as the weekly update raw screen: the clipboard carries a text/html copy of
+    // the store rows with URLs, packshots and NSUIDs, which a plain textarea throws
+    // away. Grab it on paste and keep it in a hidden field.
+    let justPasted = false;
+
+    pasteBox.addEventListener('paste', function (e) {
+        const html = (e.clipboardData || window.clipboardData).getData('text/html');
+        if (html && html.indexOf('data-nsuid') !== -1) {
+            rawHtmlField.value = html;
+            justPasted = true;
+            const n = (html.match(/data-nsuid/g) || []).length;
+            pasteStatus.textContent = '✓ Captured store row' + (n === 1 ? '' : 's')
+                + ' - ' + n + ' game' + (n === 1 ? '' : 's') + ' with URL, packshot, price and NSUID.';
+            pasteStatus.classList.add('text-success');
+        } else {
+            rawHtmlField.value = '';
+            pasteStatus.textContent = pasteStatus.dataset.default;
+            pasteStatus.classList.remove('text-success');
+        }
+    });
+
+    // Edited by hand after a paste, so the captured HTML no longer matches what is
+    // visible - drop it and treat the box as a URL instead.
+    pasteBox.addEventListener('input', function () {
+        if (justPasted) { justPasted = false; return; }
+        if (rawHtmlField.value) {
+            rawHtmlField.value = '';
+            pasteStatus.textContent = pasteStatus.dataset.default;
+            pasteStatus.classList.remove('text-success');
+        }
+    });
+
+    const previewCol   = document.getElementById('preview-col');
+    const previewImage = document.getElementById('packshot_preview');
+    const previewNote  = document.getElementById('packshot_preview_note');
+
+    function setText(id, value) {
+        document.getElementById(id).textContent = value || '—';
+    }
+
+    // Confidence styling copied from the weekly category screen, so the same signal
+    // reads the same way in both tools: coloured score, confidence word underneath,
+    // and a red-bordered select when there is nothing to suggest.
+    const CONFIDENCE_STYLE = {
+        high:   { classes: 'badge fs-6 bg-success',                  word: 'High',   style: '' },
+        medium: { classes: 'badge fs-6 bg-warning text-dark',        word: 'Medium', style: '' },
+        low:    { classes: 'badge fs-6',                             word: 'Low',    style: 'background-color: #fd7e14; color: #fff;' },
+        none:   { classes: 'badge fs-6 bg-danger',                   word: 'N/A',    style: '' },
+    };
+
+    function applyConfidence(confidence, score) {
+        const block  = document.getElementById('confidence_block');
+        const badge  = document.getElementById('confidence_badge');
+        const word   = document.getElementById('confidence_word');
+        const select = document.getElementById('category');
+        const style  = CONFIDENCE_STYLE[confidence] || CONFIDENCE_STYLE.none;
+
+        badge.className = style.classes;
+        badge.setAttribute('style', style.style);
+        badge.textContent = (confidence === 'none' || !score) ? '—' : score;
+        word.textContent  = style.word;
+
+        select.classList.toggle('border-danger', confidence === 'none');
+        block.classList.remove('d-none');
+    }
+
+    function showPreviewNote(message) {
+        previewNote.textContent = message;
+        previewNote.classList.remove('d-none');
+        previewImage.classList.add('d-none');
+    }
+
+    // Same idea as the weekly update packshots screen: show the image straight from the
+    // URL so a wrong or dead one is obvious before importing.
+    function updatePreview(url) {
+        previewNote.classList.add('d-none');
+
+        if (!url) {
+            previewImage.classList.add('d-none');
+            previewImage.removeAttribute('src');
+            showPreviewNote('No packshot URL. Paste the store row to get one, or add it by hand.');
+            previewCol.classList.remove('d-none');
+            return;
+        }
+
+        previewImage.classList.remove('d-none');
+        previewImage.src = url;
+        previewCol.classList.remove('d-none');
+    }
+
+    previewImage.addEventListener('error', function () {
+        if (previewImage.getAttribute('src')) {
+            showPreviewNote('That packshot URL could not be loaded.');
+        }
+    });
+
+    function alertHtml(type, title, body) {
+        return '<div class="alert alert-' + type + '"><strong>' + title + '</strong>'
+             + (body ? ' ' + body : '') + '</div>';
+    }
+
+    function showWarnings(data) {
+        let html = '';
+
+        if (data.duplicate) {
+            html += alertHtml('danger', 'Already in the database.',
+                'A game with this title already exists on this console'
+                + (data.duplicate.id ? ' (game ' + data.duplicate.id + ')' : '')
+                + '. Importing will be refused.');
+        }
+        if (data.lq_confirmed) {
+            html += alertHtml('danger', 'Low quality publisher.',
+                'The weekly pipeline would skip this game. Import only if you are sure.');
+        }
+        if (data.lq_reasons && data.lq_reasons.length) {
+            html += alertHtml('warning', 'LQ signals:', data.lq_reasons.join('; '));
+        }
+        if (data.auto_status === 'bundle') {
+            html += alertHtml('warning', 'Looks like a bundle.',
+                'The weekly pipeline would set this aside rather than import it.');
+        }
+        if (data.page_error) {
+            html += alertHtml('warning', 'The game page could not be read.',
+                data.page_error + ' Publisher, players and description are missing, and the'
+                + ' LQ publisher check did not run.');
+        }
+        if (data.source === 'url') {
+            html += alertHtml('info', 'Added from a URL.',
+                'The store page carries no price or square packshot, so both need filling in by hand.');
+        }
+
+        warningsBox.innerHTML = html;
+    }
+
+    function fillForm(data) {
+        setText('show_title', data.title_raw);
+        setText('show_console', data.console_raw);
+        setText('show_publisher', data.publisher);
+        setText('show_players', data.players);
+        setText('show_genres', data.genres);
+        setText('show_collection', data.collection);
+        setText('show_nsuid', data.nsuid);
+        setText('show_packshot', data.packshot_url ? 'yes' : 'not in this source');
+
+        document.getElementById('form_console_id').value   = data.console_id;
+        document.getElementById('form_nintendo_url').value  = data.nintendo_url || '';
+        document.getElementById('form_publisher').value     = data.publisher || '';
+        document.getElementById('form_players').value       = data.players || '';
+        document.getElementById('form_description').value   = data.description || '';
+        document.getElementById('form_collection').value    = data.collection || '';
+
+        document.getElementById('title').value        = data.title || '';
+        document.getElementById('release_date').value = data.release_date || '';
+        document.getElementById('price_gbp').value    = data.price_gbp !== null ? data.price_gbp : '';
+        document.getElementById('packshot_url').value = data.packshot_url || '';
+
+        document.getElementById('price_note').textContent = data.price_raw
+            ? 'From the store row: ' + data.price_raw
+            : 'Not available from this source - type it in.';
+
+        const category = document.getElementById('category');
+        category.value = data.category || '';
+        applyConfidence(data.category_confidence, data.category_score);
+        document.getElementById('category_reason').textContent = data.category
+            ? data.category_reason
+            : 'No suggestion - pick one.' + (data.category_reason ? ' ' + data.category_reason : '');
+
+        updatePreview(data.packshot_url);
+
+        showWarnings(data);
+        form.classList.remove('d-none');
+    }
+
+    // Typed or corrected by hand - keep the preview in step
+    document.getElementById('packshot_url').addEventListener('input', function (e) {
+        updatePreview(e.target.value.trim());
+    });
+
+    // Picking one by hand answers the "no suggestion" warning
+    document.getElementById('category').addEventListener('change', function (e) {
+        e.target.classList.toggle('border-danger', e.target.value === '');
+    });
+
+    function showCandidates(candidates) {
+        candidateList.innerHTML = '';
+        candidates.forEach(function (c) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'list-group-item list-group-item-action';
+            button.innerHTML = '<strong>' + c.title + '</strong>'
+                + '<br><small class="text-muted">' + [c.console, c.release_date, c.price]
+                    .filter(Boolean).join(' · ') + '</small>';
+            button.addEventListener('click', function () {
+                picker.classList.add('d-none');
+                analyse(c.index);
+            });
+            candidateList.appendChild(button);
+        });
+        picker.classList.remove('d-none');
+    }
+
+    function analyse(entryIndex) {
+        errorBox.classList.add('d-none');
+        form.classList.add('d-none');
+        previewCol.classList.add('d-none');
+        analyseButton.disabled = true;
+        analyseButton.textContent = 'Reading…';
+
+        const payload = {
+            raw_html:     rawHtmlField.value,
+            nintendo_url: rawHtmlField.value ? '' : pasteBox.value.trim(),
+            console_id:   consoleSelect.value || null,
+        };
+        if (entryIndex !== undefined && entryIndex !== null) {
+            payload.entry_index = entryIndex;
+        }
+
+        fetch(ANALYSE_URL, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+            if (res.data.status === 'choose') {
+                showCandidates(res.data.candidates);
+                return;
+            }
+            if (!res.ok || res.data.status !== 'ok') {
+                errorBox.textContent = res.data.message || 'Could not read that.';
+                errorBox.classList.remove('d-none');
+                return;
+            }
+            fillForm(res.data);
+        })
+        .catch(function () {
+            errorBox.textContent = 'Could not read that.';
+            errorBox.classList.remove('d-none');
+        })
+        .finally(function () {
+            analyseButton.disabled = false;
+            analyseButton.textContent = 'Read it';
+        });
+    }
+
+    analyseButton.addEventListener('click', function () { analyse(null); });
+})();
+</script>
+{% endblock page_body %}

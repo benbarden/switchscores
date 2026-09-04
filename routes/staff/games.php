@@ -7,6 +7,7 @@ use App\Models\UserRole;
 use App\Http\Controllers\Staff\Games\DashboardController;
 use App\Http\Controllers\Staff\Games\ReleaseHubController;
 use App\Http\Controllers\Staff\Games\SearchController;
+use App\Http\Controllers\Staff\Games\SingleGameAddController;
 use App\Http\Controllers\Staff\Games\GamesDetailController;
 use App\Http\Controllers\Staff\Games\GamesEditorController;
 use App\Http\Controllers\Staff\Games\BulkEditorController;
@@ -52,6 +53,13 @@ Route::group([
         Route::post('images/migration/migrate-batch', 'migrateBatch')->name('images.migration.migrateBatch');
         Route::post('images/migration/{gameId}/migrate', 'migrate')->name('images.migration.migrate');
         Route::post('images/migration/{gameId}/revert', 'revert')->name('images.migration.revert');
+    });
+
+    // ---- Single game add ----
+    Route::controller(SingleGameAddController::class)->group(function () {
+        Route::get('add-single-game', 'show')->name('single-game-add.show');
+        Route::post('add-single-game/analyse', 'analyse')->name('single-game-add.analyse');
+        Route::post('add-single-game/import', 'store')->name('single-game-add.import');
     });
 
     // ---- Release hub ----

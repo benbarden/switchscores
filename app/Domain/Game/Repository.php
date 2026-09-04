@@ -241,6 +241,22 @@ class Repository extends AbstractRepository
         return $query->first();
     }
 
+    /**
+     * Next eshop_europe_order for a release date on one console.
+     *
+     * The weekly batch numbers a whole listing at once from its position in the store
+     * list. A game added on its own has no listing position, so it goes on the end of
+     * its release date and can be dragged in the Release Hub if that is wrong (#135).
+     */
+    public function getNextEshopOrderForDate(int $consoleId, string $releaseDate): int
+    {
+        $max = Game::where('console_id', $consoleId)
+            ->whereDate('eu_release_date', $releaseDate)
+            ->max('eshop_europe_order');
+
+        return ((int) $max) + 1;
+    }
+
     public function updateEshopOrder(int $gameId, int $order): void
     {
         Game::where('id', $gameId)->update(['eshop_europe_order' => $order]);

@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserCreated' => [
             'App\Listeners\PointsForUserRegistration'
         ],
+        'App\Events\GameCreated' => [
+            'App\Listeners\PrioritiseNewGameForCrawl'
+        ],
         'App\Events\GameCollectionAdded' => [
             'App\Listeners\LogGameCollectionAdded'
         ],

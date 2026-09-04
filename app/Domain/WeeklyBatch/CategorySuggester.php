@@ -205,24 +205,51 @@ class CategorySuggester
      */
     public function suggest(WeeklyBatchItem $item): array
     {
+        return $this->suggestFor(
+            title: $item->title ?? '',
+            consoleSlug: $item->console,
+            genres: $item->nintendo_genres,
+            publisherNormalised: $item->publisher_normalised,
+            description: $item->description,
+            collection: $item->collection,
+            excludeBatchId: $item->batch_id,
+        );
+    }
+
+    /**
+     * Scoring works from plain values, so a caller with no weekly batch behind it can
+     * use it too - the single-game add tool (#135). Pass excludeBatchId null when there
+     * is no batch of your own to keep out of the history counts.
+     *
+     * Returns ['category' => string|null, 'confidence' => 'high'|'medium'|'low'|'none', 'reason' => string]
+     */
+    public function suggestFor(
+        string $title,
+        string $consoleSlug,
+        ?string $genres = null,
+        ?string $publisherNormalised = null,
+        ?string $description = null,
+        ?string $collection = null,
+        ?int $excludeBatchId = null
+    ): array {
         $scores  = [];
         $signals = [];
 
-        $this->scoreGenres($item->nintendo_genres ?? '', $scores, $signals);
-        $this->scorePublisher($item->publisher_normalised ?? '', $scores, $signals);
-        $this->scorePhrases($item->description ?? '', $scores, $signals, 'Description');
-        $this->scorePhrases($item->title ?? '', $scores, $signals, 'Title');
-        $this->scoreHistory($item, $scores, $signals);
-        $this->scoreCrossConsole($item, $scores, $signals);
-        $this->scoreSeries($item, $scores, $signals);
+        $this->scoreGenres($genres ?? '', $scores, $signals);
+        $this->scorePublisher($publisherNormalised ?? '', $scores, $signals);
+        $this->scorePhrases($description ?? '', $scores, $signals, 'Description');
+        $this->scorePhrases($title, $scores, $signals, 'Title');
+        $this->scoreHistory($collection, $publisherNormalised, $excludeBatchId, $scores, $signals);
+        $this->scoreCrossConsole($title, $consoleSlug, $scores, $signals);
+        $this->scoreSeries($title, $scores, $signals);
 
         // Bypass collections default to their mapped category, but yield to any other
         // category that already reached SCORE_DEFINITIVE via phrase/genre signals.
         // We override (not add to) the collection category score so genre tags for the
         // same category (e.g. Nintendo genre "Arcade") don't stack above SCORE_DEFINITIVE
         // and drown out legitimate phrase matches.
-        if ($item->collection && isset(self::BYPASS_COLLECTIONS[$item->collection])) {
-            $collectionCat    = self::BYPASS_COLLECTIONS[$item->collection];
+        if ($collection && isset(self::BYPASS_COLLECTIONS[$collection])) {
+            $collectionCat    = self::BYPASS_COLLECTIONS[$collection];
             $otherDefinitive  = false;
             foreach ($scores as $cat => $score) {
                 if ($cat !== $collectionCat && $score >= self::SCORE_DEFINITIVE) {
@@ -232,7 +259,7 @@ class CategorySuggester
             }
             if (!$otherDefinitive) {
                 $scores[$collectionCat]  = self::SCORE_DEFINITIVE;
-                $signals[$collectionCat] = [['label' => "Collection: {$item->collection}", 'score' => self::SCORE_DEFINITIVE]];
+                $signals[$collectionCat] = [['label' => "Collection: {$collection}", 'score' => self::SCORE_DEFINITIVE]];
             }
         }
 
@@ -313,28 +340,28 @@ class CategorySuggester
         }
     }
 
-    private function scoreHistory(WeeklyBatchItem $item, array &$scores, array &$signals): void
+    private function scoreHistory(?string $collection, ?string $publisherNormalised, ?int $excludeBatchId, array &$scores, array &$signals): void
     {
         // Collection history for non-bypass collections (stronger signal than publisher history)
-        if ($item->collection && !isset(self::BYPASS_COLLECTIONS[$item->collection])) {
-            $hist = $this->repoItem->getCategoryHistoryByCollection($item->collection, $item->batch_id);
+        if ($collection && !isset(self::BYPASS_COLLECTIONS[$collection])) {
+            $hist = $this->repoItem->getCategoryHistoryByCollection($collection, $excludeBatchId);
             if ($hist) {
-                $this->addScore($scores, $signals, $hist, self::SCORE_STRONG, "Collection history: {$item->collection}");
+                $this->addScore($scores, $signals, $hist, self::SCORE_STRONG, "Collection history: {$collection}");
             }
         }
 
         // Publisher history
-        if ($item->publisher_normalised) {
-            $hist = $this->repoItem->getCategoryHistory($item->publisher_normalised, $item->batch_id);
+        if ($publisherNormalised) {
+            $hist = $this->repoItem->getCategoryHistory($publisherNormalised, $excludeBatchId);
             if ($hist) {
-                $this->addScore($scores, $signals, $hist, self::SCORE_WEAK, "DB history: {$item->publisher_normalised}");
+                $this->addScore($scores, $signals, $hist, self::SCORE_WEAK, "DB history: {$publisherNormalised}");
             }
         }
     }
 
-    private function scoreSeries(WeeklyBatchItem $item, array &$scores, array &$signals): void
+    private function scoreSeries(string $title, array &$scores, array &$signals): void
     {
-        $titleLower = strtolower($item->title);
+        $titleLower = strtolower($title);
 
         foreach ($this->seriesList as $series) {
             $pattern = '/\b' . preg_quote(strtolower($series->series), '/') . '\b/';
@@ -352,11 +379,11 @@ class CategorySuggester
         }
     }
 
-    private function scoreCrossConsole(WeeklyBatchItem $item, array &$scores, array &$signals): void
+    private function scoreCrossConsole(string $title, string $consoleSlug, array &$scores, array &$signals): void
     {
-        $otherConsoleId = $item->console === 'switch-2' ? Console::ID_SWITCH_1 : Console::ID_SWITCH_2;
+        $otherConsoleId = $consoleSlug === 'switch-2' ? Console::ID_SWITCH_1 : Console::ID_SWITCH_2;
 
-        $titlesToTry = array_unique([$item->title, $this->stripConsoleSuffix($item->title)]);
+        $titlesToTry = array_unique([$title, $this->stripConsoleSuffix($title)]);
 
         foreach ($titlesToTry as $title) {
             $game = $this->repoGame->findByTitleAndConsole($title, $otherConsoleId);

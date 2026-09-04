@@ -16,8 +16,14 @@ class NintendoCoUkGameData
      */
     private $parsedData = [];
 
+    /**
+     * @var string Raw HTML, kept for the inline JS config which is not in the DOM tree
+     */
+    private $html;
+
     public function __construct(string $html)
     {
+        $this->html = $html;
         $this->domCrawler = new DomCrawler($html);
         $this->parse();
     }
@@ -34,6 +40,43 @@ class NintendoCoUkGameData
         $this->parsePublisher();
         $this->parseDescription();
         $this->parseBodyDescription();
+        $this->parseStoreConfig();
+    }
+
+    /**
+     * Parse the inline JS config the store page carries (`nt_data` and `nsuids`).
+     *
+     * The weekly batch gets title, genres and release date from the pasted listing, so
+     * nothing needed these before. Adding a game from its URL alone has no listing to
+     * read, so they come from here instead (#135).
+     *
+     * Price is deliberately absent: the store loads it client-side from the eShop API,
+     * so it is not in the HTML at all and has to be entered by hand.
+     */
+    private function parseStoreConfig(): void
+    {
+        if (preg_match('/genres:\s*"([^"]*)"/', $this->html, $m)) {
+            // Pipe-separated on the page ("platformer|adventure"), comma-separated
+            // everywhere else in the app.
+            $genres = trim($m[1]);
+            $this->parsedData['genres'] = $genres === ''
+                ? null
+                : implode(', ', array_map('trim', explode('|', $genres)));
+        }
+
+        if (preg_match('/gameTitle:\s*"([^"]*)"/', $this->html, $m)) {
+            $title = trim($m[1]);
+            $this->parsedData['store_title'] = $title === '' ? null : $title;
+        }
+
+        if (preg_match('/nsuid:\s*"(\d+)"/', $this->html, $m)) {
+            $this->parsedData['nsuid'] = $m[1];
+        }
+
+        // Release date is dd/mm/yyyy on the page
+        if (preg_match('#releaseDate:\s*"(\d{2})/(\d{2})/(\d{4})"#', $this->html, $m)) {
+            $this->parsedData['release_date'] = "{$m[3]}-{$m[2]}-{$m[1]}";
+        }
     }
 
     /**
@@ -251,6 +294,35 @@ class NintendoCoUkGameData
     public function getData(): array
     {
         return $this->parsedData;
+    }
+
+    /**
+     * Title as the store itself names the game, from the inline config.
+     */
+    public function getStoreTitle(): ?string
+    {
+        return $this->parsedData['store_title'] ?? null;
+    }
+
+    /**
+     * Nintendo genres, comma-separated to match how the rest of the app stores them.
+     */
+    public function getGenres(): ?string
+    {
+        return $this->parsedData['genres'] ?? null;
+    }
+
+    /**
+     * Release date as Y-m-d.
+     */
+    public function getReleaseDate(): ?string
+    {
+        return $this->parsedData['release_date'] ?? null;
+    }
+
+    public function getNsuid(): ?string
+    {
+        return $this->parsedData['nsuid'] ?? null;
     }
 
     /**

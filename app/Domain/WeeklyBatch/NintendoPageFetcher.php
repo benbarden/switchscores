@@ -7,6 +7,7 @@ use Symfony\Component\HttpClient\HttpClient;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\Scraper\NintendoCoUkGameData;
+use App\Domain\Scraper\NintendoPageStatus;
 
 class NintendoPageFetcher
 {
@@ -70,6 +71,14 @@ class NintendoPageFetcher
             throw new \RuntimeException("HTTP {$statusCode} fetching: {$url}");
         }
 
+        // A de-listed game redirects to Nintendo's error page, which answers 200 - so the
+        // status check above cannot see it, and the fetch would otherwise "succeed" with
+        // every field empty. Same test the nightly crawl commands use.
+        $finalUrl = $crawler->getUri() ?? $url;
+        if (NintendoPageStatus::isSoft404($finalUrl)) {
+            throw new \RuntimeException("Nintendo 404 page (game may be de-listed): {$url}");
+        }
+
         $html = $crawler->html();
         $scraper = new NintendoCoUkGameData($html);
 
@@ -95,6 +104,14 @@ class NintendoPageFetcher
             'lq_uncertain'         => $lqUncertain,
             'lq_flag_reason'       => $lqFlagReason,
             'lq_publisher_name'    => $lqPublisherName,
+            // From the page's own config block. The weekly batch takes these from the
+            // pasted listing and ignores them here; the single-game tool has no listing
+            // to read, so it uses them (#135).
+            'title'                => $scraper->getStoreTitle(),
+            'genres'               => $scraper->getGenres(),
+            'release_date'         => $scraper->getReleaseDate(),
+            'nsuid'                => $scraper->getNsuid(),
+            'header_image_url'     => $scraper->getHeaderImageUrl(),
         ];
     }
 

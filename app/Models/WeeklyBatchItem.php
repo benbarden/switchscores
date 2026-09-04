@@ -99,6 +99,34 @@ class WeeklyBatchItem extends Model
     }
 
     /**
+     * Convert to the shape GameImporter takes. The importer works from this value
+     * object rather than from a batch item, so a game can also be imported from a
+     * source with no weekly batch behind it (improvement #135). The mapping lives
+     * here so the value object stays free of batch knowledge.
+     *
+     * Note `publisher` is the normalised name: the importer looks the company up by
+     * it, and the raw name from the store listing often will not match.
+     */
+    public function toImportGameData(): \App\Domain\GameImport\ImportGameData
+    {
+        return new \App\Domain\GameImport\ImportGameData(
+            title: $this->title,
+            releaseDate: $this->release_date?->format('Y-m-d'),
+            priceGbp: $this->price_gbp === null ? null : (float) $this->price_gbp,
+            url: $this->nintendo_url,
+            packshotUrl: $this->packshot_url,
+            publisher: $this->publisher_normalised,
+            players: $this->players,
+            category: $this->category,
+            collection: $this->collection,
+            series: null,
+            consoleSlug: $this->console,
+            sourceFile: null,
+            description: $this->description,
+        );
+    }
+
+    /**
      * Decide an item's status immediately after a successful fetch.
      *
      * Fetch only runs for STATUS_FETCH_PENDING items, so this is always a fresh
