@@ -165,6 +165,8 @@ Route::get('/community', 'PublicSite\CommunityController@landing')->name('commun
 // Sitemaps
 Route::controller('SitemapController')->group(function () {
     Route::redirect('/sitemap', '/sitemaps/index.xml', 301);
+    // Crawlers probe /sitemap.xml by convention; it 404'd before this line existed
+    Route::redirect('/sitemap.xml', '/sitemaps/index.xml', 301);
     Route::redirect('/sitemap/site', '/sitemaps/sitemap-site.xml', 301);
     Route::redirect('/sitemap/games', '/sitemaps/sitemap-games.xml', 301);
     Route::redirect('/sitemap/calendar', '/sitemaps/sitemap-calendar.xml', 301);

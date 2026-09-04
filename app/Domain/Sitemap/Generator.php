@@ -262,8 +262,12 @@ class Generator
 
         $sitemapPages[] = ['url' => route('browse.byCategory.landing'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
 
+        // Both the hub page and its list are separately indexable, self-canonicalising pages.
+        // The list was previously absent from every sitemap despite being the target of the
+        // legacy /c/{console}/category/{category}/list redirects.
         foreach ($categoryList as $item) {
             $sitemapPages[] = ['url' => route('browse.byCategory.page', ['category' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            $sitemapPages[] = ['url' => route('browse.byCategory.list', ['category' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;
@@ -286,6 +290,7 @@ class Generator
 
         foreach ($collectionList as $item) {
             $sitemapPages[] = ['url' => route('browse.byCollection.page', ['collection' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            $sitemapPages[] = ['url' => route('browse.byCollection.list', ['collection' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;
@@ -308,6 +313,7 @@ class Generator
 
         foreach ($seriesList as $item) {
             $sitemapPages[] = ['url' => route('browse.bySeries.page', ['series' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            $sitemapPages[] = ['url' => route('browse.bySeries.list', ['series' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;
@@ -330,6 +336,7 @@ class Generator
 
         foreach ($tagList as $item) {
             $sitemapPages[] = ['url' => route('browse.byTag.page', ['tag' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8'];
+            $sitemapPages[] = ['url' => route('browse.byTag.list', ['tag' => $item->link_title]), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7'];
         }
 
         $bindings['SitemapPages'] = $sitemapPages;

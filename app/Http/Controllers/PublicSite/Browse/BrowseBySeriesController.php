@@ -52,10 +52,14 @@ class BrowseBySeriesController extends Controller
 
         $bindings['GameSeries']  = $gameSeries;
         $bindings['ConsoleSlug'] = $consoleSlug;
+        $bindings['CanonicalUrl'] = route('browse.bySeries.page', ['series' => $gameSeries->link_title]);
 
-        $bindings['Stats']      = $this->repoGameSeries->getSnapshotStatsBySeriesMerged($seriesId, $consoleId);
+        $stats = $this->repoGameSeries->getSnapshotStatsBySeriesMerged($seriesId, $consoleId);
+
+        $bindings['Stats']      = $stats;
         $bindings['TopRated']   = $this->repoGameSeries->rankedBySeriesMerged($seriesId, $consoleId, 12);
         $bindings['HiddenGems'] = $this->repoGameSeries->hiddenGemsBySeriesMerged($seriesId, $consoleId, 12);
+        $bindings['MetaNoIndex'] = $stats['total'] === 0;
 
         if ($gameSeries->meta_description) {
             $bindings['MetaDescription'] = $gameSeries->meta_description;
@@ -96,10 +100,13 @@ class BrowseBySeriesController extends Controller
         $page    = max((int) $request->get('page', 1), 1);
         $perPage = 36;
 
-        $bindings['Games']        = $this->repoGameSeries->listBySeriesMerged($seriesId, $page, $perPage, $filter, $sort, $consoleId);
+        $games = $this->repoGameSeries->listBySeriesMerged($seriesId, $page, $perPage, $filter, $sort, $consoleId);
+
+        $bindings['Games']        = $games;
         $bindings['sort']         = $sort;
         $bindings['filter']       = $filter;
         $bindings['CanonicalUrl'] = route('browse.bySeries.list', ['series' => $gameSeries->link_title]);
+        $bindings['MetaNoIndex']  = $games['total'] === 0;
 
         return view('public.browse.by-series.list', $bindings);
     }

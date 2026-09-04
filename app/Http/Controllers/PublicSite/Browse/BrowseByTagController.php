@@ -54,10 +54,14 @@ class BrowseByTagController extends Controller
 
         $bindings['Tag']         = $tag;
         $bindings['ConsoleSlug'] = $consoleSlug;
+        $bindings['CanonicalUrl'] = route('browse.byTag.page', ['tag' => $tag->link_title]);
 
-        $bindings['Stats']      = $this->repoTag->getSnapshotStatsByTagMerged($tagId, $consoleId);
+        $stats = $this->repoTag->getSnapshotStatsByTagMerged($tagId, $consoleId);
+
+        $bindings['Stats']      = $stats;
         $bindings['TopRated']   = $this->repoTag->rankedByTagMerged($tagId, $consoleId, 12);
         $bindings['HiddenGems'] = $this->repoTag->hiddenGemsByTagMerged($tagId, $consoleId, 12);
+        $bindings['MetaNoIndex'] = $stats['total'] === 0;
 
         if ($tag->meta_description) {
             $bindings['MetaDescription'] = $tag->meta_description;
@@ -98,10 +102,13 @@ class BrowseByTagController extends Controller
         $page    = max((int) $request->get('page', 1), 1);
         $perPage = 36;
 
-        $bindings['Games']        = $this->repoTag->listByTagMerged($tagId, $page, $perPage, $filter, $sort, $consoleId);
+        $games = $this->repoTag->listByTagMerged($tagId, $page, $perPage, $filter, $sort, $consoleId);
+
+        $bindings['Games']        = $games;
         $bindings['sort']         = $sort;
         $bindings['filter']       = $filter;
         $bindings['CanonicalUrl'] = route('browse.byTag.list', ['tag' => $tag->link_title]);
+        $bindings['MetaNoIndex']  = $games['total'] === 0;
 
         return view('public.browse.by-tag.list', $bindings);
     }

@@ -60,9 +60,14 @@ class BrowseByCategoryController extends Controller
         $bindings['ConsoleSlug'] = $consoleSlug;
         $bindings['CanonicalUrl'] = route('browse.byCategory.page', ['category' => $category->link_title]);
 
-        $bindings['Stats']      = $this->repoCategory->getSnapshotStatsMerged($category, $consoleId);
+        $stats = $this->repoCategory->getSnapshotStatsMerged($category, $consoleId);
+
+        $bindings['Stats']      = $stats;
         $bindings['TopRated']   = $this->repoCategory->rankedByCategoryMerged($categoryId, $consoleId, 12);
         $bindings['HiddenGems'] = $this->repoCategory->hiddenGemsByCategoryMerged($categoryId, $consoleId, 12);
+        // Same reasoning as the list view: a console with no games in this category is a valid
+        // but empty page, and serving it as an indexable 200 is a soft 404.
+        $bindings['MetaNoIndex'] = $stats['total'] === 0;
 
         if ($category->meta_description) {
             $bindings['MetaDescription'] = $category->meta_description;
@@ -112,10 +117,16 @@ class BrowseByCategoryController extends Controller
         $page    = max((int) $request->get('page', 1), 1);
         $perPage = 36;
 
-        $bindings['Games']        = $this->repoCategory->listByCategoryMerged($categoryId, $page, $perPage, $filter, $sort, $consoleId);
+        $games = $this->repoCategory->listByCategoryMerged($categoryId, $page, $perPage, $filter, $sort, $consoleId);
+
+        $bindings['Games']        = $games;
         $bindings['sort']         = $sort;
         $bindings['filter']       = $filter;
         $bindings['CanonicalUrl'] = route('browse.byCategory.list', ['category' => $category->link_title]);
+        // A console/filter combination with no games is a valid view but an empty one. Serving it
+        // as an indexable 200 is what Search Console reports as a soft 404, so keep it out of the
+        // index while leaving it usable and crawlable.
+        $bindings['MetaNoIndex']  = $games['total'] === 0;
 
         return view('public.browse.by-category.list', $bindings);
     }

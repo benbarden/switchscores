@@ -32,6 +32,9 @@
     {% if CanonicalUrl %}
         <link rel="canonical" href="{{ CanonicalUrl|raw }}">
     {% endif %}
+    {% if MetaNoIndex %}
+        <meta name="robots" content="noindex, follow">
+    {% endif %}
     {% if MetaDescription %}
         <meta name="description" content="{{ MetaDescription|raw }}" />
     {% endif %}

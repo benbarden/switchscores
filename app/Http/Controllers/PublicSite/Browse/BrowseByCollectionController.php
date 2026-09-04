@@ -52,10 +52,14 @@ class BrowseByCollectionController extends Controller
 
         $bindings['GameCollection'] = $gameCollection;
         $bindings['ConsoleSlug']    = $consoleSlug;
+        $bindings['CanonicalUrl']   = route('browse.byCollection.page', ['collection' => $gameCollection->link_title]);
 
-        $bindings['Stats']      = $this->repoGameCollection->getSnapshotStatsByCollectionMerged($collectionId, $consoleId);
+        $stats = $this->repoGameCollection->getSnapshotStatsByCollectionMerged($collectionId, $consoleId);
+
+        $bindings['Stats']      = $stats;
         $bindings['TopRated']   = $this->repoGameCollection->rankedByCollectionMerged($collectionId, $consoleId, 12);
         $bindings['HiddenGems'] = $this->repoGameCollection->hiddenGemsByCollectionMerged($collectionId, $consoleId, 12);
+        $bindings['MetaNoIndex'] = $stats['total'] === 0;
 
         if ($gameCollection->meta_description) {
             $bindings['MetaDescription'] = $gameCollection->meta_description;
@@ -96,10 +100,13 @@ class BrowseByCollectionController extends Controller
         $page    = max((int) $request->get('page', 1), 1);
         $perPage = 36;
 
-        $bindings['Games']        = $this->repoGameCollection->listByCollectionMerged($collectionId, $page, $perPage, $filter, $sort, $consoleId);
+        $games = $this->repoGameCollection->listByCollectionMerged($collectionId, $page, $perPage, $filter, $sort, $consoleId);
+
+        $bindings['Games']        = $games;
         $bindings['sort']         = $sort;
         $bindings['filter']       = $filter;
         $bindings['CanonicalUrl'] = route('browse.byCollection.list', ['collection' => $gameCollection->link_title]);
+        $bindings['MetaNoIndex']  = $games['total'] === 0;
 
         return view('public.browse.by-collection.list', $bindings);
     }
