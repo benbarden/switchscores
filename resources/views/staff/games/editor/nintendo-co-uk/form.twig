@@ -1,3 +1,5 @@
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
 {% include 'ui/components/alerts/form-errors.twig' %}
 <form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
@@ -31,6 +33,18 @@
                         </td>
                         <td>
                             {{ GameData.title }}
+                        </td>
+                    </tr>
+                    {# The API link dropdown lists items from both consoles, so show which
+                       one this game is on before a link is chosen #}
+                    <tr>
+                        <td>
+                            <strong>
+                                Console
+                            </strong>
+                        </td>
+                        <td>
+                            {{ consolebadge.standard(GameData) }}
                         </td>
                     </tr>
                     </tbody>

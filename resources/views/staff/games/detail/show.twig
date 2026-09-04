@@ -1,6 +1,7 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
 {% import 'ui/components/gsc/insights-games-table.twig' as gscgames %}
+{% import 'ui/components/game/console-banner.twig' as gameconsolebanner %}
 
 {% block page_inner %}
 
@@ -79,6 +80,9 @@
 <div class="row">
 
     <div class="col-md-8">
+
+        {# Same console bar the public game page puts above the header image #}
+        {{ gameconsolebanner.show(GameData) }}
 
         {% set boxartUrl = ImageHelper.imageHeaderUrl(GameData) %}
         {% if boxartUrl %}

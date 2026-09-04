@@ -1,15 +1,21 @@
+{# Console badge for staff pages.
+
+   Colours match the public site's console banner (ui/components/game/console-banner.twig):
+   Switch 1 #008cba (blue), Switch 2 #c9302c (red). Keep the two files in step - staff and
+   public showing different colours for the same console is worse than either choice. #}
+
 {% macro standard(item) %}
     {% if item.console_id == 1 or (item.console.id is defined and item.console.id == 1) %}
-        <label class="badge bg-info">Switch 1</label>
+        <label class="badge" style="background-color: #008cba; color: #fff;">Switch 1</label>
     {% elseif item.console_id == 2 or (item.console.id is defined and item.console.id == 2) %}
-        <label class="badge bg-success">Switch 2</label>
+        <label class="badge" style="background-color: #c9302c; color: #fff;">Switch 2</label>
     {% endif %}
 {% endmacro %}
 
 {% macro short(item) %}
     {% if item.console_id == 1 or (item.console.id is defined and item.console.id == 1) %}
-        <label class="badge bg-info">S1</label>
+        <label class="badge" style="background-color: #008cba; color: #fff;">S1</label>
     {% elseif item.console_id == 2 or (item.console.id is defined and item.console.id == 2) %}
-        <label class="badge bg-success">S2</label>
+        <label class="badge" style="background-color: #c9302c; color: #fff;">S2</label>
     {% endif %}
 {% endmacro %}
