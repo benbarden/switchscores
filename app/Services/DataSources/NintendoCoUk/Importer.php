@@ -199,14 +199,7 @@ class Importer
                 if (!array_key_exists('title', $sourceItem)) continue;
                 if (!array_key_exists('system_type', $sourceItem)) continue;
 
-                $systemType = $sourceItem['system_type'][0];
-                if ($systemType == 'nintendoswitch2') {
-                    $consoleId = Console::ID_SWITCH_2;
-                } elseif ($systemType == 'nintendoswitch2,nintendoswitch2') {
-                    $consoleId = Console::ID_SWITCH_2;
-                } else {
-                    $consoleId = Console::ID_SWITCH_1;
-                }
+                $consoleId = self::consoleIdFromSystemType($sourceItem['system_type'][0]);
 
                 $linkId      = $sourceItem['fs_id'] ?? null;
                 $jsonString  = json_encode($sourceItem);
@@ -275,6 +268,30 @@ class Importer
      * Extract only the meaningful fields for hashing.
      * Excludes volatile Solr metadata (_version_, score, etc.) that changes every run.
      */
+    /**
+     * Which console a source record belongs to, from its `system_type`.
+     *
+     * `system_type` is a comma-separated list, and Nintendo repeats the same value: as
+     * well as "nintendoswitch2" and "nintendoswitch2,nintendoswitch2", live data holds
+     * it three and four times over, and occasionally mixed with a Switch 1 value on a
+     * genuine Switch 2 record ("nintendoswitch_downloadsoftware,nintendoswitch2").
+     *
+     * So any nintendoswitch2 part makes the record a Switch 2 one. Checked on 2026-09-04
+     * against all 16 rows this had mis-consoled: every one of their store URLs confirmed
+     * Switch 2. Matched per part rather than as a substring, so no future value can match
+     * by accident.
+     */
+    public static function consoleIdFromSystemType(?string $systemType): int
+    {
+        foreach (explode(',', (string) $systemType) as $part) {
+            if (trim($part) === 'nintendoswitch2') {
+                return Console::ID_SWITCH_2;
+            }
+        }
+
+        return Console::ID_SWITCH_1;
+    }
+
     private function hashableFields(array $item): string
     {
         $keys = [

@@ -293,14 +293,26 @@ class GamesEditorController extends Controller
                     $dsCurrentParsedItem->game_id = null;
                     $dsCurrentParsedItem->save();
 
-                    // We also need to delete any current packshots
-                    $serviceGameImages = new GameImages($game);
-                    $serviceGameImages->deleteSquare();
-                    $serviceGameImages->deleteHeader();
+                    // Only delete the packshots when a replacement link is being set, so the
+                    // new item's images take their place. Clearing the link entirely used to
+                    // delete them too, which is destructive and has no way back: the objects
+                    // are removed from storage, and a game with no link and no store URL has
+                    // nothing left to re-download from. Unlinking says "this record is not
+                    // this game", not "this game has no artwork" - and the artwork is usually
+                    // still right, since the wrong record is normally another edition of the
+                    // same game.
+                    if ($nintendoCoUkLinkId) {
 
-                    // Reset the game
-                    $game->image_square = null;
-                    $game->image_header = null;
+                        $serviceGameImages = new GameImages($game);
+                        $serviceGameImages->deleteSquare();
+                        $serviceGameImages->deleteHeader();
+
+                        $game->image_square = null;
+                        $game->image_header = null;
+
+                    }
+
+                    // Link state goes either way: it describes the link, not the game.
                     $game->eshop_europe_fs_id = null;
                     $game->save();
 
