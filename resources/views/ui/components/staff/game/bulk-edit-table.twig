@@ -1,4 +1,5 @@
 {% import 'ui/components/links/game.twig' as gamelink %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
 
 {{ csrf_field() }}
 <input type="hidden" id="console_id" name="console_id" value="{{ ConsoleId }}">
@@ -23,11 +24,7 @@
             {% for item in GameList %}
                 <tr>
                     <td>
-                        {% if item.console.name == 'Switch 1' %}
-                            <label class="badge bg-info">{{ item.console.name }}</label>
-                        {% elseif item.console.name == 'Switch 2' %}
-                            <label class="badge bg-success">{{ item.console.name }}</label>
-                        {% endif %}
+                        {{ consolebadge.standard(item) }}
                         {{ gamelink.title(item, 'staff') }}
                         {% if item.is_low_quality == 1 %}
                             <label class="badge bg-danger">Low quality</label>

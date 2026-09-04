@@ -1,3 +1,5 @@
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
 {% if ItemList.count > 0 %}
     <table class="table data-sortable">
         <thead>
@@ -10,7 +12,9 @@
                 <th class="text-center">Price (standard)</th>
                 <th class="text-center">Nintendo Url</th>
             {% endif %}
-            <th class="text-center">Options</th>
+            {# Never wrap the actions: the title column absorbs the slack instead, so a
+               long title wraps on its own row rather than breaking every row's links #}
+            <th class="text-center" style="white-space: nowrap;">Options</th>
         </tr>
         </thead>
         <tbody>
@@ -27,7 +31,7 @@
                 </td>
                 {% if DataSource.isNintendoCoUk() %}
                     <td class="text-center">
-                        {{ item.console.name }}
+                        {{ consolebadge.standard(item) }}
                     </td>
                     <td class="text-center">
                         {{ item.price_standard }}
@@ -36,7 +40,7 @@
                         <a href="{{ eshop_url('eu', item.url) }}" target="_blank">View</a>
                     </td>
                 {% endif %}
-                <td class="text-center">
+                <td class="text-center" style="white-space: nowrap;">
                     {% if DataSource.isNintendoCoUk() %}
                         <a href="{{ route('staff.data-sources.nintendo-co-uk.add-game', {'itemId': item.id}) }}">Add game</a> :
                     {% endif %}
