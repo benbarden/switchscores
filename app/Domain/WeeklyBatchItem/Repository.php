@@ -170,6 +170,17 @@ class Repository
         $item->save();
     }
 
+    /**
+     * Move an item into the active pipeline using the fields worked out by
+     * ParseService::classifyActiveItem(). Used when an out-of-range item is added
+     * to the batch after parsing.
+     */
+    public function activateItem(WeeklyBatchItem $item, array $classification): void
+    {
+        $item->fill($classification);
+        $item->save();
+    }
+
     public function clearUrl(WeeklyBatchItem $item): void
     {
         $item->nintendo_url = null;

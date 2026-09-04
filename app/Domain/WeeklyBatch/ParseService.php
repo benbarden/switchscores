@@ -156,33 +156,11 @@ class ParseService
             }
 
             // Active item — detect collection, bundles, and LQ signals
-            $collection   = $this->matchCollection($title);
-            $isAutoLq     = $this->detectAutoLq($title);
-            $isBundle     = $this->detectBundle($title);
-            $lqFlagReason = $this->detectLqSignals($title, $entry['price_gbp']);
-
-            if ($isAutoLq) {
-                $itemStatus   = WeeklyBatchItem::STATUS_LOW_QUALITY;
-                $lqFlagReason = 'Auto-LQ title prefix: '.$title;
-            } elseif ($isBundle) {
-                $itemStatus = WeeklyBatchItem::STATUS_BUNDLE;
-            } elseif (!empty($baseData['nintendo_url'])) {
-                // HTML paste already gave us the store URL — skip the manual URL step
-                // and send the item straight to fetch (mirrors Repository::updateUrl).
-                $itemStatus = WeeklyBatchItem::STATUS_FETCH_PENDING;
-            } else {
-                $itemStatus = WeeklyBatchItem::STATUS_PENDING;
-            }
-
-            $activeData = $baseData + [
-                'collection'  => $collection,
-                'item_status' => $itemStatus,
-                'lq_flag'     => $lqFlagReason ? 1 : 0,
-                'lq_flag_reason' => $lqFlagReason,
-            ];
-            if ($itemStatus === WeeklyBatchItem::STATUS_FETCH_PENDING) {
-                $activeData['fetch_status'] = WeeklyBatchItem::FETCH_STATUS_PENDING;
-            }
+            $activeData = $baseData + $this->classifyActiveItem(
+                $title,
+                $entry['price_gbp'],
+                $baseData['nintendo_url']
+            );
 
             $item = $this->repoItem->create($activeData);
 
@@ -196,6 +174,49 @@ class ParseService
         $this->repoRawPage->markParsed($rawPage);
 
         return $summary;
+    }
+
+    /**
+     * Work out where an item entering the active pipeline belongs: its collection,
+     * whether it is an auto-LQ title or a bundle, any LQ signals to flag, and the
+     * status it starts at. Returns the fields to set on the item.
+     *
+     * Shared by parsePage() and by the "add to batch" action for items originally
+     * filtered out as out of range, so both routes into the pipeline classify an
+     * item the same way.
+     */
+    public function classifyActiveItem(string $title, ?float $price, ?string $nintendoUrl): array
+    {
+        $collection   = $this->matchCollection($title);
+        $isAutoLq     = $this->detectAutoLq($title);
+        $isBundle     = $this->detectBundle($title);
+        $lqFlagReason = $this->detectLqSignals($title, $price);
+
+        if ($isAutoLq) {
+            $itemStatus   = WeeklyBatchItem::STATUS_LOW_QUALITY;
+            $lqFlagReason = 'Auto-LQ title prefix: '.$title;
+        } elseif ($isBundle) {
+            $itemStatus = WeeklyBatchItem::STATUS_BUNDLE;
+        } elseif (!empty($nintendoUrl)) {
+            // Store URL already known - skip the manual URL step and send the item
+            // straight to fetch (mirrors Repository::updateUrl).
+            $itemStatus = WeeklyBatchItem::STATUS_FETCH_PENDING;
+        } else {
+            $itemStatus = WeeklyBatchItem::STATUS_PENDING;
+        }
+
+        $data = [
+            'collection'     => $collection,
+            'item_status'    => $itemStatus,
+            'lq_flag'        => $lqFlagReason ? 1 : 0,
+            'lq_flag_reason' => $lqFlagReason,
+        ];
+
+        if ($itemStatus === WeeklyBatchItem::STATUS_FETCH_PENDING) {
+            $data['fetch_status'] = WeeklyBatchItem::FETCH_STATUS_PENDING;
+        }
+
+        return $data;
     }
 
     /**

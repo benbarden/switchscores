@@ -102,7 +102,20 @@ Documented in `infra-red/docs/minio.md`.
 - [ ] Prove #7/#8: localdev with zero local images still renders (reads prod Spaces),
       then a MinIO override deviates one game only, prod untouched
 
-### Phase 1 — bulk migrate ⏳ TODO
+### Phase 1 — bulk migrate ✅ DONE (confirmed 2026-08-31)
+
+**Confirmed complete on 2026-08-31:** the staff dashboard `/staff/games/images` reads **100%
+migrated**, and prod `.env` has `PACKSHOTS_DEFAULT_LOCATION=spaces`. Verified live — game pages
+serve packshots from `switchscores-packshots.lon1.cdn.digitaloceanspaces.com` and og:image is
+single-prefixed.
+
+**This section read "⏳ TODO" with the box below unticked for roughly six weeks after the work was
+finished.** The contradiction was visible in this file the whole time: the flip item already said
+"safe now the backfill is at 100%". Three commits also only make sense post-migration — `55ef33c7`
+(extension-less object keys), `47e0c9f2` (crawl commands re-downloading images already in object
+storage), `44d3db23` (resolving packshots on raw-row list pages). **Lesson: a task doc updated only
+when the plan changes will silently drift behind execution, and the drift stays invisible until
+someone asks "didn't we already do this?" — which is what happened.**
 
 - [x] Confirm the low-quality image re-download job (#70) is complete first — **done 2026-07-15.**
       It rode along with the full game-page scrape (dead-link check), completed Mar/Apr 2026.
@@ -110,7 +123,8 @@ Documented in `infra-red/docs/minio.md`.
       actually replaced; games whose saved image already matched the remote Content-Length were
       left alone and kept their old undated name. So undated = "didn't need re-downloading", not
       "not processed" — a filename-pattern query can't distinguish the two and will mislead.
-- [ ] Idempotent, resumable script copies all `public/img/ps-*` → Spaces, populates `game_images`
+- [x] Idempotent, resumable script copies all `public/img/ps-*` → Spaces, populates `game_images`
+      — **done; backfill completed 2026-07-20, dashboard confirmed 100% on 2026-08-31.**
 
 ### Ingestion repoint + default location (required before server move) ✅ BUILT 2026-07-20 (not yet flipped)
 
@@ -124,7 +138,8 @@ only code writing to the `packshots` disk was `ImageStorageMigrator` (the staff 
       `public/img`, set `games.image_*`, no row; `spaces` → `put()` to the disk + upsert the
       `game_images` row) and owns persistence. Same one-shared-helper shape as `PackshotJoin`.
 - [x] Delete path made storage-aware (`Services/Game/Images.php`, req #5).
-- [ ] **Flip to `spaces`** — a prod `.env` change, safe now the backfill is at 100%.
+- [x] **Flip to `spaces`** — a prod `.env` change, safe now the backfill is at 100%.
+      **Done — confirmed set on prod 2026-08-31.**
 
 **Five write paths, not one.** The doc previously named only `Services/DataSources/NintendoCoUk/Images.php`
 and the crawl commands. The full set, all now routed through the writer:
@@ -280,3 +295,19 @@ Stats + list queries in `App\Domain\Game\Repository\GameImageRepository`.
 - ~~Confirm the low-quality image re-download job (#70) is complete.~~ Confirmed 2026-07-15 — see Phase 1.
 - Estimate outbound transfer vs the 1 TiB/mo CDN allowance.
 - Decide whether MinIO lives in the switchscores compose only, or a shared infra localdev compose.
+- **The compose comment is ahead of the code (found 2026-08-31).** `docker-compose.yml` describes
+  MinIO as holding "only per-game packshot overrides; the prod CDN serves everything else". That
+  split is not implemented: the `packshots` disk has a single `PACKSHOTS_URL`, and `ImageResolver`
+  serves every `location = spaces` game from that one disk, so there is no per-image URL source to
+  route overrides locally and everything else to the CDN. **Making that comment true is exactly the
+  open "Move override concept" item above.** Until then, local MinIO holds only test residue from
+  the staff migrate button.
+- **Laptop move (new machine on order, 2026-08-31).** Do **not** copy the `minio_data` or `db_data`
+  Docker volumes to the new laptop: it is an Intel → Apple Silicon move with a possible MinIO
+  version bump, and nothing in either volume is a source of truth. Stand MinIO up empty
+  (`minio-createbucket` creates and public-reads the bucket on `docker compose up -d`), set
+  localdev `PACKSHOTS_URL` to the **public prod CDN** so all packshots render with no copying, and
+  keep `PACKSHOTS_KEY`/`SECRET`/`ENDPOINT` pointed at MinIO so writes stay local and localdev never
+  holds prod credentials. Known limitation of the single-URL config: an image written locally is
+  not readable back until `PACKSHOTS_URL` is temporarily pointed at MinIO. If MinIO contents ever
+  do need moving, export objects with `mc mirror`, never by copying the volume.

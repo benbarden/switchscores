@@ -571,16 +571,44 @@ class WeeklyBatchListController extends Controller
             ->with('success', 'LQ decisions saved.');
     }
 
-    public function activateOutOfRange($batchId, $console, $listType, $itemId)
+    public function activateOutOfRange($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
     {
         $item = $this->repoItem->find((int) $itemId);
 
         if (!$item || $item->batch_id != $batchId) abort(404);
-        if ($item->item_status !== \App\Models\WeeklyBatchItem::STATUS_OUT_OF_RANGE) abort(422);
+        if ($item->item_status !== WeeklyBatchItem::STATUS_OUT_OF_RANGE) abort(422);
         if ($item->game_id) abort(422); // already in DB — shouldn't be activated
 
-        $item->item_status = \App\Models\WeeklyBatchItem::STATUS_PENDING;
-        $item->save();
+        // Out-of-range items are created before the parser classifies active items, so
+        // run that classification now. Without it the item lands at `pending` even when
+        // the paste already supplied a store URL, and the fetch step then reports it as
+        // having no URL; it would also miss collection matching and LQ flagging.
+        $this->repoItem->activateItem($item, $this->parseService->classifyActiveItem(
+            $item->title,
+            $item->price_gbp === null ? null : (float) $item->price_gbp,
+            $item->nintendo_url
+        ));
+
+        if ($request->ajax()) {
+            $item->refresh();
+
+            // Render the same partial the Raw screen uses, so the new row can be added
+            // to the active items table without a reload.
+            $rowHtml = view('staff.games.weekly-updates.list._active-item-row', [
+                'item'     => $item,
+                'Batch'    => $this->getBatch((int) $batchId),
+                'Console'  => $console,
+                'ListType' => $listType,
+            ])->render();
+
+            return response()->json([
+                'status'      => 'ok',
+                'item_status' => $item->item_status,
+                'page_number' => $item->page_number,
+                'sort_order'  => $item->sort_order,
+                'row_html'    => $rowHtml,
+            ]);
+        }
 
         return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'));
     }

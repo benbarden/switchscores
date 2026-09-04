@@ -1,0 +1,65 @@
+{# One row of the active items table on the Raw screen. Kept as a partial so the
+   "add to batch" action can render the same markup for a single item and drop it
+   into the table without a page reload (improvement #150). #}
+<tr data-page="{{ item.page_number }}" data-sort="{{ item.sort_order }}">
+    <td class="text-center">{{ item.page_number }}</td>
+    <td>
+        {{ item.title }}
+        {% if item.title != item.title_raw %}
+            <br><small class="text-muted">Original: {{ item.title_raw }}</small>
+        {% endif %}
+        {% if item.collection %}
+            <br><span class="badge bg-info text-dark">{{ item.collection }}</span>
+        {% endif %}
+    </td>
+    <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+    <td class="text-center" style="white-space: nowrap;">
+        {% if item.price_gbp is not null %}
+            £{{ item.price_gbp|number_format(2) }}
+            {% if item.price_flag %}
+                <span class="badge bg-warning text-dark" title="{{ item.price_flag_reason }}">⚑</span>
+            {% endif %}
+        {% else %}
+            —
+        {% endif %}
+    </td>
+    <td><small>{{ item.nintendo_genres ?? '—' }}</small></td>
+    <td class="status-cell">
+        {% if item.item_status in ['pending', 'fetch_pending'] %}
+            <span class="badge bg-primary">To process</span>
+        {% elseif item.item_status == 'bundle' %}
+            <span class="badge bg-info text-dark">Bundle</span>
+        {% elseif item.item_status == 'low_quality' %}
+            <span class="badge bg-danger">LQ</span>
+        {% else %}
+            <span class="badge bg-secondary">{{ item.item_status }}</span>
+        {% endif %}
+    </td>
+    <td>
+        {% if item.lq_flag %}
+            <div class="mb-1">
+                <span class="badge bg-warning text-dark">⚑ LQ signal</span>
+                <br><small class="text-muted">{{ item.lq_flag_reason }}</small>
+            </div>
+        {% endif %}
+        {% if item.price_flag %}
+            <div>
+                <span class="badge bg-warning text-dark">⚑ Price</span>
+                <br><small class="text-muted">{{ item.price_flag_reason }}</small>
+            </div>
+        {% endif %}
+    </td>
+    <td>
+        {% if item.item_status not in ['imported'] %}
+        <select class="form-select form-select-sm item-action-select"
+                data-action-url="{{ route('staff.games.weekly-updates.list.item.action', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
+            <option value="">Action…</option>
+            <option value="reparse">Re-parse title</option>
+            <option value="low_quality">Low quality</option>
+            <option value="bundle">Bundle</option>
+            <option value="excluded">Exclude (other reason)</option>
+            <option value="reset">Reset</option>
+        </select>
+        {% endif %}
+    </td>
+</tr>

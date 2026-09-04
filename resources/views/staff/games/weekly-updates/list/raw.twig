@@ -162,70 +162,9 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="active-items-body">
         {% for item in activeItems %}
-            <tr>
-                <td class="text-center">{{ item.page_number }}</td>
-                <td>
-                    {{ item.title }}
-                    {% if item.title != item.title_raw %}
-                        <br><small class="text-muted">Original: {{ item.title_raw }}</small>
-                    {% endif %}
-                    {% if item.collection %}
-                        <br><span class="badge bg-info text-dark">{{ item.collection }}</span>
-                    {% endif %}
-                </td>
-                <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
-                <td class="text-center" style="white-space: nowrap;">
-                    {% if item.price_gbp is not null %}
-                        £{{ item.price_gbp|number_format(2) }}
-                        {% if item.price_flag %}
-                            <span class="badge bg-warning text-dark" title="{{ item.price_flag_reason }}">⚑</span>
-                        {% endif %}
-                    {% else %}
-                        —
-                    {% endif %}
-                </td>
-                <td><small>{{ item.nintendo_genres ?? '—' }}</small></td>
-                <td class="status-cell">
-                    {% if item.item_status == 'pending' %}
-                        <span class="badge bg-primary">To process</span>
-                    {% elseif item.item_status == 'bundle' %}
-                        <span class="badge bg-info text-dark">Bundle</span>
-                    {% elseif item.item_status == 'low_quality' %}
-                        <span class="badge bg-danger">LQ</span>
-                    {% else %}
-                        <span class="badge bg-secondary">{{ item.item_status }}</span>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.lq_flag %}
-                        <div class="mb-1">
-                            <span class="badge bg-warning text-dark">⚑ LQ signal</span>
-                            <br><small class="text-muted">{{ item.lq_flag_reason }}</small>
-                        </div>
-                    {% endif %}
-                    {% if item.price_flag %}
-                        <div>
-                            <span class="badge bg-warning text-dark">⚑ Price</span>
-                            <br><small class="text-muted">{{ item.price_flag_reason }}</small>
-                        </div>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.item_status not in ['imported'] %}
-                    <select class="form-select form-select-sm item-action-select"
-                            data-action-url="{{ route('staff.games.weekly-updates.list.item.action', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
-                        <option value="">Action…</option>
-                        <option value="reparse">Re-parse title</option>
-                        <option value="low_quality">Low quality</option>
-                        <option value="bundle">Bundle</option>
-                        <option value="excluded">Exclude (other reason)</option>
-                        <option value="reset">Reset</option>
-                    </select>
-                    {% endif %}
-                </td>
-            </tr>
+            {% include 'staff/games/weekly-updates/list/_active-item-row.twig' with {'item': item} %}
         {% endfor %}
         </tbody>
     </table>
@@ -256,35 +195,39 @@
 
     {# ---- Out of range sections: only meaningful on "new" list ---- #}
     {# ---- Out of range: NOT in DB (needs attention) ---- #}
+    {# Adding is done over AJAX so the page keeps its scroll position and several
+       items can be added in a row. See improvements #149/#150. #}
     {% if ListType == 'new' and outOfRangeNotInDb|length > 0 %}
-    <div class="alert alert-warning mt-4">
-        <strong>⚠ {{ outOfRangeNotInDb|length }} out-of-range game(s) not found in DB</strong> — these may have been missed in a previous week.
+    <div id="out-of-range-not-in-db">
+        <div class="alert alert-warning mt-4">
+            <strong>⚠ <span class="oor-remaining-count">{{ outOfRangeNotInDb|length }}</span> out-of-range game(s) not found in DB</strong> - these may have been missed in a previous week.
+            <span class="oor-added-note d-none"> <strong class="oor-added-count">0</strong> added to this batch.</span>
+        </div>
+        <table class="table table-sm table-bordered table-warning" style="max-width: 800px;">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-center" style="width: 6%;">Page</th>
+                    <th>Title</th>
+                    <th class="text-center" style="width: 14%;">Date</th>
+                    <th style="width: 10%;"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in outOfRangeNotInDb %}
+                <tr>
+                    <td class="text-center">{{ item.page_number }}</td>
+                    <td>{{ item.title_raw }}</td>
+                    <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-primary oor-activate"
+                                data-activate-url="{{ route('staff.games.weekly-updates.list.raw.activate-out-of-range', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}"
+                                data-title="{{ item.title_raw|e('html_attr') }}">Add to batch</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <table class="table table-sm table-bordered table-warning" style="max-width: 800px;">
-        <thead class="table-dark">
-            <tr>
-                <th class="text-center" style="width: 6%;">Page</th>
-                <th>Title</th>
-                <th class="text-center" style="width: 14%;">Date</th>
-                <th style="width: 10%;"></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in outOfRangeNotInDb %}
-            <tr>
-                <td class="text-center">{{ item.page_number }}</td>
-                <td>{{ item.title_raw }}</td>
-                <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
-                <td class="text-center">
-                    <form method="post" action="{{ route('staff.games.weekly-updates.list.raw.activate-out-of-range', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn btn-sm btn-primary" onclick="return confirm('Add {{ item.title_raw|e }} to this batch?')">Add to batch</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
     {% endif %}
 
     {# ---- Out of range: already in DB (safe to ignore) ---- #}
@@ -379,7 +322,7 @@
         });
     });
 
-    document.querySelectorAll('.item-action-select').forEach(function (select) {
+    function bindItemAction(select) {
         select.addEventListener('change', function () {
             const action = select.value;
             if (!action) return;
@@ -438,7 +381,101 @@
                 select.disabled = false;
             });
         });
-    });
+    }
+
+    document.querySelectorAll('.item-action-select').forEach(bindItemAction);
+
+    // ---- Add out-of-range items missed in a previous week ----
+    // Done in place rather than as a form post: a full reload sent the page back to
+    // the top, losing your place in a long list (improvement #150).
+    (function () {
+        const section = document.getElementById('out-of-range-not-in-db');
+        if (!section) return;
+
+        const remainingCount = section.querySelector('.oor-remaining-count');
+        const addedNote      = section.querySelector('.oor-added-note');
+        const addedCount     = section.querySelector('.oor-added-count');
+        let added = 0;
+
+        // Insert the new row where a reload would have put it: the active items table
+        // is ordered by page number, then by the item's position within that page.
+        function addActiveRow(activeBody, data) {
+            const template = document.createElement('template');
+            template.innerHTML = data.row_html.trim();
+            const newRow = template.content.firstElementChild;
+            if (!newRow) return;
+
+            const before = Array.from(activeBody.querySelectorAll('tr')).find(function (existing) {
+                const page = Number(existing.dataset.page);
+                const sort = Number(existing.dataset.sort);
+                return page > data.page_number
+                    || (page === data.page_number && sort > data.sort_order);
+            });
+
+            activeBody.insertBefore(newRow, before || null);
+
+            const select = newRow.querySelector('.item-action-select');
+            if (select) bindItemAction(select);
+
+            // Brief highlight so the row is findable in a long table.
+            newRow.classList.add('table-success');
+            setTimeout(function () { newRow.classList.remove('table-success'); }, 2000);
+        }
+
+        section.querySelectorAll('.oor-activate').forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (!confirm('Add ' + button.dataset.title + ' to this batch?')) return;
+
+                button.disabled = true;
+                button.textContent = 'Adding…';
+
+                fetch(button.dataset.activateUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': CSRF_TOKEN,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(function (r) {
+                    if (!r.ok) throw new Error('Request failed');
+                    return r.json();
+                })
+                .then(function (data) {
+                    if (data.status !== 'ok') throw new Error('Unexpected response');
+
+                    // The active items table is only rendered when it has rows, so if
+                    // this is the first active item there is nowhere to put it.
+                    const activeBody = document.getElementById('active-items-body');
+                    if (!activeBody) {
+                        window.location.reload();
+                        return;
+                    }
+
+                    addActiveRow(activeBody, data);
+
+                    const row   = button.closest('tr');
+                    const tbody = row.parentNode;
+                    row.remove();
+
+                    added++;
+                    addedCount.textContent = added;
+                    addedNote.classList.remove('d-none');
+                    remainingCount.textContent = tbody.querySelectorAll('tr').length;
+
+                    // Last one added - the warning no longer applies.
+                    if (tbody.querySelectorAll('tr').length === 0) {
+                        section.querySelector('table').remove();
+                    }
+                })
+                .catch(function () {
+                    button.disabled = false;
+                    button.textContent = 'Add to batch';
+                    alert('Could not add that item. Reload the page and try again.');
+                });
+            });
+        });
+    })();
 })();
 </script>
 {% endblock page_body %}
