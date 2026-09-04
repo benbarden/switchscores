@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Staff\Games\WeeklyUpdates;
 
+use Carbon\Carbon;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
@@ -40,6 +41,16 @@ class WeeklyBatchController extends Controller
     {
         $pageTitle = 'New weekly batch';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::weeklyUpdatesSubpage($pageTitle))->bindings;
+
+        // Batches are dated by their Friday, and the run happens on or just after it, so
+        // default to the most recent one: today when today is Friday, otherwise the
+        // Friday just gone. Still editable - a batch can be created late or re-dated.
+        $defaultDate = Carbon::today();
+        if (!$defaultDate->isFriday()) {
+            $defaultDate = $defaultDate->previous(Carbon::FRIDAY);
+        }
+
+        $bindings['DefaultBatchDate'] = $defaultDate->toDateString();
 
         return view('staff.games.weekly-updates.create', $bindings);
     }

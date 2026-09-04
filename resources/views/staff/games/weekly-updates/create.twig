@@ -6,7 +6,9 @@
     {{ csrf_field()|raw }}
     <div class="mb-3">
         <label for="batch_date" class="form-label">Batch date (Friday)</label>
-        <input type="date" id="batch_date" name="batch_date" class="form-control" required>
+        <input type="date" id="batch_date" name="batch_date" class="form-control"
+               value="{{ DefaultBatchDate }}" required>
+        <div class="form-text">Defaults to the most recent Friday. Change it if this batch needs a different date.</div>
     </div>
     <button type="submit" class="btn btn-primary">Create batch</button>
     <a href="{{ route('staff.games.weekly-updates.index') }}" class="btn btn-secondary ms-2">Cancel</a>
