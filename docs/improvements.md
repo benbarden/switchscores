@@ -2,7 +2,7 @@
 
 This document tracks potential improvements, features, and enhancements for the Switch Scores project.
 
-**Next ID: 158**
+**Next ID: 159**
 
 ## Numbering rule (added 2026-08-07)
 
@@ -196,6 +196,7 @@ The history was always being stored (`gsc_page_snapshots` had 220 daily snapshot
 
 | # | Idea | Complexity | Notes | Your Notes |
 |---|------|------------|-------|------------|
+| 158 | Re-download packshots for a single game from the staff UI | Low | Only a CLI route exists once a game is unlinked | The "Update images" button on Game detail sits inside `{% if DataSourceNintendoCoUk %}` in `detail-col3.twig`, so it only renders for a game with a linked API item. A game with no link has **no UI route at all** - the packshot details page offers only migrate and revert - and recovery means `php artisan DSNintendoCoUkDownloadPackshots {gameId}` on the box. `DownloadPackshotHelper` already handles the unlinked case: it falls back to `nintendo_store_url_override` and `packshot_square_url_override`, which is exactly how game 15751 was recovered on 2026-09-04. So this is a button, not new download logic - show it whenever the game has either a data source item **or** a store URL override, matching what the helper can actually act on. Do #157 first or alongside, or a failure will look like the button doing nothing. Related: #156. |
 | 2 | Bulk add tag to games with search string (e.g. Solitaire) | Medium | No bulk tag UI - needs new controller/view | Explore using Claude for mass tagging instead of building UI |
 | 138 | Staff-specific error/404 page template | Low | **Renumbered from 134 on 2026-08-07** (clashed with the GSC daily-figures item). Related to #32 (public 404). Needs an auth-aware error view | Hitting the public 404/error layout while logged in as staff is jarring. Show a staff-flavoured error page (staff layout + links back into admin) when an authenticated staff user hits an error. |
 | 153 | Prune / retention policy for `api_request_log` | Low | Decide now, not at migration time | The `api_request_log` table has no retention policy, so it grows forever. Add an artisan command to drop rows older than N months, and wire it into the cron. Small job, but worth deciding the window **now** rather than discovering an unbounded table during the infrared-switch migration. Related: #151 (which increases what gets written). |
