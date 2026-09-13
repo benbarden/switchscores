@@ -89,3 +89,4 @@ networks:
 volumes:
   db_data:
   minio_data:
+
