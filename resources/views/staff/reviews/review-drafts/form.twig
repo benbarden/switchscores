@@ -42,8 +42,8 @@
             <th>Linked to game</th>
             <td>
                 {% if ReviewDraftData.game.id %}
-                    {{ ReviewDraftData.game.title }}
                     {{ consolebadge.standard(ReviewDraftData.game) }}
+                    {{ ReviewDraftData.game.title }}
                     {% if feedConsole and ReviewDraftData.game.console_id != feedConsole.id %}
                         <div class="alert alert-warning mt-2 mb-0 py-1">
                             This game is on {{ ReviewDraftData.game.console.name }}, but the feed is
