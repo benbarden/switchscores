@@ -1,112 +1,123 @@
 {% import 'ui/components/form/submit.twig' as formsubmit %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
 
 {% include 'ui/components/alerts/form-errors.twig' %}
 <form role="form" method="post" action="{{ formSubmitAction }}">
     {{ csrf_field() }}
 
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">Site</label>
-        <div class="col-sm-4">
-            <div class="form-text">{{ ReviewDraftData.site.name }}</div>
-        </div>
-    </div>
+    {# Checked by id: Twig resolves an empty Eloquent relation to the relation object, which is
+       truthy, so testing ReviewDraftData.feedLink or feedLink.console directly is always true. #}
+    {% set feedConsole = ReviewDraftData.feed_link_id and ReviewDraftData.feedLink.console_id
+        ? ReviewDraftData.feedLink.console : null %}
 
-    <div class="row mb-3">
-        <label for="game_id" class="col-md-2 col-form-label">Linked to game</label>
-        <div class="col-sm-4">
-            {% if ReviewDraftData.game.id %}
-                <small>{{ ReviewDraftData.game.title }}</small>
-            {% else %}
-                <strong>Not linked</strong>
-            {% endif %}
-        </div>
-    </div>
+    <style>
+        .draft-form-table th,
+        .draft-form-table td { padding: 0.9rem 1.1rem; }
+        .draft-form-table th { background-color: #e7f1ff; font-weight: 600; }
+    </style>
 
-    <div class="row mb-3">
-        <label for="game_id" class="col-md-2 col-form-label">Change game</label>
-        <div class="col-sm-4">
-            <select id="game_id" class="form-select" name="game_id">
-            </select>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <label for="item_rating" class="col-md-2 col-form-label">Rating</label>
-        <div class="col-sm-2">
-            <input id="item_rating" name="item_rating" type="text" class="form-control">
-        </div>
-        <div class="col-sm-2">
-            <div class="form-text">
-                <span class="h4">/{{ ReviewDraftData.site.rating_scale }}</span>
-            </div>
-        </div>
-    </div>
-    {% if ReviewDraftData.site.rating_scale != 10 %}
-        <div class="row mb-3">
-            <div class="col-md-2">
-
-            </div>
-            <div class="col-sm-4">
-                <div class="form-text">
-                    This score will be converted to a rating out of 10 when the
-                    review is generated.
+    <div class="row">
+    <div class="col-lg-8">
+    <table class="table table-bordered align-middle draft-form-table">
+        <tbody>
+        <tr>
+            <th style="width: 180px;">Site</th>
+            <td>{{ ReviewDraftData.site.name }}</td>
+        </tr>
+        <tr>
+            <th>Expected console</th>
+            <td>
+                {% if not ReviewDraftData.feed_link_id %}
+                    Unknown - this draft has no feed link recorded.
+                {% elseif feedConsole %}
+                    {{ consolebadge.standard(ReviewDraftData.feedLink) }}
+                    This draft came from a {{ feedConsole.name }} feed, so it should be linked to a
+                    {{ feedConsole.name }} game.
+                {% else %}
+                    Any - the feed this draft came from covers every console.
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Linked to game</th>
+            <td>
+                {% if ReviewDraftData.game.id %}
+                    {{ ReviewDraftData.game.title }}
+                    {{ consolebadge.standard(ReviewDraftData.game) }}
+                    {% if feedConsole and ReviewDraftData.game.console_id != feedConsole.id %}
+                        <div class="alert alert-warning mt-2 mb-0 py-1">
+                            This game is on {{ ReviewDraftData.game.console.name }}, but the feed is
+                            {{ feedConsole.name }}. Check it's the right game.
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <strong>Not linked</strong>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th><label for="game_id">Change game</label></th>
+            <td>
+                <select id="game_id" class="form-select" name="game_id">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="item_rating">Rating</label></th>
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                    <input id="item_rating" name="item_rating" type="text" class="form-control" style="width: 100px;">
+                    <span class="h4 mb-0">/{{ ReviewDraftData.site.rating_scale }}</span>
                 </div>
-            </div>
-        </div>
-    {% endif %}
-
-    <hr>
-
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">Item title</label>
-        <div class="col-sm-4">
-            <div class="form-text">{{ ReviewDraftData.item_title }}</div>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">Item URL</label>
-        <div class="col-sm-4">
-            <div class="form-text">
+                {% if ReviewDraftData.site.rating_scale != 10 %}
+                    <div class="mt-2">
+                        This score will be converted to a rating out of 10 when the review is generated.
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Item title</th>
+            <td>{{ ReviewDraftData.item_title }}</td>
+        </tr>
+        <tr>
+            <th>Item URL</th>
+            <td>
                 <a href="{{ ReviewDraftData.item_url }}" target="_blank">{{ ReviewDraftData.item_url }}</a>
-            </div>
-        </div>
+            </td>
+        </tr>
+        <tr>
+            <th>Item date</th>
+            <td>{{ ReviewDraftData.item_date }}</td>
+        </tr>
+        <tr>
+            <th><label for="process_status">Process status</label></th>
+            <td>
+                <div>
+                    <select id="process_status" name="process_status" class="form-select">
+                        <option value="">(No value)</option>
+                        <optgroup label="Success:">
+                            {% for item in ProcessStatusSuccess %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Failure:">
+                            {% for item in ProcessStatusFailure %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-text text-muted">
+                    To skip importing this draft, select the reason for skipping it here. If the item has already
+                    been skipped, leave this blank to reprocess the draft on the next run.
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
     </div>
-
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">Item date</label>
-        <div class="col-sm-4">
-            <div class="form-text">{{ ReviewDraftData.item_date }}</div>
-        </div>
     </div>
-
-    <hr>
-
-    <div class="row mb-3">
-        <label for="process_status" class="col-md-2 col-form-label">Process status</label>
-        <div class="col-sm-4">
-            <select id="process_status" name="process_status" class="form-select">
-                <option value="">(No value)</option>
-                <optgroup label="Success:">
-                    {% for item in ProcessStatusSuccess %}
-                        <option value="{{ item }}">{{ item }}</option>
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Failure:">
-                    {% for item in ProcessStatusFailure %}
-                        <option value="{{ item }}">{{ item }}</option>
-                    {% endfor %}
-                </optgroup>
-            </select>
-            <div class="form-text">
-                Where possible, this will be filled in automatically. You can also manually select an option
-                to stop this item from being processed. Or, you can clear the option if a previously skipped item
-                should be reprocessed.
-            </div>
-        </div>
-    </div>
-
-    <hr>
 
     {{ formsubmit.renderB5() }}
 </form>

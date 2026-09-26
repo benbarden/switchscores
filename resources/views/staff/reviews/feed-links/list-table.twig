@@ -1,3 +1,5 @@
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
 {% if FeedLinks.count > 0 %}
     <table class="table table-responsive table-sm">
         <thead>
@@ -26,8 +28,8 @@
                     </a>
                 </td>
                 <td class="text-center">
-                    {% if item.console %}
-                        {{ item.console.name }}
+                    {% if item.console_id %}
+                        {{ consolebadge.standard(item) }}
                     {% else %}
                         <span class="text-muted" title="Not console-specific">Any</span>
                     {% endif %}

@@ -11,7 +11,7 @@
             <a href="{{ route('staff.reviews.feedLinks.edit', {'linkId': LinkId}) }}">Edit this feed link</a>
         </p>
         <p>
-            {% if FeedLinkData.console %}
+            {% if FeedLinkData.console_id %}
                 <small>Games are looked up on <strong>{{ FeedLinkData.console.name }}</strong> only.</small>
             {% else %}
                 <small class="text-muted">
