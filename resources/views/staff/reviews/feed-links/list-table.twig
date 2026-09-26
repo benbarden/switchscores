@@ -4,6 +4,7 @@
         <tr>
             <th class="text-center">#</th>
             <th>Site</th>
+            <th class="text-center">Console</th>
             <th class="text-center">Link</th>
             <th class="text-center">Status</th>
             <th class="text-center">Match rate</th>
@@ -23,6 +24,13 @@
                     <a href="{{ route('partners.review-sites.siteProfile', {'linkTitle': item.site.link_title}) }}" target="_blank">
                         {{ item.site.name }}
                     </a>
+                </td>
+                <td class="text-center">
+                    {% if item.console %}
+                        {{ item.console.name }}
+                    {% else %}
+                        <span class="text-muted" title="Not console-specific">Any</span>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     <a href="{{ item.feed_url }}" target="_blank">
