@@ -10,6 +10,16 @@
             &nbsp;|&nbsp;
             <a href="{{ route('staff.reviews.feedLinks.edit', {'linkId': LinkId}) }}">Edit this feed link</a>
         </p>
+        <p>
+            {% if FeedLinkData.console %}
+                <small>Games are looked up on <strong>{{ FeedLinkData.console.name }}</strong> only.</small>
+            {% else %}
+                <small class="text-muted">
+                    No console set - games are looked up on any console. A title that exists on more than
+                    one is left unmatched.
+                </small>
+            {% endif %}
+        </p>
     </div>
 </div>
 
@@ -116,6 +126,7 @@
         if (status === 'Matched a game') return 'bg-success';
         if (status === 'Parsed, but no game found') return 'bg-warning text-dark';
         if (status === 'Rule matched, but the capture index does not exist') return 'bg-warning text-dark';
+        if (status === 'Parsed, but matches more than one game') return 'bg-warning text-dark';
         return 'bg-danger';
     }
 
@@ -123,7 +134,22 @@
         if (status === 'Matched a game') return 'Matched';
         if (status === 'Parsed, but no game found') return 'No game';
         if (status === 'Rule matched, but the capture index does not exist') return 'Bad index';
+        if (status === 'Parsed, but matches more than one game') return 'Ambiguous';
         return 'No match';
+    }
+
+    function describeGame(game) {
+        return '<small>' + escapeHtml(game.game_title)
+            + ' <span class="text-muted">(' + game.game_id
+            + (game.game_console ? ', ' + escapeHtml(game.game_console) : '') + ')</span></small>';
+    }
+
+    function describeMatch(item) {
+        if (item.game_id) return describeGame(item);
+        if (item.candidates && item.candidates.length) {
+            return item.candidates.map(describeGame).join('<br>');
+        }
+        return '<span class="text-muted">&mdash;</span>';
     }
 
     function renderMessages(data) {
@@ -180,10 +206,7 @@
                 + '<td>' + (item.parsed_title
                     ? '<code>' + escapeHtml(item.parsed_title) + '</code>'
                     : '<span class="text-muted">&mdash;</span>') + '</td>'
-                + '<td>' + (item.game_id
-                    ? '<small>' + escapeHtml(item.game_title)
-                        + ' <span class="text-muted">(' + item.game_id + ')</span></small>'
-                    : '<span class="text-muted">&mdash;</span>') + '</td>'
+                + '<td>' + describeMatch(item) + '</td>'
                 + '<td><span class="badge ' + badgeClass(item.status) + '" title="'
                     + escapeHtml(item.status) + '">' + shortStatus(item.status) + '</span></td>'
                 + '</tr>';

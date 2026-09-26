@@ -100,7 +100,31 @@ class Repository
             ->exists();
     }
 
-    public function byTitleGroup(array $titles)
+    /**
+     * The single game a set of title variants points to, or null.
+     *
+     * Null when nothing matches, and also when the hashes point to more than one game - the
+     * same title on both consoles, most often. Picking one there would publish a review on
+     * whichever game the database happened to return first, so an ambiguous title is left
+     * unmatched for a human instead. Passing a console narrows the lookup to that console's
+     * games, which resolves the common case.
+     */
+    public function byTitleGroup(array $titles, $consoleId = null)
+    {
+        $gameTitleHashes = $this->allByTitleGroup($titles, $consoleId);
+
+        if ($gameTitleHashes->pluck('game_id')->unique()->count() != 1) {
+            return null;
+        }
+
+        return $gameTitleHashes->first();
+    }
+
+    /**
+     * Every title hash matching a set of title variants, optionally limited to one console.
+     * For callers that need to tell "no match" apart from "more than one game".
+     */
+    public function allByTitleGroup(array $titles, $consoleId = null)
     {
         $hashGenerator = new HashGenerator();
 
@@ -108,12 +132,13 @@ class Repository
             $title = $hashGenerator->generateHash($title);
         }
 
-        $gameTitleHash = GameTitleHash::whereIn('title_hash', $titles)->get();
-        if ($gameTitleHash) {
-            return $gameTitleHash->first();
-        } else {
-            return null;
+        $query = GameTitleHash::whereIn('title_hash', $titles);
+
+        if ($consoleId) {
+            $query->where('console_id', $consoleId);
         }
+
+        return $query->get();
     }
 
     public function getByGameId($gameId)

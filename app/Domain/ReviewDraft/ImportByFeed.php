@@ -345,7 +345,8 @@ class ImportByFeed
 
         // Only auto-match if exactly one game has this title.
         // If multiple exist (same title on different consoles), leave for manual review.
-        $games = $this->repoGame->getAllByTitle($itemTitle);
+        // A console-specific feed only considers games on its own console.
+        $games = $this->repoGame->getAllByTitle($itemTitle, $this->partnerFeedLink->console_id);
         if ($games->count() === 1) {
             $reviewDraft['game_id'] = $games->first()->id;
             $reviewDraft['parse_status'] = ReviewDraft::PARSE_STATUS_AUTO_MATCHED;

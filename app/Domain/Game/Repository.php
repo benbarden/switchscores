@@ -201,11 +201,18 @@ class Repository extends AbstractRepository
     }
 
     /**
-     * Get all games matching a title (may exist on multiple consoles)
+     * Get all games matching a title (may exist on multiple consoles), optionally limited
+     * to one console.
      */
-    public function getAllByTitle($title): \Illuminate\Support\Collection
+    public function getAllByTitle($title, $consoleId = null): \Illuminate\Support\Collection
     {
-        return Game::where('title', $title)->get();
+        $query = Game::where('title', $title);
+
+        if ($consoleId) {
+            $query->where('console_id', $consoleId);
+        }
+
+        return $query->get();
     }
 
     /**

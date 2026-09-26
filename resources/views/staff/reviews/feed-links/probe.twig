@@ -52,6 +52,8 @@
 
         <h3>Review site</h3>
 
+        <div id="existing-site-notice"></div>
+
         <div class="row mb-3">
             <div class="col-md-8 offset-md-2">
                 <div class="form-check form-check-inline">
@@ -121,6 +123,22 @@
             <label for="feed_url" class="col-md-2 col-form-label">Feed URL</label>
             <div class="col-md-6">
                 <input id="feed_url" name="feed_url" type="text" class="form-control" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="console_id" class="col-md-2 col-form-label">Console</label>
+            <div class="col-md-4">
+                <select id="console_id" class="form-select" name="console_id">
+                    <option value="">Any console</option>
+                    {% for item in ConsoleList %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text">
+                    Set this when the feed only covers one console, e.g. a Switch 2 category feed. Games are
+                    then only matched on that console - without it, a title on both consoles is left unmatched.
+                </div>
             </div>
         </div>
 
@@ -204,7 +222,7 @@
 
         <div class="row mb-3">
             <div class="col-md-8 offset-md-2">
-                <button type="submit" class="btn btn-primary">Create site and feed link</button>
+                <button id="create-submit" type="submit" class="btn btn-primary">Create site and feed link</button>
             </div>
         </div>
     </form>
@@ -268,6 +286,30 @@
         });
     }
 
+    // A site we already have for this feed's host is the likely target - usually a partner's
+    // second feed - so default to adding to it. Create a new site stays one click away in case
+    // the match is wrong.
+    function applyExistingSite(site) {
+        var notice = document.getElementById('existing-site-notice');
+
+        if (!site) {
+            notice.innerHTML = '';
+            setValue('site_id', '');
+            document.getElementById('site_mode_new').checked = true;
+            refreshSiteMode();
+            return;
+        }
+
+        setValue('site_id', site.id);
+        document.getElementById('site_mode_existing').checked = true;
+        refreshSiteMode();
+
+        notice.innerHTML = '<div class="alert alert-info"><strong>' + escapeHtml(site.name)
+            + '</strong> already exists, with ' + site.feed_link_count + ' feed link'
+            + (site.feed_link_count === 1 ? '' : 's') + '. This feed will be added to it - choose '
+            + '"Create a new site" if that is wrong.</div>';
+    }
+
     function runProbe() {
         var button = document.getElementById('run-probe');
         var feedUrl = document.getElementById('probe_feed_url').value;
@@ -299,6 +341,7 @@
             renderWarnings(data.warnings, data.item_count);
             renderDetections(data.detections);
             applyValues(data.values, data.feed_url);
+            applyExistingSite(data.existing_site);
 
             document.getElementById('sample-titles').textContent =
                 (data.sample_titles || []).slice(0, 5).join('  |  ');
@@ -317,6 +360,9 @@
         var isExisting = document.getElementById('site_mode_existing').checked;
         document.getElementById('existing-site-fields').style.display = isExisting ? '' : 'none';
         document.getElementById('new-site-fields').style.display = isExisting ? 'none' : '';
+        document.getElementById('create-submit').textContent = isExisting
+            ? 'Add feed link to site'
+            : 'Create site and feed link';
     }
 
     document.getElementById('run-probe').addEventListener('click', runProbe);

@@ -16,6 +16,7 @@ use App\Domain\Feed\FeedProbeResult;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
+use App\Domain\Console\Repository as ConsoleRepository;
 
 use App\Construction\ReviewSite\ReviewSiteBuilder;
 use App\Construction\ReviewSite\ReviewSiteDirector;
@@ -43,7 +44,8 @@ class FeedLinkProbeController extends Controller
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private ReviewSiteRepository $repoReviewSite,
-        private PartnerFeedLinkRepository $repoPartnerFeedLink
+        private PartnerFeedLinkRepository $repoPartnerFeedLink,
+        private ConsoleRepository $repoConsole
     )
     {
     }
@@ -57,6 +59,7 @@ class FeedLinkProbeController extends Controller
         $bindings['DataTypeList'] = $this->repoPartnerFeedLink->getDataTypeDropdown();
         $bindings['ItemNodeList'] = $this->repoPartnerFeedLink->getItemNodeDropdown();
         $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
+        $bindings['ConsoleList'] = $this->repoConsole->consoleList();
 
         return view('staff.reviews.feed-links.probe', $bindings);
     }
@@ -94,7 +97,35 @@ class FeedLinkProbeController extends Controller
             'values' => $this->prefillValues($result),
             'warnings' => $result->getWarnings(),
             'sample_titles' => array_slice($result->getSampleTitles(), 0, 10),
+            'existing_site' => $this->findExistingSite($result, $feedUrl),
         ]);
+    }
+
+    /**
+     * A review site we already have for this feed, so the page can default to adding the
+     * feed to it rather than creating a duplicate - the usual case being a partner's second
+     * feed. Tries the site URL the feed declares, then the feed's own host, since a
+     * category feed's channel link is not always the site root.
+     */
+    private function findExistingSite(FeedProbeResult $result, $feedUrl)
+    {
+        $site = null;
+
+        if ($result->hasDetection('website_url')) {
+            $site = $this->repoReviewSite->findByWebsiteHost($result->getDetection('website_url'));
+        }
+
+        if (!$site) {
+            $site = $this->repoReviewSite->findByWebsiteHost($feedUrl);
+        }
+
+        if (!$site) return null;
+
+        return [
+            'id' => $site->id,
+            'name' => $site->name,
+            'feed_link_count' => $site->feedLinks()->count(),
+        ];
     }
 
     /**
@@ -125,6 +156,7 @@ class FeedLinkProbeController extends Controller
             $feedLink = $this->repoPartnerFeedLink->create([
                 'feed_status' => $request->input('feed_status'),
                 'site_id' => $siteId,
+                'console_id' => $request->input('console_id') ?: null,
                 'feed_url' => $request->input('feed_url'),
                 'feed_url_prefix' => $request->input('feed_url_prefix'),
                 'data_type' => $request->input('data_type'),

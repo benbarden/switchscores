@@ -106,6 +106,7 @@ class FeedLinkTitleRuleController extends Controller
 
         $testTitleRule = new TestTitleRule();
         $testTitleRule->setRule($pattern, $index === null || $index === '' ? null : (int) $index);
+        $testTitleRule->setConsoleId($feedLink->console_id);
 
         $validation = $testTitleRule->validatePattern();
 

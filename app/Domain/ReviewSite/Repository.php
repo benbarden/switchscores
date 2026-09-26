@@ -65,4 +65,39 @@ class Repository
             ->first();
     }
 
+    /**
+     * The one review site whose website shares a host with the given URL, or null.
+     *
+     * Compares hosts rather than full URLs, so http/https, www and trailing paths don't stop a
+     * match. Null when more than one site shares the host - YouTube channels all sit on
+     * youtube.com - since guessing between them is worse than not suggesting one.
+     */
+    public function findByWebsiteHost($url)
+    {
+        $host = self::normaliseHost($url);
+        if (!$host) return null;
+
+        $matches = ReviewSite::all()->filter(function ($site) use ($host) {
+            return self::normaliseHost($site->website_url) === $host;
+        });
+
+        return $matches->count() === 1 ? $matches->first() : null;
+    }
+
+    public static function normaliseHost($url)
+    {
+        if (!$url) return null;
+
+        if (!str_contains($url, '://')) {
+            $url = 'https://'.$url;
+        }
+
+        $host = parse_url(trim($url), PHP_URL_HOST);
+        if (!$host) return null;
+
+        $host = strtolower($host);
+
+        return str_starts_with($host, 'www.') ? substr($host, 4) : $host;
+    }
+
 }

@@ -105,8 +105,9 @@ class ParseTitle
 
             $this->logInfo('Checking for matches: '.var_export($titleMatches, true));
 
-            // Can we find a game from this title?
-            $gameTitleHash = $repoGameTitleHash->byTitleGroup($titleMatches);
+            // Can we find a game from this title? Limited to the feed's console when it has
+            // one, as the same title can exist on both.
+            $gameTitleHash = $repoGameTitleHash->byTitleGroup($titleMatches, $partnerFeedLink['console_id']);
             if ($gameTitleHash) {
                 $reviewDraft->game_id = $gameTitleHash->game_id;
                 $parseStatus = ReviewDraft::PARSE_STATUS_AUTO_MATCHED;

@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Staff;
 
+use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
+
+use App\Models\Console;
 use App\Models\PartnerFeedLink;
 use App\Models\ReviewSite;
 use App\Models\User;
@@ -185,5 +188,49 @@ class FeedLinkProbeCreateTest extends TestCase
         $response->assertSessionHasErrors('site_id');
 
         $this->assertNull(PartnerFeedLink::where('feed_url', $this->feedUrl())->first());
+    }
+
+    public function testTheConsoleIsSavedOnTheFeedLink()
+    {
+        $this->post('/staff/reviews/feed-links/probe/create', $this->validPayload([
+            'console_id' => Console::ID_SWITCH_2,
+        ]));
+
+        $feedLink = PartnerFeedLink::where('feed_url', $this->feedUrl())->first();
+
+        $this->assertEquals(Console::ID_SWITCH_2, $feedLink->console_id);
+    }
+
+    /**
+     * "Any console" posts an empty string, which must land as null - not 0, which would
+     * filter game lookups to a console that doesn't exist.
+     */
+    public function testAnyConsoleIsSavedAsNull()
+    {
+        $this->post('/staff/reviews/feed-links/probe/create', $this->validPayload([
+            'console_id' => '',
+        ]));
+
+        $feedLink = PartnerFeedLink::where('feed_url', $this->feedUrl())->first();
+
+        $this->assertNull($feedLink->console_id);
+    }
+
+    /**
+     * The lookup behind pre-selecting "Add to an existing site": a second feed on the same
+     * host finds the site the first one created.
+     */
+    public function testASecondFeedOnTheSameHostFindsTheExistingSite()
+    {
+        $this->post('/staff/reviews/feed-links/probe/create', $this->validPayload());
+
+        $site = ReviewSite::where('website_url', 'https://'.self::MARKER.'/')->first();
+
+        $found = (new ReviewSiteRepository())->findByWebsiteHost(
+            'https://www.'.self::MARKER.'/feed/?category_name=reviews%20switch-2'
+        );
+
+        $this->assertNotNull($found);
+        $this->assertEquals($site->id, $found->id);
     }
 }

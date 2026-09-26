@@ -12,6 +12,7 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
+use App\Domain\Console\Repository as ConsoleRepository;
 
 class FeedLinksController extends Controller
 {
@@ -31,7 +32,8 @@ class FeedLinksController extends Controller
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private ReviewSiteRepository $repoReviewSite,
-        private PartnerFeedLinkRepository $repoPartnerFeedLink
+        private PartnerFeedLinkRepository $repoPartnerFeedLink,
+        private ConsoleRepository $repoConsole
     )
     {
     }
@@ -57,6 +59,7 @@ class FeedLinksController extends Controller
         $values = [
             'feed_status' => $request->feed_status,
             'site_id' => $request->site_id,
+            'console_id' => $request->console_id ?: null,
             'feed_url' => $request->feed_url,
             'feed_url_prefix' => $request->feed_url_prefix,
             'data_type' => $request->data_type,
@@ -95,6 +98,7 @@ class FeedLinksController extends Controller
         $bindings['ItemNodeList'] = $this->repoPartnerFeedLink->getItemNodeDropdown();
 
         $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
+        $bindings['ConsoleList'] = $this->repoConsole->consoleList();
 
         return view('staff.reviews.feed-links.add', $bindings);
     }
@@ -135,6 +139,7 @@ class FeedLinksController extends Controller
         $bindings['ItemNodeList'] = $this->repoPartnerFeedLink->getItemNodeDropdown();
 
         $bindings['ReviewSiteList'] = $this->repoReviewSite->getAll();
+        $bindings['ConsoleList'] = $this->repoConsole->consoleList();
 
         $bindings['FormMode'] = 'edit';
 

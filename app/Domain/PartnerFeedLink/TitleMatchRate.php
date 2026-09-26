@@ -45,6 +45,7 @@ class TitleMatchRate
             $partnerFeedLink->title_match_rule_pattern,
             $partnerFeedLink->title_match_rule_index
         );
+        $testTitleRule->setConsoleId($partnerFeedLink->console_id);
 
         if (!$testTitleRule->validatePattern()['valid']) {
             // An uncompilable rule matches nothing, which is a real 0 rather than "unknown".

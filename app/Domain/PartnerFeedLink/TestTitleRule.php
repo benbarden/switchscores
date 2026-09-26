@@ -22,6 +22,7 @@ class TestTitleRule
     const STATUS_NO_GAME = 'Parsed, but no game found';
     const STATUS_RULE_NO_MATCH = 'Rule did not match the title';
     const STATUS_INDEX_MISSING = 'Rule matched, but the capture index does not exist';
+    const STATUS_AMBIGUOUS = 'Parsed, but matches more than one game';
 
     /**
      * Shortest combined prefix + suffix that suggestRule() treats as a real separator rather
@@ -32,6 +33,8 @@ class TestTitleRule
     private $matchRulePattern;
 
     private $matchRuleIndex;
+
+    private $consoleId;
 
     private $repoGameTitleHash;
 
@@ -44,6 +47,15 @@ class TestTitleRule
     {
         $this->matchRulePattern = $matchRulePattern;
         $this->matchRuleIndex = $matchRuleIndex;
+        return $this;
+    }
+
+    /**
+     * The feed link's console, so the game lookup is limited the same way ParseTitle limits it.
+     */
+    public function setConsoleId($consoleId)
+    {
+        $this->consoleId = $consoleId;
         return $this;
     }
 
@@ -124,6 +136,7 @@ class TestTitleRule
             self::STATUS_NO_GAME => 0,
             self::STATUS_RULE_NO_MATCH => 0,
             self::STATUS_INDEX_MISSING => 0,
+            self::STATUS_AMBIGUOUS => 0,
         ];
 
         foreach ($titles as $title) {
@@ -153,6 +166,8 @@ class TestTitleRule
             'parsed_title' => $parsedTitle,
             'game_id' => null,
             'game_title' => null,
+            'game_console' => null,
+            'candidates' => [],
             'status' => self::STATUS_RULE_NO_MATCH,
         ];
 
@@ -166,16 +181,35 @@ class TestTitleRule
             return $result;
         }
 
-        $gameTitleHash = $this->repoGameTitleHash->byTitleGroup($titleMatches);
+        // Same lookup as byTitleGroup(), which ParseTitle uses, but kept as a list so an
+        // ambiguous title can show which games it could have been.
+        $gameIds = $this->repoGameTitleHash->allByTitleGroup($titleMatches, $this->consoleId)
+            ->pluck('game_id')->unique()->values();
 
-        if ($gameTitleHash) {
-            $game = Game::find($gameTitleHash->game_id);
-            $result['game_id'] = $gameTitleHash->game_id;
-            $result['game_title'] = $game ? $game->title : null;
-            $result['status'] = self::STATUS_MATCHED_GAME;
-        } else {
+        if ($gameIds->isEmpty()) {
             $result['status'] = self::STATUS_NO_GAME;
+            return $result;
         }
+
+        $games = Game::whereIn('id', $gameIds)->with('console')->get();
+
+        if ($gameIds->count() > 1) {
+            foreach ($games as $game) {
+                $result['candidates'][] = [
+                    'game_id' => $game->id,
+                    'game_title' => $game->title,
+                    'game_console' => $game->console ? $game->console->name : null,
+                ];
+            }
+            $result['status'] = self::STATUS_AMBIGUOUS;
+            return $result;
+        }
+
+        $game = $games->first();
+        $result['game_id'] = $gameIds->first();
+        $result['game_title'] = $game ? $game->title : null;
+        $result['game_console'] = $game && $game->console ? $game->console->name : null;
+        $result['status'] = self::STATUS_MATCHED_GAME;
 
         return $result;
     }
