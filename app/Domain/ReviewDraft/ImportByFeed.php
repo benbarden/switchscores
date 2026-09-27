@@ -87,24 +87,84 @@ class ImportByFeed
         $this->partnerFeedLink = $partnerFeedLink;
     }
 
+    /**
+     * Imports a feed: loads it, creates review drafts, and records how the run went.
+     *
+     * Only Live feeds are imported. Anything else (Test, Broken, Archived) is skipped before any
+     * request is made and nothing is written, so it keeps its last real run status. Staff tools
+     * that only test a feed (the title rule tester, the probe wizard) load it directly and never
+     * come through here.
+     *
+     * Every import that gets past that check records its outcome on the feed link - success with
+     * the counts, or failure with the error - including a feed that could not be loaded at all.
+     * A load failure is rethrown after it is recorded, so callers still log it as before.
+     */
     public function runImport()
     {
         $partnerFeedUrl = $this->partnerFeedLink->feed_url;
+
+        if (!$this->partnerFeedLink->isLive()) {
+            $this->logger->info(sprintf('Skipped feed %s: feed is %s, not Live',
+                $this->partnerFeedLink->id, $this->partnerFeedLink->getFeedStatusDesc()));
+            return;
+        }
+
         $partnerName = $this->reviewSite->name;
 
         $this->logger->info(sprintf('Site %s: %s - Feed URL: %s', $this->reviewSite->id, $partnerName, $partnerFeedUrl));
 
         // Load the feed
-        $feedLoader = new Loader($this->partnerFeedLink);
-        $feedLoader->loadByUrl($partnerFeedUrl);
-        $itemArray = $feedLoader->buildItemArray();
+        try {
+            $itemArray = $this->loadItems($partnerFeedUrl);
+        } catch (\Exception $e) {
+            $this->recordFailure($e->getMessage());
+            throw $e;
+        }
 
         // Process the items
-        $this->processItems($itemArray);
+        $counts = $this->processItems($itemArray);
+        if ($counts !== null) {
+            $this->recordSuccess($counts['imported'], $counts['skipped']);
+        }
     }
 
+    /**
+     * Fetches the feed and returns its items. Split out so tests can stand in for the network.
+     */
+    protected function loadItems($feedUrl)
+    {
+        $feedLoader = new Loader($this->partnerFeedLink);
+        $feedLoader->loadByUrl($feedUrl);
+        return $feedLoader->buildItemArray();
+    }
+
+    private function recordSuccess($imported, $skipped)
+    {
+        $now = Carbon::now();
+        $this->partnerFeedLink->was_last_run_successful = 1;
+        $this->partnerFeedLink->last_run_status = sprintf('Imported: %s - Skipped: %s', $imported, $skipped);
+        $this->partnerFeedLink->last_run_at = $now;
+        $this->partnerFeedLink->last_successful_run_at = $now;
+        $this->partnerFeedLink->save();
+    }
+
+    private function recordFailure($message)
+    {
+        $this->partnerFeedLink->was_last_run_successful = 0;
+        $this->partnerFeedLink->last_run_status = $message;
+        $this->partnerFeedLink->last_run_at = Carbon::now();
+        $this->partnerFeedLink->save();
+    }
+
+    /**
+     * @return array|null ['imported' => int, 'skipped' => int], or null if the run failed
+     *                    (the failure is recorded on the feed link).
+     */
     public function processItems($itemArray)
     {
+        $imported = 0;
+        $skipped = 0;
+
         try {
 
             foreach ($itemArray as $item) {
@@ -119,17 +179,22 @@ class ImportByFeed
                     $logInfo = sprintf('Importing: %s - %s', $itemData['item_date'], trim($itemData['item_url']));
                     $this->logger->info($logInfo);
                     $this->processItem($itemData);
+                    $imported++;
                 } catch (AlreadyImported $e) {
                     //$this->logger->info($e->getMessage());
+                    $skipped++;
                     continue;
                 } catch (HistoricEntry $e) {
                     //$this->logger->info($e->getMessage());
+                    $skipped++;
                     continue;
                 } catch (FeedUrlPrefixNotMatched $e) {
                     //$this->logger->info($e->getMessage());
+                    $skipped++;
                     continue;
                 } catch (TitleRuleNotMatched $e) {
                     //$this->logger->info($e->getMessage());
+                    $skipped++;
                     continue;
                 }
 
@@ -138,11 +203,12 @@ class ImportByFeed
         } catch (\Exception $e) {
 
             $this->logger->error('Got error: '.$e->getMessage());
-            $this->partnerFeedLink->was_last_run_successful = 0;
-            $this->partnerFeedLink->last_run_status = $e->getMessage();
-            $this->partnerFeedLink->save();
+            $this->recordFailure($e->getMessage());
+            return null;
 
         }
+
+        return ['imported' => $imported, 'skipped' => $skipped];
     }
 
     public function cleanUpTitle($title)

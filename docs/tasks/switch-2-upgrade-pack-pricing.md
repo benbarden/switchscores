@@ -1,6 +1,8 @@
 # Switch 2 pricing: telling an upgrade pack from a deluxe edition
 
-Scoping notes. Not started. Analysis done 2026-07-20.
+Analysis done 2026-07-20. **Status (updated 2026-09-27):** price API layers 1-3 built and deployed
+(July 2026) but inert - the API returns HTTP 403 to prod's datacentre IP. Tracked as **#162** in
+`docs/improvements.md`, which has the next steps. Manual store-edition records are **#161**.
 
 Four games are currently held on manual prices with `ignore_price` as a **temporary** measure
 (flag `price-upgrade-pack`). This task removes the need for that hold.

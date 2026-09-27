@@ -4,6 +4,16 @@ Scoping notes. Not started.
 
 ## Do this first: `was_last_run_successful` never records a load failure
 
+**Fixed 2026-09-27 on localdev (for #163), deploy pending.** Found while fixing: nothing ever set
+the flag back to 1 either, so it was stale in both directions. Now `ImportByFeed::runImport()`
+records every import run - success (flag 1, "Imported: X - Skipped: Y", `last_run_at` and
+`last_successful_run_at`) or failure (flag 0, the error, `last_run_at`), load failures included -
+and imports **Live feeds only** (Test, Broken and Archived are skipped before any request, and
+nothing is written). The staff tester and probe load feeds directly and are unaffected. Migration
+`2026_09_27_000001_add_run_timestamps_to_partner_feed_links_table` adds the two timestamps. Tests:
+`tests/Unit/Domain/ReviewDraft/ImportByFeedRunStatusTest.php`. Still open from this section: what to
+do with permanently blocked feeds like 31. The original notes follow.
+
 **A feed that cannot be fetched keeps its last successful status forever.** Any dashboard built
 on `was_last_run_successful` inherits the lie, so fix this before building anything on top of it.
 

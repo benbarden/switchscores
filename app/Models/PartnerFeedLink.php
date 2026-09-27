@@ -44,7 +44,15 @@ class PartnerFeedLink extends Model
         'feed_status', 'site_id', 'console_id', 'feed_url', 'feed_url_prefix', 'data_type', 'item_node',
         'title_match_rule_pattern', 'title_match_rule_index', 'allow_historic_content',
         'title_match_rate', 'title_match_rate_at',
-        'was_last_run_successful', 'last_run_status'
+        'was_last_run_successful', 'last_run_status', 'last_run_at', 'last_successful_run_at'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'last_run_at' => 'datetime',
+        'last_successful_run_at' => 'datetime',
     ];
 
     public function site()
@@ -70,6 +78,11 @@ class PartnerFeedLink extends Model
     public function isAtom()
     {
         return $this->item_node == self::ITEM_NODE_ENTRY;
+    }
+
+    public function isLive()
+    {
+        return $this->feed_status == self::FEED_STATUS_LIVE;
     }
 
     public function getFeedStatusDesc()
