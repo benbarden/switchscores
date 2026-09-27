@@ -1,78 +1,51 @@
 {% extends 'theme/staff-b5/layout-default.twig' %}
-{% import "ui/components/headings/heading.twig" as heading %}
-{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
 {% import 'ui/components/links/game.twig' as gamelink %}
 {% import 'ui/components/game/console-badge.twig' as consolebadge %}
+{% import 'ui/components/staff/dashboard-tile.twig' as dashtile %}
 
 {% block page_inner %}
+
+{# Needs attention (#163, Phase 1). Tiles are already filtered by role in AttentionTiles.
+   Queues to clear on the left (2/3), site health on the right (1/3). #}
+{% set queueTiles = AttentionTiles|filter(t => t.group == 'queue') %}
+{% set healthTiles = AttentionTiles|filter(t => t.group == 'health') %}
+{% if AttentionTiles|length > 0 %}
+<section class="ss-dash">
+    <div class="ss-dash__grid{% if healthTiles|length == 0 or queueTiles|length == 0 %} ss-dash__grid--single{% endif %}">
+        {% if queueTiles|length > 0 %}
+            <div>
+                <h2 class="ss-dash__h">Needs attention</h2>
+                <div class="ss-tiles ss-tiles--2">
+                    {% for tile in queueTiles %}
+                        {{ dashtile.render(tile) }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if healthTiles|length > 0 %}
+            <div>
+                <h2 class="ss-dash__h">Site health</h2>
+                <div class="ss-tiles ss-tiles--1">
+                    {% for tile in healthTiles %}
+                        {{ dashtile.render(tile) }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
 
 <div class="row">
 
     <div class="col-md-4">
 
-        {{ heading.renderSlick('Submissions') }}
+        {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <h2 class="ss-h2">Games to add</h2>
 
-        <table class="table">
-            <tbody>
-            {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                {{ rowstat.renderB5(
-                    'Review drafts', route('staff.reviews.review-drafts.showPending'), ReviewDraftUnprocessedCount
-                ) }}
-            {% endif %}
-            {% if auth_user().hasRole('Reviews manager') or auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.reviews.quick-reviews.list') }}">Quick reviews</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.reviews.quick-reviews.list') }}" class="h4">{{ PendingQuickReviewCount }}</a>
-                    </td>
-                </tr>
-            {% endif %}
-            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.featured-games.list') }}">Featured games</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.games.featured-games.list') }}" class="h4">{{ PendingFeaturedGameCount }}</a>
-                    </td>
-                </tr>
-            {% endif %}
-            {% if auth_user().isOwner() %}
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.invite-code-request.list') }}">Invite code requests</a>
-                    </td>
-                    <td class="text-end">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games-company-signups.index') }}">Games company signups</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.games-company-signups.index') }}" class="h4">{{ TotalGamesCompanySignups }}</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.contact.index') }}">Contact submissions</a>
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ route('staff.contact.index') }}" class="h4">{{ NewContactSubmissionCount }}</a>
-                    </td>
-                </tr>
-            {% endif %}
-            </tbody>
-        </table>
-
-        {{ heading.renderSlick('Games to add') }}
-
-        <table class="table">
-            <tbody>
-            {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+            <table class="table ss-table">
+                <tbody>
                 <tr>
                     <td>
                         <a href="{{ route('staff.games.weekly-updates.index')}}">Weekly updates</a>
@@ -85,17 +58,16 @@
                         <a href="{{ route('staff.games.release-hub.show')}}">Release hub</a>
                     </td>
                     <td class="text-end">
-                        <a href="{{ route('staff.games.release-hub.show')}}" class="h4"></a>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
-                    </td>
-                    <td class="text-end">
-                    </td>
-                </tr>
-            {% endif %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <h2 class="ss-h2">Nintendo links</h2>
+
+        <table class="table ss-table">
+            <tbody>
             {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
                 <tr>
                     <td>
@@ -106,13 +78,6 @@
                     </td>
                 </tr>
             {% endif %}
-            </tbody>
-        </table>
-
-        {{ heading.renderSlick('Nintendo links') }}
-
-        <table class="table">
-            <tbody>
             <tr>
                 <td>
                     <a href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}">No Nintendo.co.uk link</a>
@@ -132,9 +97,13 @@
             </tbody>
         </table>
 
-        {{ heading.renderSlick('Missing data') }}
+    </div>
 
-        <table class="table">
+    <div class="col-md-4">
+
+        <h2 class="ss-h2">Missing data</h2>
+
+        <table class="table ss-table">
             <tbody>
             <tr>
                 <td>
@@ -158,35 +127,21 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-category-with-collection'}) }}">
-                        No category with collection
-                    </a>
-                </td>
-                <td class="text-end">
-                    <span class="h4">{{ NoCategoryWithCollectionCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}">Games with missing publisher</a>
                 </td>
                 <td class="text-end">
                     <a href="{{ route('staff.partners.data-cleanup.games-with-missing-publisher') }}" class="h4">{{ PublisherMissingCount }}</a>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.data-quality.duplicate-reviews') }}">Duplicate reviews</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.data-quality.duplicate-reviews') }}" class="h4">{{ DuplicateReviewsCount }}</a>
-                </td>
-            </tr>
             </tbody>
         </table>
 
-        {{ heading.renderSlick('Registration') }}
-        <table class="table">
+    </div>
+
+    <div class="col-md-4">
+
+        <h2 class="ss-h2">Registration</h2>
+        <table class="table ss-table">
             <tbody>
             {% if auth_user().isOwner() %}
                 <tr>
@@ -217,105 +172,79 @@
 
     </div>
 
-    <div class="col-md-4">
+</div>
 
-        {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {% if CrawlPriorityQueue.count > 0 %}
-                {{ heading.renderSlick('Crawl priority queue') }}
-                <div class="col-md-12">
-                    {% for item in CrawlPriorityQueue %}
-                        <div class="row" style="margin-top: 6px;">
-                            <div class="col-md-3 col-sm-3 col-xs-3">
-                                {{ packshots.square(item) }}
-                            </div>
-                            <div class="col-md-9 col-sm-9 col-xs-9">
-                                {{ consolebadge.short(item) }}
-                                {{ gamelink.title(item, 'staff') }}
-                                <br>
-                                <small>
-                                    {% if item.last_crawled_at %}
-                                        Last crawled: {{ item.last_crawled_at|date('d M Y') }}
-                                    {% else %}
-                                        Never crawled
-                                    {% endif %}
-                                </small>
-                                {% if item.is_low_quality == 1 %}
-                                    <br>
-                                    <label class="badge bg-danger">Low quality</label>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% elseif NextToCrawl is defined and NextToCrawl.count > 0 %}
-                {{ heading.renderSlick('Next to crawl') }}
-                <div class="col-md-12">
-                    {% for item in NextToCrawl %}
-                        <div class="row" style="margin-top: 6px;">
-                            <div class="col-md-3 col-sm-3 col-xs-3">
-                                {{ packshots.square(item) }}
-                            </div>
-                            <div class="col-md-9 col-sm-9 col-xs-9">
-                                {{ consolebadge.short(item) }}
-                                {{ gamelink.title(item, 'staff') }}
-                                <br>
-                                <small>
-                                    {% if item.last_crawled_at %}
-                                        Last crawled: {{ item.last_crawled_at|date('d M Y') }}
-                                    {% else %}
-                                        Never crawled
-                                    {% endif %}
-                                </small>
-                                {% if item.is_low_quality == 1 %}
-                                    <br>
-                                    <label class="badge bg-danger">Low quality</label>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                {{ heading.renderSlick('Crawl queue') }}
-                <p>No games to crawl.</p>
-            {% endif %}
+{# Crawl queue and recently added: 5 each, smaller (#163, decision 2) #}
+{% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
+<div class="row">
+
+    <div class="col-md-6">
+        {% if CrawlPriorityQueue.count > 0 %}
+            {% set crawlTitle = 'Crawl priority queue' %}
+            {% set crawlItems = CrawlPriorityQueue %}
+        {% elseif NextToCrawl is defined and NextToCrawl.count > 0 %}
+            {% set crawlTitle = 'Next to crawl' %}
+            {% set crawlItems = NextToCrawl %}
+        {% else %}
+            {% set crawlTitle = 'Crawl queue' %}
+            {% set crawlItems = [] %}
         {% endif %}
 
+        <h2 class="ss-h2">{{ crawlTitle }}</h2>
+        {% if crawlItems|length > 0 %}
+            <ul class="ss-mini">
+                {% for item in crawlItems %}
+                    <li>
+                        <span class="ss-mini__img">{{ packshots.square(item) }}</span>
+                        <span class="ss-mini__body">
+                            {{ consolebadge.short(item) }}
+                            {{ gamelink.title(item, 'staff') }}
+                            <small>
+                                {% if item.last_crawled_at %}
+                                    Last crawled {{ item.last_crawled_at|date('d M Y') }}
+                                {% else %}
+                                    Never crawled
+                                {% endif %}
+                                {% if item.is_low_quality == 1 %}
+                                    &middot; <span class="badge bg-danger">Low quality</span>
+                                {% endif %}
+                            </small>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted small">No games to crawl.</p>
+        {% endif %}
     </div>
 
-    <div class="col-md-4">
-
-        {% if auth_user().hasRole('Games manager') or auth_user().isOwner() %}
-            {{ heading.renderSlick('Recently added') }}
-            {% if RecentlyAddedGames.count > 0 %}
-                <div class="col-md-12">
-                    {% for item in RecentlyAddedGames %}
-                        <div class="row" style="margin-top: 6px;">
-                            <div class="col-md-3 col-sm-3 col-xs-3">
-                                {{ packshots.square(item) }}
-                            </div>
-                            <div class="col-md-9 col-sm-9 col-xs-9">
-                                {{ consolebadge.short(item) }}
-                                {{ gamelink.title(item, 'staff') }}
-                                <br>
-                                <small>
-                                    Added: {{ item.created_at|date('d M @ H:i') }}
-                                </small>
+    <div class="col-md-6">
+        <h2 class="ss-h2">Recently added</h2>
+        {% if RecentlyAddedGames.count > 0 %}
+            <ul class="ss-mini">
+                {% for item in RecentlyAddedGames %}
+                    <li>
+                        <span class="ss-mini__img">{{ packshots.square(item) }}</span>
+                        <span class="ss-mini__body">
+                            {{ consolebadge.short(item) }}
+                            {{ gamelink.title(item, 'staff') }}
+                            <small>
+                                Added {{ item.created_at|date('d M @ H:i') }}
                                 {% if item.is_low_quality == 1 %}
-                                    <br>
-                                    <label class="badge bg-danger">Low quality</label>
+                                    &middot; <span class="badge bg-danger">Low quality</span>
                                 {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p>No items found!</p>
-            {% endif %}
-            <p><a href="{{ route('staff.games.list.showList', {'listType': 'recently-added'}) }}">View all recently added games</a>.</p>
+                            </small>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted small">No items found.</p>
         {% endif %}
-
+        <p class="small"><a href="{{ route('staff.games.list.showList', {'listType': 'recently-added'}) }}">View all recently added games</a></p>
     </div>
 
 </div>
+{% endif %}
 
 {% endblock page_inner %}

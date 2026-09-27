@@ -1,0 +1,18 @@
+{# Staff dashboard tile (#163). Styles: .ss-tile / .ss-chip in public/staff-b5/custom.css.
+
+   tile: key, label, count, context, state (ok | amber | red | none), stateLabel, url,
+         suffix (optional, shown small after the count, e.g. "/ 24")
+   The chip always carries a text label, so a tile's state never relies on colour alone. #}
+
+{% macro render(tile) %}
+    <a class="ss-tile ss-tile--{{ tile.state }}" href="{{ tile.url }}" data-tile="{{ tile.key }}">
+        <span class="ss-tile__top">
+            <span class="ss-tile__label">{{ tile.label }}</span>
+            {% if tile.stateLabel %}
+                <span class="ss-chip ss-chip--{{ tile.state }}">{{ tile.stateLabel }}</span>
+            {% endif %}
+        </span>
+        <span class="ss-tile__n">{{ tile.count }}{% if tile.suffix is defined and tile.suffix %}<small>{{ tile.suffix }}</small>{% endif %}</span>
+        <span class="ss-tile__c">{{ tile.context }}</span>
+    </a>
+{% endmacro %}

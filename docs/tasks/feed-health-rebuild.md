@@ -4,7 +4,7 @@ Scoping notes. Not started.
 
 ## Do this first: `was_last_run_successful` never records a load failure
 
-**Fixed 2026-09-27 on localdev (for #163), deploy pending.** Found while fixing: nothing ever set
+**Fixed and deployed 2026-09-27 (for #163), migration run on prod.** Found while fixing: nothing ever set
 the flag back to 1 either, so it was stale in both directions. Now `ImportByFeed::runImport()`
 records every import run - success (flag 1, "Imported: X - Skipped: Y", `last_run_at` and
 `last_successful_run_at`) or failure (flag 0, the error, `last_run_at`), load failures included -

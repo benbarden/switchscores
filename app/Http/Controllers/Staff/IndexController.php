@@ -18,9 +18,9 @@ use App\Domain\GamesCompanySignup\Repository as GamesCompanyRepository;
 use App\Domain\Contact\Repository as ContactRepository;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
+use App\Domain\StaffDashboard\AttentionTiles;
 
 use App\Models\QuickReview;
-use App\Services\DataQuality\QualityStats;
 
 class IndexController extends Controller
 {
@@ -37,6 +37,7 @@ class IndexController extends Controller
         private ContactRepository $repoContact,
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
+        private AttentionTiles $attentionTiles,
     )
     {
     }
@@ -46,42 +47,39 @@ class IndexController extends Controller
         $pageTitle = 'Dashboard';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::staffDashboard())->bindings;
 
-        $serviceQualityStats = new QualityStats();
-
-        // Submissions
-        $bindings['ReviewDraftUnprocessedCount'] = $this->repoReviewDraft->countUnprocessed();
+        // Needs attention (#163): queue counts feed the tiles, which add age and state
         $pendingQuickReview = $this->repoQuickReview->byStatus(QuickReview::STATUS_PENDING);
-        $bindings['PendingQuickReviewCount'] = count($pendingQuickReview);
-        $bindings['PendingFeaturedGameCount'] = $this->repoFeaturedGames->countPending();
-        $bindings['TotalGamesCompanySignups'] = $this->repoGamesCompany->countTotal();
-        $bindings['NewContactSubmissionCount'] = $this->repoContact->countNewSubmissions();
+        $bindings['AttentionTiles'] = $this->attentionTiles->build(auth()->user(), [
+            'reviewDrafts' => $this->repoReviewDraft->countUnprocessed(),
+            'quickReviews' => count($pendingQuickReview),
+            'featuredGames' => $this->repoFeaturedGames->countPending(),
+            'contact' => $this->repoContact->countNewSubmissions(),
+            'signups' => $this->repoGamesCompany->countTotal(),
+        ]);
 
         // Games to add
         $bindings['GamesForReleaseCount'] = $this->repoGameStats->totalToBeReleased();
+
+        // Nintendo links
         $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();
         $unlinkedItemList = $this->repoDataSourceParsed->getAllNintendoCoUkWithNoGameId($ignoreIdList);
         $bindings['NintendoCoUkUnlinkedCount'] = $unlinkedItemList->count();
-
-        // Nintendo links
         $bindings['NoNintendoCoUkLinkCount'] = $this->repoGameLists->noNintendoCoUkLink()->count();
         $bindings['BrokenNintendoCoUkLinkCount'] = $this->repoGameLists->brokenNintendoCoUkLink()->count();
 
         // Missing data
         $bindings['NoCategoryExcludingLowQualityCount'] = $this->repoGameStats->totalNoCategoryExcludingLowQuality();
         $bindings['NoCategoryAllCount'] = $this->repoGameStats->totalNoCategoryAll();
-        $bindings['NoCategoryWithCollectionCount'] = $this->repoGameStats->totalNoCategoryWithCollectionId();
         $bindings['PublisherMissingCount'] = $this->dbGamePublisher->countGamesWithNoPublisher();
-        $bindings['DuplicateReviewsCount'] = count($serviceQualityStats->getDuplicateReviews());
 
-        // Visual action lists
-        $bindings['CrawlPriorityQueue'] = $this->repoGameLists->crawlPriorityQueue();
+        // Visual action lists - condensed to 5 each (#163, decision 2)
+        $bindings['CrawlPriorityQueue'] = $this->repoGameLists->crawlPriorityQueue(5);
         if ($bindings['CrawlPriorityQueue']->isEmpty()) {
-            $bindings['NextToCrawl'] = $this->repoGameLists->nextToCrawl();
+            $bindings['NextToCrawl'] = $this->repoGameLists->nextToCrawl(5);
         }
 
         // New games
-        $bindings['RecentlyReleasedGames'] = $this->repoGameLists->recentlyReleasedAll(1, 15);
-        $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(15);
+        $bindings['RecentlyAddedGames'] = $this->repoGameLists->recentlyAdded(5);
 
         // Owner links
         $bindings['RegisteredUserCount'] = $this->repoUser->getCount();

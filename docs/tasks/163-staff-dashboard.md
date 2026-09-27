@@ -1,7 +1,7 @@
 # #163 - Staff dashboard
 
 Plan agreed and approved by Ben 2026-09-27 (decisions 6-10). Build order: the feed-health fix,
-then Phase 1, then Phase 2. **Feed-health fix done on localdev 2026-09-27, deploy pending** (see
+then Phase 1, then Phase 2. **Feed-health fix deployed 2026-09-27, migration run on prod** (see
 `feed-health-rebuild.md`); the Partner feeds tile should read `last_successful_run_at`, which only
 fills in after the first nightly run following deploy.
 
@@ -31,6 +31,22 @@ the top, **growth** (content over time) below it. The existing link tables stay,
 | 8 | Growth charts use **monthly** buckets over 12 months - the calmer view for a page opened every session. Claude's default; Ben had no preference. Easy to switch. |
 | 9 | The crawl column only shows one of its three lists at a time, so condensing it is a matter of item count and size, not choosing between lists. |
 | 10 | Plan approved (Ben, 2026-09-27). Build order: feed-health fix, then Phase 1, then Phase 2. |
+| 11 | **Nightly jobs tile: option A.** `JobRun` only records Tools Hub runs - the cron file's jobs write nothing - so the tile infers from what key jobs leave behind: latest `DataSourceImportRun.completed_at` (Nintendo import), latest Live feed `last_run_at` (partner import), latest integrity check result, latest `GscPageSnapshot.snapshot_date`. Red if any is more than 26 hours old. Exact per-job recording is #164. |
+| 12 | **Submissions table removed** from the staff home: every row in it becomes a tile. |
+| 13 | **Partner feeds amber** when any Live feed's `title_match_rate` is under 50% (Ben: "it'll do for now"). |
+| 14 | **Games company signups** has no status field, so its tile shows the total and newest date with no amber state. |
+| 15 | **Tiles styled like the claude-context artifact pages**, the start of a wider staff style refresh (Ben, 2026-09-27). Tokens and components live in `public/staff-b5/custom.css` under `ss-` classes (fonts Archivo / Instrument Sans / JetBrains Mono, loaded in `theme/staff-b5/base.twig`), so existing staff pages are unchanged until they opt in. Tile grid is 3 columns (owner sees 9 tiles, 3x3). |
+
+| 16 | **Two-column band** (Ben's review, 2026-09-27): "Needs attention" (2/3 width, tiles 2 across) holds the queues to clear - review drafts, quick reviews, featured games, contact submissions, games company signups. "Site health" (1/3, stacked) holds live feeds, nightly jobs, integrity checks. Each tile carries a `group` ('queue' / 'health'); a viewer with only one group gets a single full-width column. |
+| 17 | **Nintendo.co.uk unlinked is a row, not a tile**: it includes future-dated games, so it's never meant to reach zero. Back under Nintendo links, visible to Data source manager and owner as before. |
+| 18 | **Light blue "slick" headings replaced** on the staff home by `ss-h2` subheadings (Archivo, dark rule underneath), with quieter `ss-table` rows. The Dashboard title, top nav and breadcrumbs are left for a later pass. |
+
+| 19 | **First site-wide staff refresh changes** (Ben, 2026-09-27, knowing they affect every staff page): `h1` in Archivo 800 to match the dashboard headings; breadcrumbs and the "View public site" link in the tile label style (Instrument Sans 600). In `custom.css` and `theme/staff-b5/layout-default.twig`. |
+
+**Phase 1 built on localdev 2026-09-27, awaiting Ben's review.** Files: `app/Domain/StaffDashboard/`
+(`Thresholds`, `TileState`, `DbQueries`, `AttentionTiles`), `Staff/IndexController`, `staff/index.twig`,
+`ui/components/staff/dashboard-tile.twig`, `staff-b5/custom.css`, `staff-b5/base.twig`. Tests:
+`tests/Unit/Domain/StaffDashboard/TileStateTest.php`, `tests/Feature/Staff/StaffDashboardTest.php`.
 
 ---
 
@@ -58,7 +74,7 @@ state chip. State is also carried by the chip text, never colour alone.
 | Contact submissions | new contact submissions (existing binding) | amber if any > 3 days |
 | Games company signups | existing binding | amber if any unactioned > 7 days |
 | Nintendo.co.uk unlinked | existing binding | count only, no state |
-| Partner feeds | `PartnerFeedLink` - see dependency below | red if any feed failing; amber if any `title_match_rate` below a threshold |
+| Partner feeds | `PartnerFeedLink`, **Live feeds only** - see dependency below | red if any feed failing; amber if any `title_match_rate` below a threshold |
 | Scheduled jobs | `JobRun` (latest per `command`: `status`, `finished_at`) | red if the latest run failed, or a daily job has no run in 26 hours |
 | Integrity checks | `IntegrityCheckResult` latest per check (`is_passing`, `failing_count`) | amber if any failing |
 
@@ -73,6 +89,12 @@ feeds tile must not be built on that flag until the fix in that doc lands. Optio
   feed - and switch to the flag after the fix.
 
 **Decided: A** (decision 7).
+
+**Count Live feeds only.** Non-Live feeds are never imported, so nothing is written to them and
+their `was_last_run_successful` stays at whatever it last was - feed 31 (Broken) still reads 1 from
+before it died. Verified on localdev 2026-09-27: feed 29 (Live) recorded "Imported: 0 - Skipped: 298"
+with both timestamps; feed 31 (Broken) was skipped with nothing written. A Live feed with a null
+`last_run_at` hasn't been imported since the fix - show it as "not run yet", not as healthy.
 
 ### Build notes
 
