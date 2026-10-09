@@ -11,6 +11,7 @@
 !/public/img/gen/series/.gitkeep
 /storage/*.key
 /storage/tmp/*
+!/storage/tmp/.gitkeep
 /vagrant-tmp/*
 /vendor
 .env

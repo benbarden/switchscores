@@ -6,6 +6,7 @@ namespace App\Domain\GameLists;
 use App\Domain\Repository\AbstractRepository;
 use App\Enums\CacheDuration;
 use App\Models\Game;
+use App\Models\GameImage;
 use App\Models\GameSeries;
 
 use Illuminate\Support\Facades\DB;
@@ -238,9 +239,12 @@ class Repository extends AbstractRepository
 
     public function bySeriesWithImages(GameSeries $gameSeries, $limit = null)
     {
+        // Packshots live in Spaces; games.image_square is legacy and unset for newer games
         $games = Game::with('images')->where('series_id', $gameSeries->id)
-            ->whereNotNull('image_header')
-            ->whereNotNull('image_square')
+            ->whereHas('images', function ($query) {
+                $query->where('location', GameImage::LOCATION_SPACES)
+                    ->whereNotNull('square_filename');
+            })
             ->orderBy('rating_avg', 'desc');
 
         if ($limit) {

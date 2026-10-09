@@ -4,7 +4,9 @@ namespace App\Console\Commands\ImageGen;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
+use App\Domain\Game\ImageResolver;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 
@@ -28,6 +30,7 @@ class SeriesImage extends Command
 
     private $repoGameLists;
     private $repoGameSeries;
+    private $imageResolver;
 
     /**
      * Create a new command instance.
@@ -36,11 +39,13 @@ class SeriesImage extends Command
      */
     public function __construct(
         GameListsRepository $repoGameLists,
-        GameSeriesRepository $repoGameSeries
+        GameSeriesRepository $repoGameSeries,
+        ImageResolver $imageResolver
     )
     {
         $this->repoGameLists = $repoGameLists;
         $this->repoGameSeries = $repoGameSeries;
+        $this->imageResolver = $imageResolver;
         parent::__construct();
     }
 
@@ -78,38 +83,47 @@ class SeriesImage extends Command
             }
 
             $imageCounter = 0;
+            $imagesAdded = 0;
 
             foreach ($gamesWithSeries as $game) {
 
-                $imageSquare = $game->image_square;
-                $imageHeader = $game->image_header;
+                $imageSquareKey = $this->imageResolver->storageKey(
+                    $game, ImageResolver::TYPE_SQUARE, $game->images->square_filename
+                );
 
                 $imageOffset = floor($imageCounter * ($imageWidth / count($gamesWithSeries)));
                 //$logger->info("Counter: $imageCounter; Width: $imageWidth; Count: ".count($gamesToUse)."; Offset: ".$imageOffset);
 
                 try {
 
-                    $imageSquareFullPath = 'public/img/ps-square/'.$imageSquare;
-                    if (file_exists($imageSquareFullPath)) {
-                        $gameImage = Image::make($imageSquareFullPath);
+                    $imageSquareData = Storage::disk(ImageResolver::DISK)->get($imageSquareKey);
+                    if ($imageSquareData) {
+                        $gameImage = Image::make($imageSquareData);
                         $gameImage->resize(200, 200);
                         if (count($gamesWithSeries) == 3) {
                             $gameImage->crop(200, 200, 25, 0);
                         }
 
                         $img->insert($gameImage, 'left', $imageOffset, 0);
+                        $imagesAdded++;
                     } else {
-                        $logger->error($imageSquareFullPath.' - File not found');
+                        $logger->error($imageSquareKey.' - File not found');
                     }
 
                 } catch (\Exception $e) {
 
-                    $logger->error($imageSquareFullPath.' - '.$e->getMessage());
+                    $logger->error($imageSquareKey.' - '.$e->getMessage());
 
                 }
 
                 $imageCounter++;
 
+            }
+
+            if ($imagesAdded == 0) {
+                // Don't overwrite a good image with a blank one if Spaces couldn't be read
+                $logger->error('No packshots loaded for series '.$seriesName.'; keeping existing image');
+                continue;
             }
 
             $img->save(public_path('img/gen/series/'.$seriesFilename));
