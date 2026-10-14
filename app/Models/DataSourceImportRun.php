@@ -31,6 +31,6 @@ class DataSourceImportRun extends Model
     public function durationSeconds()
     {
         if (!$this->completed_at) return null;
-        return $this->completed_at->diffInSeconds($this->started_at);
+        return (int) $this->started_at->diffInSeconds($this->completed_at);
     }
 }
