@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domain\Feed\FeedRunOutcome;
 use Illuminate\Database\Eloquent\Model;
 
 class PartnerFeedLink extends Model
@@ -44,8 +45,14 @@ class PartnerFeedLink extends Model
         'feed_status', 'site_id', 'console_id', 'feed_url', 'feed_url_prefix', 'data_type', 'item_node',
         'title_match_rule_pattern', 'title_match_rule_index', 'allow_historic_content',
         'title_match_rate', 'title_match_rate_at',
-        'was_last_run_successful', 'last_run_status', 'last_run_at', 'last_successful_run_at'
+        'was_last_run_successful', 'last_run_status', 'last_run_outcome', 'last_run_at', 'last_successful_run_at'
     ];
+
+    /**
+     * Longest last_run_status shown in the Feed Links table. New messages are one line; this
+     * caps the full-page dumps stored before 2026-10-16 until each feed runs again.
+     */
+    const LAST_RUN_STATUS_DISPLAY_LENGTH = 160;
 
     /**
      * @var array
@@ -83,6 +90,38 @@ class PartnerFeedLink extends Model
     public function isLive()
     {
         return $this->feed_status == self::FEED_STATUS_LIVE;
+    }
+
+    public function hasRun(): bool
+    {
+        return $this->last_run_at !== null || $this->last_run_status !== null;
+    }
+
+    /**
+     * Runs from before last_run_outcome existed only have the success flag to go on.
+     */
+    private function lastRunOutcomeOrFallback(): string
+    {
+        if ($this->last_run_outcome) {
+            return $this->last_run_outcome;
+        }
+        return $this->was_last_run_successful ? FeedRunOutcome::OK : FeedRunOutcome::ERROR;
+    }
+
+    public function getLastRunOutcomeLabel(): string
+    {
+        return FeedRunOutcome::label($this->lastRunOutcomeOrFallback());
+    }
+
+    public function getLastRunBadgeClass(): string
+    {
+        return FeedRunOutcome::badgeClass($this->lastRunOutcomeOrFallback());
+    }
+
+    public function getLastRunStatusShort(): string
+    {
+        $status = trim(preg_replace('/\s+/', ' ', (string) $this->last_run_status));
+        return mb_strimwidth($status, 0, self::LAST_RUN_STATUS_DISPLAY_LENGTH, '...');
     }
 
     public function getFeedStatusDesc()

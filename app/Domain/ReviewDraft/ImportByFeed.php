@@ -8,8 +8,12 @@ use App\Models\ReviewSite;
 use App\Models\ReviewDraft;
 use App\Models\PartnerFeedLink;
 
+use App\Domain\Feed\FeedLoadException;
+use App\Domain\Feed\FeedResponse;
+use App\Domain\Feed\FeedRunOutcome;
 use App\Domain\Feed\Loader;
 use App\Domain\Feed\Importer;
+use App\Domain\PartnerFeedLink\RunRepository;
 
 use App\Domain\Game\Repository as RepoGame;
 use App\Domain\ReviewDraft\Builder as ReviewDraftBuilder;
@@ -52,6 +56,17 @@ class ImportByFeed
      * @var StripUtm
      */
     private $urlStripUtm;
+
+    /**
+     * The response behind the current run, when loadItems() fetched one. Recorded with the run.
+     */
+    protected ?FeedResponse $lastResponse = null;
+
+    /**
+     * Longest message stored for a failure that isn't a FeedLoadException. Those are one line
+     * already; this guards against anything else that might carry a response body.
+     */
+    const MAX_STATUS_LENGTH = 500;
 
     public function __construct(
         private RepoGame $repoGame
@@ -114,10 +129,14 @@ class ImportByFeed
         $this->logger->info(sprintf('Site %s: %s - Feed URL: %s', $this->reviewSite->id, $partnerName, $partnerFeedUrl));
 
         // Load the feed
+        $this->lastResponse = null;
         try {
             $itemArray = $this->loadItems($partnerFeedUrl);
+        } catch (FeedLoadException $e) {
+            $this->recordFailure($e->getMessage(), $e->outcome, $e->response);
+            throw $e;
         } catch (\Exception $e) {
-            $this->recordFailure($e->getMessage());
+            $this->recordFailure($e->getMessage(), FeedRunOutcome::ERROR);
             throw $e;
         }
 
@@ -134,26 +153,68 @@ class ImportByFeed
     protected function loadItems($feedUrl)
     {
         $feedLoader = new Loader($this->partnerFeedLink);
-        $feedLoader->loadByUrl($feedUrl);
+        try {
+            $feedLoader->loadByUrl($feedUrl);
+        } finally {
+            $this->lastResponse = $feedLoader->getResponse();
+        }
         return $feedLoader->buildItemArray();
     }
 
     private function recordSuccess($imported, $skipped)
     {
         $now = Carbon::now();
+        $status = sprintf('Imported: %s - Skipped: %s', $imported, $skipped);
+
         $this->partnerFeedLink->was_last_run_successful = 1;
-        $this->partnerFeedLink->last_run_status = sprintf('Imported: %s - Skipped: %s', $imported, $skipped);
+        $this->partnerFeedLink->last_run_status = $status;
+        $this->partnerFeedLink->last_run_outcome = FeedRunOutcome::OK;
         $this->partnerFeedLink->last_run_at = $now;
         $this->partnerFeedLink->last_successful_run_at = $now;
         $this->partnerFeedLink->save();
+
+        $this->recordRun([
+            'run_at' => $now,
+            'was_successful' => true,
+            'outcome' => FeedRunOutcome::OK,
+            'http_status' => $this->lastResponse?->statusCode,
+            'content_type' => $this->lastResponse?->contentType,
+            'message' => $status,
+            'imported' => $imported,
+            'skipped' => $skipped,
+        ]);
     }
 
-    private function recordFailure($message)
+    private function recordFailure($message, $outcome, ?FeedResponse $response = null)
     {
+        $now = Carbon::now();
+        $message = mb_strimwidth(trim($message), 0, self::MAX_STATUS_LENGTH, '...');
+        $response = $response ?? $this->lastResponse;
+
         $this->partnerFeedLink->was_last_run_successful = 0;
         $this->partnerFeedLink->last_run_status = $message;
-        $this->partnerFeedLink->last_run_at = Carbon::now();
+        $this->partnerFeedLink->last_run_outcome = $outcome;
+        $this->partnerFeedLink->last_run_at = $now;
         $this->partnerFeedLink->save();
+
+        $this->recordRun([
+            'run_at' => $now,
+            'was_successful' => false,
+            'outcome' => $outcome,
+            'http_status' => $response?->statusCode,
+            'content_type' => $response?->contentType,
+            'message' => $message,
+            'body_excerpt' => $response?->bodyExcerpt(),
+        ]);
+    }
+
+    /**
+     * Adds the run to the feed link's history. Split out so tests can capture it without a
+     * database.
+     */
+    protected function recordRun(array $values)
+    {
+        (new RunRepository())->record((int) $this->partnerFeedLink->id, $values);
     }
 
     /**
@@ -203,7 +264,7 @@ class ImportByFeed
         } catch (\Exception $e) {
 
             $this->logger->error('Got error: '.$e->getMessage());
-            $this->recordFailure($e->getMessage());
+            $this->recordFailure($e->getMessage(), FeedRunOutcome::IMPORT_ERROR);
             return null;
 
         }

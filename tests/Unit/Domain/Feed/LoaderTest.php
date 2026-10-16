@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Domain\Feed;
 
+use App\Domain\Feed\FeedLoadException;
+use App\Domain\Feed\FeedRunOutcome;
 use App\Domain\Feed\Loader;
 use App\Models\PartnerFeedLink;
 
@@ -95,6 +97,25 @@ class LoaderTest extends TestCase
 
         $this->assertEquals('Game 3 Review', $items[0]['title']);
         $this->assertEquals('Game 1 Review', $items[2]['title']);
+    }
+
+    /**
+     * The Loader used to append the whole body to this error, which is how bot check pages
+     * ended up in the cron log and the Feed Links table.
+     */
+    public function testAParseErrorGivesAShortMessageWithoutTheBody()
+    {
+        $body = '<html><body><p>Not a feed at all <svg></p></body>';
+
+        try {
+            $this->loadItems($this->feedLink(PartnerFeedLink::DATA_TYPE_ARRAY), $body);
+            $this->fail('Expected a FeedLoadException');
+        } catch (FeedLoadException $e) {
+            $this->assertEquals(FeedRunOutcome::PARSE_ERROR, $e->outcome);
+            $this->assertStringStartsWith('Invalid XML: ', $e->getMessage());
+            $this->assertStringNotContainsString('Not a feed at all', $e->getMessage());
+            $this->assertEquals($body, $e->response->body);
+        }
     }
 
     public function testAnItemNodeTheParseModeCannotWalkYieldsNoItems()

@@ -16,6 +16,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/feed-links', 'Staff\Reviews\FeedLinksController@index')->name('staff.reviews.feedLinks.index');
     Route::match(['get', 'post'], '/staff/reviews/feed-links/add', 'Staff\Reviews\FeedLinksController@add')->name('staff.reviews.feedLinks.add');
     Route::match(['get', 'post'], '/staff/reviews/feed-links/edit/{linkId}', 'Staff\Reviews\FeedLinksController@edit')->name('staff.reviews.feedLinks.edit');
+    Route::get('/staff/reviews/feed-links/runs/{linkId}', 'Staff\Reviews\FeedLinksController@runs')->name('staff.reviews.feedLinks.runs');
     Route::get('/staff/reviews/feed-links/probe', 'Staff\Reviews\FeedLinkProbeController@show')->name('staff.reviews.feedLinks.probe');
     Route::post('/staff/reviews/feed-links/probe/run', 'Staff\Reviews\FeedLinkProbeController@run')->name('staff.reviews.feedLinks.probe.run');
     Route::post('/staff/reviews/feed-links/probe/create', 'Staff\Reviews\FeedLinkProbeController@create')->name('staff.reviews.feedLinks.probe.create');

@@ -1,0 +1,61 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    <a href="{{ route('staff.reviews.feedLinks.edit', {'linkId': FeedLink.id}) }}"
+       class="btn btn-sm btn-outline-secondary">Edit feed link</a>
+    <a href="{{ route('staff.reviews.feedLinks.testTitleRule', {'linkId': FeedLink.id}) }}"
+       class="btn btn-sm btn-outline-secondary">Test title rule</a>
+</p>
+
+<p>
+    <strong>Feed URL:</strong> <a href="{{ FeedLink.feed_url }}" target="_blank">{{ FeedLink.feed_url }}</a>
+    <br>
+    <strong>Status:</strong> {{ FeedLink.getFeedStatusDesc() }}
+</p>
+
+<p class="text-muted">
+    The last {{ KeepRuns }} import runs, newest first. Blocked means the site served a bot check
+    page instead of the feed - the feed link is probably fine, but the site is refusing our
+    server. For failed runs, the start of the response is kept so you can see what came back.
+</p>
+
+{% if Runs.count > 0 %}
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>Run</th>
+            <th class="text-center">Result</th>
+            <th class="text-center">HTTP</th>
+            <th>Content type</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for run in Runs %}
+            <tr>
+                <td class="text-nowrap">{{ run.run_at|date('d M Y H:i') }}</td>
+                <td class="text-center">
+                    <span class="badge {{ run.getOutcomeBadgeClass() }}">{{ run.getOutcomeLabel() }}</span>
+                </td>
+                <td class="text-center">{{ run.http_status ?? '-' }}</td>
+                <td><small>{{ run.content_type ?? '-' }}</small></td>
+                <td>
+                    <small>{{ run.message }}</small>
+                    {% if run.body_excerpt %}
+                        <details class="mt-1">
+                            <summary><small>Show response ({{ run.body_excerpt|length|number_format }} characters kept)</small></summary>
+                            <pre class="bg-light border p-2 mt-1" style="max-height: 400px; overflow: auto; white-space: pre-wrap; word-break: break-all;"><small>{{ run.body_excerpt }}</small></pre>
+                        </details>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No runs recorded yet. Runs are recorded from the next nightly import onwards.</p>
+{% endif %}
+
+{% endblock page_inner %}

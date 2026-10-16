@@ -2,6 +2,9 @@
 
 namespace Tests\Unit\Domain\ReviewDraft;
 
+use App\Domain\Feed\FeedLoadException;
+use App\Domain\Feed\FeedResponse;
+use App\Domain\Feed\FeedRunOutcome;
 use App\Domain\Game\Repository as RepoGame;
 use App\Domain\ReviewDraft\ImportByFeed;
 use App\Models\PartnerFeedLink;
@@ -110,6 +113,68 @@ class ImportByFeedRunStatusTest extends TestCase
         $this->assertNotNull($feedLink->last_successful_run_at);
     }
 
+    public function testABlockedFeedIsRecordedWithItsOutcomeAndTheResponse()
+    {
+        $feedLink = $this->makeFeedLink(PartnerFeedLink::FEED_STATUS_LIVE);
+        $page = '<html><title>One moment, please...</title><p>Please wait while your request is being verified...</p></html>';
+        $import = $this->makeImport($feedLink, function () use ($page) {
+            throw new FeedLoadException(
+                'Blocked: bot check page, HTTP 200',
+                FeedRunOutcome::BLOCKED_VERIFICATION,
+                new FeedResponse(200, 'text/html', $page)
+            );
+        });
+
+        try {
+            $import->runImport();
+            $this->fail('Expected the load failure to be rethrown');
+        } catch (FeedLoadException $e) {
+            // expected
+        }
+
+        $this->assertEquals(FeedRunOutcome::BLOCKED_VERIFICATION, $feedLink->last_run_outcome);
+        $this->assertEquals('Blocked: bot check page, HTTP 200', $feedLink->last_run_status);
+
+        $this->assertCount(1, $import->runs);
+        $run = $import->runs[0];
+        $this->assertFalse($run['was_successful']);
+        $this->assertEquals(FeedRunOutcome::BLOCKED_VERIFICATION, $run['outcome']);
+        $this->assertEquals(200, $run['http_status']);
+        $this->assertEquals('text/html', $run['content_type']);
+        $this->assertEquals($page, $run['body_excerpt']);
+    }
+
+    public function testASuccessfulRunIsAddedToTheHistoryWithoutABody()
+    {
+        $feedLink = $this->makeFeedLink(PartnerFeedLink::FEED_STATUS_LIVE);
+        $import = $this->makeImport($feedLink, fn() => []);
+
+        $import->runImport();
+
+        $this->assertEquals(FeedRunOutcome::OK, $feedLink->last_run_outcome);
+        $this->assertCount(1, $import->runs);
+        $this->assertTrue($import->runs[0]['was_successful']);
+        $this->assertEquals(0, $import->runs[0]['imported']);
+        $this->assertArrayNotHasKey('body_excerpt', $import->runs[0]);
+    }
+
+    public function testAnOverlongMessageIsCappedBeforeItIsStored()
+    {
+        $feedLink = $this->makeFeedLink(PartnerFeedLink::FEED_STATUS_LIVE);
+        $import = $this->makeImport($feedLink, function () {
+            throw new \Exception(str_repeat('x', 5000));
+        });
+
+        try {
+            $import->runImport();
+        } catch (\Exception $e) {
+            // expected
+        }
+
+        $this->assertLessThanOrEqual(ImportByFeed::MAX_STATUS_LENGTH, mb_strlen($feedLink->last_run_status));
+        $this->assertEquals(FeedRunOutcome::ERROR, $feedLink->last_run_outcome);
+    }
+
     private function makeFeedLink($feedStatus)
     {
         $feedLink = new class extends PartnerFeedLink {
@@ -137,11 +202,17 @@ class ImportByFeedRunStatusTest extends TestCase
         $import = new class(resolve(RepoGame::class)) extends ImportByFeed {
             public $loadCount = 0;
             public $loader;
+            public $runs = [];
 
             protected function loadItems($feedUrl)
             {
                 $this->loadCount++;
                 return ($this->loader)();
+            }
+
+            protected function recordRun(array $values)
+            {
+                $this->runs[] = $values;
             }
         };
         $import->loader = $loader;

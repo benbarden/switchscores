@@ -20,6 +20,7 @@ class Repository
     )
     {
         $values['last_run_status'] = null;
+        $values['last_run_outcome'] = null;
         $partnerFeedLink->fill($values);
         $partnerFeedLink->save();
     }

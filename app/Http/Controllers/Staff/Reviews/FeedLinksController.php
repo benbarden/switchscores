@@ -12,6 +12,7 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\PartnerFeedLink\Repository as PartnerFeedLinkRepository;
+use App\Domain\PartnerFeedLink\RunRepository;
 use App\Domain\Console\Repository as ConsoleRepository;
 
 class FeedLinksController extends Controller
@@ -33,7 +34,8 @@ class FeedLinksController extends Controller
         private StaffPageBuilder $pageBuilder,
         private ReviewSiteRepository $repoReviewSite,
         private PartnerFeedLinkRepository $repoPartnerFeedLink,
-        private ConsoleRepository $repoConsole
+        private ConsoleRepository $repoConsole,
+        private RunRepository $repoRuns
     )
     {
     }
@@ -50,6 +52,27 @@ class FeedLinksController extends Controller
         $bindings['FeedLinksInactive'] = $feedLinksInactive;
 
         return view('staff.reviews.feed-links.index', $bindings);
+    }
+
+    /**
+     * The last import runs of one feed link, with what each response looked like.
+     */
+    public function runs($linkId)
+    {
+        $feedLink = $this->repoPartnerFeedLink->find($linkId);
+        if (!$feedLink) abort(404);
+
+        $site = $this->repoReviewSite->find($feedLink->site_id);
+
+        $pageTitle = 'Feed runs: '.($site->name ?? 'feed link '.$feedLink->id);
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::reviewsFeedLinksSubpage($pageTitle))->bindings;
+
+        $bindings['FeedLink'] = $feedLink;
+        $bindings['Site'] = $site;
+        $bindings['Runs'] = $this->repoRuns->getForFeedLink($feedLink->id);
+        $bindings['KeepRuns'] = RunRepository::KEEP_RUNS;
+
+        return view('staff.reviews.feed-links.runs', $bindings);
     }
 
     public function buildValuesArray($request)
