@@ -4,6 +4,7 @@
 namespace App\Domain\ReviewLink;
 
 
+use App\Domain\Game\PackshotJoin;
 use Illuminate\Support\Facades\DB;
 
 class DbQueries
@@ -18,10 +19,11 @@ class DbQueries
             }
         }
         $reviewLinks = DB::select('
-            SELECT g.*, count(rl.id) AS recent_review_count
+            SELECT g.*, count(rl.id) AS recent_review_count, '.PackshotJoin::rawSelect('gi').'
             FROM review_links rl
             JOIN games g ON rl.game_id = g.id
             JOIN review_sites rs ON rl.site_id = rs.id
+            LEFT JOIN game_images gi ON gi.game_id = g.id
             WHERE rl.review_date >= DATE_SUB(NOW(), INTERVAL ? DAY)
             AND g.review_count > 2
             AND g.format_digital != "De-listed"

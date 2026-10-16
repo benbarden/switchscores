@@ -2,6 +2,7 @@
 
 namespace App\Domain\TopRated;
 
+use App\Domain\Game\PackshotJoin;
 use App\Enums\GameStatus;
 use App\Models\Game;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ class DbQueries
                 'categories.name AS category_name',
                 'game_rank_alltime.game_rank')
             ->where('games.console_id', $consoleId);
+        PackshotJoin::apply($games);
 
         if ($minRank && $maxRank) {
             $games = $games->where('game_rank_alltime.game_rank', '<=', $maxRank);
@@ -55,6 +57,7 @@ class DbQueries
             ->select('games.*', 'games.id AS game_id',
                 'categories.name AS category_name',
                 'game_rank_alltime.game_rank');
+        PackshotJoin::apply($games);
 
         if ($minRank && $maxRank) {
             $games = $games->where('game_rank_alltime.game_rank', '<=', $maxRank);
@@ -104,6 +107,7 @@ class DbQueries
             ->where('game_rank_year.release_year', $year)
             ->orderBy('game_rank_year.game_rank')
             ->orderBy('games.review_count', 'desc');
+        PackshotJoin::apply($games);
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -130,6 +134,7 @@ class DbQueries
             ->where('game_rank_year.release_year', $year)
             ->orderBy('game_rank_year.game_rank')
             ->orderBy('games.review_count', 'desc');
+        PackshotJoin::apply($games);
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -151,6 +156,7 @@ class DbQueries
             ->where('game_rank_yearmonth.release_yearmonth', $yearmonth)
             ->orderBy('game_rank_yearmonth.game_rank')
             ->orderBy('games.review_count', 'desc');
+        PackshotJoin::apply($games);
 
         if ($limit != null) {
             $games = $games->limit($limit);
@@ -170,6 +176,7 @@ class DbQueries
             ->whereMonth('games.eu_release_date', '=', $month)
             ->whereNotNull('games.game_rank')
             ->orderBy('games.rating_avg', 'desc');
+        PackshotJoin::apply($games);
         if ($limit) {
             $games = $games->limit($limit);
         }
@@ -186,6 +193,7 @@ class DbQueries
             ->whereMonth('games.eu_release_date', '=', $month)
             ->whereNull('games.game_rank')
             ->orderBy('games.review_count', 'desc');
+        PackshotJoin::apply($games);
         if ($limit) {
             $games = $games->limit($limit);
         }

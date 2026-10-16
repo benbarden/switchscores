@@ -49,6 +49,22 @@ class PackshotJoin
     }
 
     /**
+     * The same aliased columns as apply(), for hand-written SQL (DB::select) that can't take a
+     * Builder. The caller adds `LEFT JOIN game_images <alias> ON <alias>.game_id = <games>.id`.
+     * game_images.game_id is unique, so the join never multiplies rows or breaks a GROUP BY.
+     */
+    public static function rawSelect(string $alias): string
+    {
+        return implode(', ', [
+            "{$alias}.location AS " . self::ALIAS_LOCATION,
+            "{$alias}.square_filename AS " . self::ALIAS_SQUARE_FILENAME,
+            "{$alias}.header_filename AS " . self::ALIAS_HEADER_FILENAME,
+            "{$alias}.square_updated_at AS " . self::ALIAS_SQUARE_UPDATED_AT,
+            "{$alias}.header_updated_at AS " . self::ALIAS_HEADER_UPDATED_AT,
+        ]);
+    }
+
+    /**
      * Rebuild a GameImage from the aliased columns on a raw row, or null when the row carries
      * no packshot record (no join applied, or no matching game_images row).
      *

@@ -89,6 +89,25 @@ class PackshotJoinTest extends TestCase
         $this->assertEquals('/img/ps-header/hdr-1-game.jpg', $url);
     }
 
+    /**
+     * rawSelect() must produce exactly the aliases hydrate() reads, or hand-written SQL silently
+     * falls back to legacy (the recently-ranked bug found during the 2026-10-16 migration).
+     */
+    public function test_raw_select_uses_the_same_aliases_hydrate_reads()
+    {
+        $sql = PackshotJoin::rawSelect('gi');
+
+        foreach ([
+            'gi.location AS ' . PackshotJoin::ALIAS_LOCATION,
+            'gi.square_filename AS ' . PackshotJoin::ALIAS_SQUARE_FILENAME,
+            'gi.header_filename AS ' . PackshotJoin::ALIAS_HEADER_FILENAME,
+            'gi.square_updated_at AS ' . PackshotJoin::ALIAS_SQUARE_UPDATED_AT,
+            'gi.header_updated_at AS ' . PackshotJoin::ALIAS_HEADER_UPDATED_AT,
+        ] as $column) {
+            $this->assertStringContainsString($column, $sql);
+        }
+    }
+
     public function test_resolver_falls_back_to_legacy_when_location_is_still_legacy()
     {
         $row = $this->rawRow([PackshotJoin::ALIAS_LOCATION => GameImage::LOCATION_LEGACY]);
