@@ -6,11 +6,11 @@ This document tracks potential improvements, features, and enhancements for the 
 
 ## Next up
 
-The items to work on next, in any order. Set from the improvements triage page; the full detail is in each item's row below.
+The items to work on next. Set from the improvements triage page; the full detail is in each item's row below. **In this order (Ben, 2026-10-16):**
 
-- #44 Game groups: link Switch 1 / Switch 2 versions of the same game
+- #162 Price API: use the relayed prices in the import (layers 4-5), with the price-review game flags - so the flagged cohorts get real prices instead of being checked and saved one by one
+- #44 Game groups: link Switch 1 / Switch 2 versions of the same game - and plan where groups get used once they exist
 - #161 Store editions: record the purchase options found on a game's store page
-- #162 Price API: get past the prod 403
 
 ## Numbering rule (added 2026-08-07)
 
