@@ -1,15 +1,17 @@
 #!/bin/bash
 
 # On-demand DB backup for Switch Scores
-# Run on the server (codacity4), from anywhere:
+# Run on the server (infrared-switch), from anywhere:
 #   ./scripts/backup-db.sh [OUTPUT_DIR]
 #
 # Reads DB_DATABASE / DB_USERNAME / DB_PASSWORD out of the site's own .env, so
 # no password prompt and no root MySQL user needed - just the app's own DB user.
-# Dumps to OUTPUT_DIR (default: ~/db-backups) as a dated, gzipped .sql.gz file.
+# Dumps to OUTPUT_DIR (default: ~/db-backups) as a gzipped .sql.gz file stamped
+# with the date and time (YYMMDD-HHMM), so a second dump the same day - e.g.
+# before and after the weekly updates - doesn't overwrite the first.
 #
-# Not scheduled - run by hand. See side-projects/server-setup/context.md in
-# claude-context for the agreed daily-cron + Spaces-upload version, not yet built.
+# Not scheduled - run by hand, before each weekly update. Daily automated
+# backups were dropped (2026-10-16): weekly droplet backups plus these dumps.
 
 set -e
 
@@ -39,7 +41,7 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
-DATE_STAMP=$(date +%y%m%d)
+DATE_STAMP=$(date +%y%m%d-%H%M)
 DUMP_FILE="${OUTPUT_DIR}/switchscores_${DB_DATABASE}_${DATE_STAMP}.sql"
 
 echo "=== Dumping ${DB_DATABASE} ==="

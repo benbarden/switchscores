@@ -29,6 +29,11 @@ class DynamicShortcode
      */
     private $seedGame;
 
+    /**
+     * @var AutoDescription
+     */
+    private $autoDescription;
+
     private $html;
 
     public function __construct($html)

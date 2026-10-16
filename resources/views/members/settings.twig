@@ -6,11 +6,7 @@
     <div class="row">
         <div class="col-md-6">
 
-            {% if session('success') %}
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            {% endif %}
+            {# The success banner comes from theme/member-b5/base.twig, like every member page. #}
 
             {% if errors.any() %}
                 <div class="alert alert-danger">
