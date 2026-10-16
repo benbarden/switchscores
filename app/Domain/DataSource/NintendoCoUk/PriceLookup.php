@@ -2,6 +2,7 @@
 
 namespace App\Domain\DataSource\NintendoCoUk;
 
+use App\Domain\Relay\EgressRelay;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +21,10 @@ use Illuminate\Support\Facades\Log;
  * the NSUID prefix is the discriminator - see NsuidPrice::PREFIX_*.
  *
  * Full analysis: docs/tasks/switch-2-upgrade-pack-pricing.md
+ *
+ * The endpoint refuses datacentre IPs (403 from both codacity4 and infrared-switch), so when
+ * the egress relay is configured every call goes through it - tested 2026-10-16, real prices
+ * came back (#162). With no relay configured (localdev, residential IP) calls go direct.
  */
 class PriceLookup
 {
@@ -39,7 +44,10 @@ class PriceLookup
 
     private const TIMEOUT_SECONDS = 20;
 
-    public function __construct(private readonly ?\Closure $sleeper = null)
+    public function __construct(
+        private readonly ?\Closure $sleeper = null,
+        private readonly ?EgressRelay $relay = null
+    )
     {
     }
 
@@ -82,12 +90,21 @@ class PriceLookup
     {
         $result->recordCall();
 
+        $query = [
+            'country' => self::COUNTRY,
+            'lang'    => self::LANG,
+            'ids'     => implode(',', $batch),
+        ];
+        $relay = $this->relay ?? EgressRelay::fromConfig();
+
         try {
-            $response = Http::timeout(self::TIMEOUT_SECONDS)->get(self::PRICE_URL, [
-                'country' => self::COUNTRY,
-                'lang'    => self::LANG,
-                'ids'     => implode(',', $batch),
-            ]);
+            if ($relay->isConfigured()) {
+                $response = Http::timeout(self::TIMEOUT_SECONDS)
+                    ->withHeaders($relay->headers())
+                    ->get($relay->relayUrl(self::PRICE_URL.'?'.http_build_query($query)));
+            } else {
+                $response = Http::timeout(self::TIMEOUT_SECONDS)->get(self::PRICE_URL, $query);
+            }
         } catch (\Throwable $e) {
             // Connection refused, DNS failure, timeout.
             Log::warning('Price API request failed: '.$e->getMessage());
@@ -96,7 +113,10 @@ class PriceLookup
         }
 
         if (!$response->successful()) {
-            Log::warning('Price API returned HTTP '.$response->status());
+            $refusal = $relay->isConfigured() ? $relay->refusal($response->status(), $response->body()) : null;
+            Log::warning($refusal !== null
+                ? 'Price API relay error: '.$refusal
+                : 'Price API returned HTTP '.$response->status());
             $result->recordFailedBatch();
             return;
         }

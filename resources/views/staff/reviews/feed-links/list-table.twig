@@ -41,6 +41,9 @@
                 </td>
                 <td class="text-center">
                     {{ item.getFeedStatusDesc() }}
+                    {% if item.usesRelay() %}
+                        <br><small class="text-muted" title="Fetched through the Cloudflare relay">via relay</small>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     {% if item.title_match_rate is null %}

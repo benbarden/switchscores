@@ -16,6 +16,7 @@
         formVals['title_match_rule_pattern'] = "{{ FeedLinkData.title_match_rule_pattern|e('js') }}";
         formVals['title_match_rule_index'] = "{{ FeedLinkData.title_match_rule_index }}";
         formVals['allow_historic_content'] = "{{ FeedLinkData.allow_historic_content }}";
+        formVals['use_relay'] = "{{ FeedLinkData.use_relay }}";
 
     } else {
 
@@ -31,6 +32,7 @@
         formVals['title_match_rule_pattern'] = "{{ old('title_match_rule_pattern')|e('js') }}";
         formVals['title_match_rule_index'] = "{{ old('title_match_rule_index') }}";
         formVals['allow_historic_content'] = "{{ old('allow_historic_content') }}";
+        formVals['use_relay'] = "{{ old('use_relay') }}";
 
     }
 
@@ -48,6 +50,8 @@
     } else {
         $('#allow_historic_content').attr('checked', false);
     }
+    // '1' from the record when editing; 'on' from old() when a submit is re-shown.
+    $('#use_relay').attr('checked', formVals['use_relay'] == '1' || formVals['use_relay'] == 'on');
 
     $('#feed_status').focus();
 

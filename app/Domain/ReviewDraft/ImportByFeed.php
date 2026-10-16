@@ -165,6 +165,9 @@ class ImportByFeed
     {
         $now = Carbon::now();
         $status = sprintf('Imported: %s - Skipped: %s', $imported, $skipped);
+        if ($this->partnerFeedLink->usesRelay()) {
+            $status .= ' (via relay)';
+        }
 
         $this->partnerFeedLink->was_last_run_successful = 1;
         $this->partnerFeedLink->last_run_status = $status;

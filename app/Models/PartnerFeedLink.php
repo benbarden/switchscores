@@ -43,7 +43,7 @@ class PartnerFeedLink extends Model
      */
     protected $fillable = [
         'feed_status', 'site_id', 'console_id', 'feed_url', 'feed_url_prefix', 'data_type', 'item_node',
-        'title_match_rule_pattern', 'title_match_rule_index', 'allow_historic_content',
+        'title_match_rule_pattern', 'title_match_rule_index', 'allow_historic_content', 'use_relay',
         'title_match_rate', 'title_match_rate_at',
         'was_last_run_successful', 'last_run_status', 'last_run_outcome', 'last_run_at', 'last_successful_run_at'
     ];
@@ -90,6 +90,15 @@ class PartnerFeedLink extends Model
     public function isLive()
     {
         return $this->feed_status == self::FEED_STATUS_LIVE;
+    }
+
+    /**
+     * Fetch this feed through the egress relay rather than directly - for sites that refuse
+     * the server's datacentre IP (#174).
+     */
+    public function usesRelay(): bool
+    {
+        return $this->use_relay == 1;
     }
 
     public function hasRun(): bool

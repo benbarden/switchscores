@@ -52,4 +52,12 @@ return [
         'notify_address' => env('CONTACT_NOTIFY_ADDRESS', 'ben@switchscores.com'),
     ],
 
+    // Outbound relay (a Cloudflare Worker) for requests that sites refuse from the server's
+    // datacentre IP: the Nintendo price API, and review feeds marked "fetch via relay".
+    // Leave unset on localdev - a residential IP gets through directly. See App\Domain\Relay\EgressRelay.
+    'egress_relay' => [
+        'url' => env('RELAY_URL'),
+        'key' => env('RELAY_KEY'),
+    ],
+
 ];

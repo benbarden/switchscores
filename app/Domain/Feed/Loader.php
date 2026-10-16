@@ -27,12 +27,14 @@ class Loader
     }
 
     /**
+     * Fetches through the egress relay when the feed link is set to (see #174).
+     *
      * @param $feedUrl
      * @throws FeedLoadException
      */
     public function loadByUrl($feedUrl)
     {
-        $this->response = (new FeedFetcher())->fetchResponse($feedUrl);
+        $this->response = (new FeedFetcher())->fetchResponse($feedUrl, $this->partnerFeedLink->usesRelay());
 
         (new FeedResponseClassifier())->assertFeed($this->response);
 

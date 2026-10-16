@@ -78,6 +78,7 @@ class FeedLinksController extends Controller
     public function buildValuesArray($request)
     {
         $allowHistoricContent = $request->allow_historic_content == 'on' ? '1' : '0';
+        $useRelay = $request->use_relay == 'on' ? '1' : '0';
 
         $values = [
             'feed_status' => $request->feed_status,
@@ -90,6 +91,7 @@ class FeedLinksController extends Controller
             'title_match_rule_pattern' => $request->title_match_rule_pattern,
             'title_match_rule_index' => $request->title_match_rule_index,
             'allow_historic_content' => $allowHistoricContent,
+            'use_relay' => $useRelay,
         ];
 
         return $values;

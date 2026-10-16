@@ -25,6 +25,7 @@ class FeedRunOutcome
     const NOT_A_FEED = 'not_a_feed';
     const PARSE_ERROR = 'parse_error';
     const IMPORT_ERROR = 'import_error';
+    const RELAY_ERROR = 'relay_error';
     const ERROR = 'error';
 
     const LABELS = [
@@ -39,6 +40,7 @@ class FeedRunOutcome
         self::NOT_A_FEED => 'Not a feed',
         self::PARSE_ERROR => 'Invalid XML',
         self::IMPORT_ERROR => 'Import error',
+        self::RELAY_ERROR => 'Relay error',
         self::ERROR => 'Error',
     ];
 

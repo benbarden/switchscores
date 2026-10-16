@@ -4,6 +4,8 @@ namespace Tests\Unit\Domain\DataSource;
 
 use App\Domain\DataSource\NintendoCoUk\NsuidPrice;
 use App\Domain\DataSource\NintendoCoUk\PriceLookup;
+use App\Domain\Relay\EgressRelay;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -127,6 +129,47 @@ class PriceLookupTest extends TestCase
         $this->assertNotNull($result->get('70010000121555'));
         $this->assertEquals(1, $result->notFound());
         $this->assertEquals(1, $result->resolved());
+    }
+
+    /**
+     * The endpoint refuses datacentre IPs, so with the relay configured every call goes
+     * through it (#162) - with the full price URL, query and all, as the one url= value.
+     */
+    public function testWithTheRelayConfiguredCallsGoThroughIt()
+    {
+        Http::fake(['*' => Http::response(['prices' => [$this->priceItem('70010000121555', '13.49')]])]);
+        $lookup = new PriceLookup(sleeper: fn () => null, relay: new EgressRelay('https://relay.example/', 'secret'));
+
+        $result = $lookup->fetch(['70010000121555']);
+
+        $this->assertEquals('13.49', $result->get('70010000121555')->regularPrice);
+        Http::assertSent(function (Request $request) {
+            parse_str(parse_url($request->url(), PHP_URL_QUERY), $params);
+            return str_starts_with($request->url(), 'https://relay.example/')
+                && $request->hasHeader('X-Relay-Key', 'secret')
+                && $params['url'] === 'https://api.ec.nintendo.com/v1/price?country=GB&lang=en&ids=70010000121555';
+        });
+    }
+
+    public function testWithoutTheRelayCallsGoDirect()
+    {
+        Http::fake(['*' => Http::response(['prices' => []])]);
+        $lookup = new PriceLookup(sleeper: fn () => null, relay: new EgressRelay(null, null));
+
+        $lookup->fetch(['70010000121555']);
+
+        Http::assertSent(fn (Request $request) => str_starts_with($request->url(), 'https://api.ec.nintendo.com/v1/price'));
+    }
+
+    public function testARelayRefusalIsAFailedBatch()
+    {
+        Http::fake(['*' => Http::response('Forbidden', 403)]);
+        $lookup = new PriceLookup(sleeper: fn () => null, relay: new EgressRelay('https://relay.example/', 'wrong'));
+
+        $result = $lookup->fetch(['70010000121555']);
+
+        $this->assertEquals(1, $result->failedBatches());
+        $this->assertEquals(0, $result->resolved());
     }
 
     public function testBatchesAtFiftyIdsPerCall()

@@ -63,7 +63,7 @@ class ProbeExistingFeedLinks extends Command
             $label = $this->label($feedLink);
 
             try {
-                $body = $fetcher->fetch($feedLink->feed_url);
+                $body = $fetcher->fetch($feedLink->feed_url, $feedLink->usesRelay());
             } catch (\Exception $e) {
                 // Excluded from the accuracy figure rather than counted as a disagreement.
                 // A feed that cannot be fetched says nothing about whether detection works,

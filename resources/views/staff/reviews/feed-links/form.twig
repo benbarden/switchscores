@@ -92,6 +92,16 @@
         </div>
     </div>
     <div class="row mb-3">
+        <label for="use_relay" class="col-md-4 col-form-label">Fetch via relay</label>
+        <div class="col-md-6">
+            <input type="checkbox" id="use_relay" name="use_relay">
+            <div class="form-text">
+                For sites that block our server with a bot check. The feed is fetched through the
+                Cloudflare relay instead. The site's host must be on the relay Worker's allowlist.
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
         <div class="col-md-8 offset-md-4">
             <button type="submit" class="btn outline btn-primary">
                 Submit
