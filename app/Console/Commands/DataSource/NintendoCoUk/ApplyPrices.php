@@ -24,7 +24,8 @@ use Illuminate\Support\Facades\Log;
  * DRY RUN BY DEFAULT. It reports what it would change and writes nothing unless
  * --apply is passed. Ben's call (2026-10-18): see real examples of the changes before
  * any live price moves, and don't touch the review flags or the ignore_price freezes
- * yet - frozen games are reported, never written.
+ * yet - frozen games are reported, never written. The cron runs it with --apply from
+ * 2026-10-18, after a manual --apply on prod was checked on the staff pages.
  *
  * Order: after DSNintendoCoUkUpdateGames, which still writes the scalar-field price
  * first. This overwrites it for Switch 2 games that have a usable standalone SKU and

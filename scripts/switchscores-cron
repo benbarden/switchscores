@@ -5,9 +5,11 @@
 10 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateAvailability >/dev/null 2>&1
 15 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkUpdateGames >/dev/null 2>&1
 20 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkDownloadPackshots >/dev/null 2>&1
-# Per-SKU prices from the price API (via the relay), Switch 2 only. Stores into
-# data_source_prices; nothing reads them yet - DSNintendoCoUkApplyPrices is run by hand (#162)
+# Per-SKU prices from the price API (via the relay), Switch 2 only (#162). FetchPrices stores
+# them; ApplyPrices then sets each game's price from its standalone SKU. Both must run after
+# UpdateGames, which still writes the search payload's price first.
 25 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkFetchPrices >/dev/null 2>&1
+28 4 * * * www-data cd /var/www/switchscores.com && php artisan DSNintendoCoUkApplyPrices --apply >/dev/null 2>&1
 
 # Review pipeline
 30 4 * * * www-data cd /var/www/switchscores.com && php artisan PartnerImportActiveFeeds >/dev/null 2>&1
