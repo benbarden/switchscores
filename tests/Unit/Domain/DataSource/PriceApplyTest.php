@@ -175,14 +175,62 @@ class PriceApplyTest extends TestCase
         $this->assertNull($decision->newDiscountPc);
     }
 
-    public function testDiscountPercentMatchesTheSearchPayloadFormat()
+    public function testFreeFriendsPassIsIgnoredNextToAPaidGame()
     {
-        // 9.99 -> 0.99 is 90.09%, which the search payload stores as 90.1.
-        $decision = $this->decide($this->game('9.99'), [
-            $this->sku('70010000000001', '9.99', ['discount_price' => '0.99']),
+        // Orbitals (18325): Friend's Pass 0.00, game 34.99. The site showed the 44.99 deluxe.
+        $decision = $this->decide($this->game('44.99'), [
+            $this->sku('70010000000001', '0.00'),
+            $this->sku('70010000000002', '34.99'),
+            $this->sku('70070000000001', '44.99'),
         ]);
 
-        $this->assertSame('90.1', $decision->newDiscountPc);
+        $this->assertSame(PriceDecision::CHANGED, $decision->outcome);
+        $this->assertSame('34.99', $decision->newPrice);
+    }
+
+    public function testAFreeGameKeepsItsFreePrice()
+    {
+        $decision = $this->decide($this->game('0.00'), [$this->sku('70010000000001', '0.00')]);
+
+        $this->assertSame(PriceDecision::UNCHANGED, $decision->outcome);
+    }
+
+    public function testDiscountPercentIsAWholeNumber()
+    {
+        // Kuukiyomi 4 (18393): 11.49 -> 7.23 is 37.08%; the store shows 37%.
+        $decision = $this->decide($this->game('4.49', '3.59', '20.0'), [
+            $this->sku('70010000000001', '11.49', ['discount_price' => '7.23']),
+        ]);
+
+        $this->assertSame('7.23', $decision->newDiscounted);
+        $this->assertSame('37.0', $decision->newDiscountPc);
+    }
+
+    public function testStoredPercentIsKeptWhenItIsWithinHalfAPoint()
+    {
+        // Royal Revolt Survivors (17325): 6.99 -> 4.19 is 40.06%, stored as 40.0.
+        $decision = $this->decide($this->game('6.99', '4.19', '40.0'), [
+            $this->sku('70010000000001', '6.99', ['discount_price' => '4.19']),
+        ]);
+        $this->assertSame(PriceDecision::UNCHANGED, $decision->outcome);
+
+        // 17.99 -> 1.79 is 90.05%; the search payload says 90.1. Keep it rather than
+        // write 90.0 and have UpdateGames put 90.1 back the next night.
+        $decision = $this->decide($this->game('17.99', '1.79', '90.1'), [
+            $this->sku('70010000000001', '17.99', ['discount_price' => '1.79']),
+        ]);
+        $this->assertSame(PriceDecision::UNCHANGED, $decision->outcome);
+    }
+
+    public function testWrongStoredPercentIsReplaced()
+    {
+        // Street Fighter 6 (15016): 34.99 -> 13.99 is 60%, stored as 35%.
+        $decision = $this->decide($this->game('34.99', '13.99', '35.0'), [
+            $this->sku('70010000000001', '34.99', ['discount_price' => '13.99']),
+        ]);
+
+        $this->assertSame(PriceDecision::CHANGED, $decision->outcome);
+        $this->assertSame('60.0', $decision->newDiscountPc);
     }
 
     public function testDecimalFormattingIsNotAChange()

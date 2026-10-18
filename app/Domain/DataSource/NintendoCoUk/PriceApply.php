@@ -60,7 +60,15 @@ class PriceApply
             return new PriceDecision(PriceDecision::NO_API_PRICE, oldPrice: $oldPrice);
         }
 
-        // Two 7001 SKUs on one record at the same price is harmless; at different
+        // A free 7001 next to a paid one is a Friend's Pass or free trial, not the game:
+        // Orbitals, Split Fiction, Little Nightmares III and Lego Voyagers, checked on the
+        // store 2026-10-18. A game whose only 7001 SKUs are free keeps them - it's free.
+        $paid = array_values(array_filter($standalone, fn (DataSourcePrice $p) => (float) $p->regular_price > 0));
+        if (!empty($paid)) {
+            $standalone = $paid;
+        }
+
+        // Two paid 7001 SKUs on one record at the same price is harmless; at different
         // prices there is no rule yet for which one is the game.
         $distinct = array_unique(array_map(fn ($p) => $this->money($p->regular_price), $standalone));
         if (count($distinct) > 1) {
@@ -81,7 +89,7 @@ class PriceApply
             return new PriceDecision(PriceDecision::API_ZERO, nsuid: $sku->nsuid, oldPrice: $oldPrice, newPrice: $newPrice);
         }
 
-        [$newDiscounted, $newDiscountPc] = $this->discount($sku, $now);
+        [$newDiscounted, $newDiscountPc] = $this->discount($sku, $now, $oldDiscountPc);
 
         $decision = fn (string $outcome) => new PriceDecision(
             $outcome, $sku->nsuid,
@@ -116,11 +124,15 @@ class PriceApply
     /**
      * The SKU's live discount as [discounted price, percent], or [null, null].
      *
-     * The percent is worked out from the two prices, to 1dp, because the price API
-     * doesn't send one. That matches the search payload's own figures (e.g. 90.1 for
-     * 9.99 -> 0.99).
+     * The price API doesn't send a percent, so it is worked out from the two prices and
+     * rounded to a whole number: the store shows whole percents (37%, 40%, 60%), and the
+     * search payload's figure matches the whole-number rounding for 1,232 of 1,346
+     * Switch 1 discounts against 601 for 1dp. The stored percent is kept when it is
+     * within 0.5 of the worked-out one, so the payload's occasional 1dp figures (90.1
+     * for 17.99 -> 1.79) don't flip back and forth between UpdateGames and this class
+     * every night.
      */
-    private function discount(DataSourcePrice $sku, Carbon $now): array
+    private function discount(DataSourcePrice $sku, Carbon $now, ?string $oldDiscountPc): array
     {
         if (is_null($sku->discount_price)) {
             return [null, null];
@@ -140,10 +152,13 @@ class PriceApply
             return [null, null];
         }
 
-        return [
-            $this->money($discount),
-            $this->percent((1 - $discount / $regular) * 100),
-        ];
+        $exact = (1 - $discount / $regular) * 100;
+
+        if (!is_null($oldDiscountPc) && abs($exact - (float) $oldDiscountPc) < 0.5) {
+            return [$this->money($discount), $oldDiscountPc];
+        }
+
+        return [$this->money($discount), $this->percent(round($exact))];
     }
 
     private function money(string|float|null $value): ?string

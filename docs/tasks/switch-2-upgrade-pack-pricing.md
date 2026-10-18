@@ -140,6 +140,56 @@ on-sale records; this doesn't).
   Pokémon Legends: Z-A S2 Ed £7.99 (£58.99), Super Mario Bros. Wonder S2 Ed £16.99 (£66.99).
   Highest overstatement: WWE 2K25 Standard Edition £139.99 (API £59.99).
 
+### First prod dry run of `DSNintendoCoUkApplyPrices`, 2026-10-18
+
+After the first real `DSNintendoCoUkFetchPrices` on prod. Outcomes: **101 changed**, 406
+unchanged, 14 frozen, 4 ambiguous, 4 no API price. The 101 split into:
+
+| | games | what it is |
+|---|---|---|
+| Price too low, now corrected | 63 | mostly the upgrade-pack bug: Trails in the Sky 1st Chapter £0.89 → £54.89, Pokémon Legends: Z-A £7.99 → £58.99, Super Mario Bros. Wonder £16.99 → £66.99. Some also carry a sale that only makes sense against the new price (Lollipop Chainsaw: £27.29 at 35% off, against a stored £3.99) |
+| Price too high, now corrected | 4 | WWE 2K25 £139.99 → £59.99, Onimusha: Way of the Sword £74.99 → £59.99, inKONBINI £19.99 → £16.50, Citizen Sleeper £17.97 → £17.75 |
+| Penny drift | 25 | x.98 → x.99, 16.74 → 16.75 and so on: the RRP the parser derives from a sale price (`lowest_f / (1 - pct)`), which the docs already warned would drift. The API's figure is read, not derived |
+| Sale only | 9 | 6 sales cleared (e.g. Daemon X Machina: Titanic Scion, 65% off), Street Fighter 6's sale percent 35% → 60% (13.99 of 34.99 is 60%), and 3 percent rounding changes (below) |
+
+**Percent rounding causes churn.** `PriceApply` works the percent out to 1dp, so 4.19 of 6.99
+becomes 40.1% where the search payload says 40.0%. On localdev, Nintendo's stored percent matches
+the price ratio **rounded to a whole number for 1,232 of 1,346 Switch 1 discounts** and to 1dp
+for only 601. Whole numbers fit the store page (it shows "-40%"). With UpdateGames writing 40.0
+and ApplyPrices writing 40.1, those games would change twice every night.
+
+#### eShop check of 12 cases (Ben, 2026-10-18)
+
+Checked on the UK store pages before anything was applied. **The API's standalone (`7001`) price
+matched the store's base edition in all 12.** Every stored price that was wrong was another
+edition's price.
+
+| # | Game | Stored | Store page (Ben) | API `7001` | What the stored value was |
+|---|---|---|---|---|---|
+| 15613 | WWE 2K25 Standard Edition | £139.99 | Standard £59.99; Farewell Tour £139.99; Bloodline £119.99; Deadman £89.99. No sale | £59.99 | the Farewell Tour Edition |
+| 18328 | Onimusha: Way of the Sword | £74.99 | Switch 2 £59.99; Deluxe £64.99; Premium Deluxe £74.99. No sale | £59.99 | the Premium Deluxe Edition |
+| 17662 | inKONBINI: One Store. Many Stories | £19.99 | £16.50, no other editions | £16.50 | an old price (genuine price change) |
+| 17987 | Citizen Sleeper: Nintendo Switch 2 Edition | £17.97 | £17.75; upgrade pack £0.00 | £17.75 | penny drift. The store labels the edition "Nintendo Switch" under a Switch 2 banner - misleading |
+| 15468 | Daemon X Machina: Titanic Scion | £59.99, 65% off → £29.99 | Switch 2 £59.99; Digital Deluxe £74.99 reduced to £29.99 (60% off, until 18/10/2026); Super Digital Deluxe £84.99 | £59.99, no sale | **the Digital Deluxe's sale shown as the game's sale**, at the wrong percent too |
+| 17465 | Content Warning | £8.99, 20% off → £7.19 | £8.99, no sale, no other editions | £8.99, no sale | a sale that has ended |
+| 18393 | Kuukiyomi 4: Consider It Nintendo Switch 2 Edition | £4.49, 20% off → £3.59 | Switch 2 £11.49 reduced to £7.23 (37% off, until 27/10/2026); upgrade pack £4.49 reduced to £3.59 (20% off, same date) | £11.49, sale £7.23 | the upgrade pack and its sale |
+| 17279 | Planet of Lana II | £12.74 | Switch 2 £16.99; upgrade pack £0.00. No sale | £16.99 | likely an RRP worked out from a sale price |
+| 18325 | Orbitals | £44.99 | Global Friend's Pass £0.00; Switch 2 £34.99; Deluxe £44.99 | £34.99 + £0.00 | the Deluxe Edition. Skipped as ambiguous |
+| 15015 | Split Fiction | £44.98 | Switch 2 £44.99; Friend's Pass £0.00 | £44.99 + £0.00 | penny drift. Skipped as ambiguous |
+| 16029 | Little Nightmares III | £34.99 | Switch 2 £34.99; Free Trial & Friend's Pass £0.00 | £34.99 + £0.00 | right already. Skipped as ambiguous |
+| 16109 | Lego Voyagers | £19.98 | Switch 2 £19.99 reduced to £11.99 (40% off, until 25/10/2026); Friend's Pass £0.00 | £19.99 + £0.00, sale £11.99 | penny drift. Skipped as ambiguous |
+
+What this settles:
+- **The four "two `7001` prices" games are all a Friend's Pass (or free trial) at £0.00** - a
+  second standalone SKU that is free. A £0.00 `7001` alongside a paid one can be ignored. Orbitals
+  shows the stored price was wrong there too.
+- **The store shows whole-number percents** (37%, 40%, 60%), which backs rounding to whole numbers:
+  `PriceApply` would have written 37.1% for Kuukiyomi 4.
+- **A sale can belong to another edition**, and the search payload attaches it to the game
+  (Daemon X Machina). Taking the sale from the `7001` SKU fixes that.
+- **A £0.00 upgrade pack is common** (Citizen Sleeper, Planet of Lana II) - a free upgrade, not
+  a price. `PriceApply` already only uses the `7001` SKU, so it is not affected.
+
 ### Confirmed scale on PROD (dump `switchscores_prod_260720-3.sql`, 2026-07-20 17:10)
 
 Swept all Switch 2 records: took each record's `70010000…` NSUID, compared the price API's

@@ -16,7 +16,7 @@ class PriceDecision
     const UNCHANGED    = 'unchanged';
     const FROZEN       = 'frozen';        // ignore_price rule - never written, reported only
     const NO_API_PRICE = 'no-api-price';  // no usable 7001 SKU for this record
-    const AMBIGUOUS    = 'ambiguous';     // more than one 7001 SKU with different prices
+    const AMBIGUOUS    = 'ambiguous';     // more than one paid 7001 SKU, at different prices
     const STALE        = 'stale';         // the 7001 price wasn't fetched recently
     const API_ZERO     = 'api-zero';      // API says 0.00 for a game we hold a price for
 
