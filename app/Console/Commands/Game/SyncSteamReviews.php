@@ -5,6 +5,7 @@ namespace App\Console\Commands\Game;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use App\Domain\JobRun\CronRunContext;
 use App\Domain\Steam\Repository as SteamRepository;
 use App\Domain\Steam\SyncService as SteamSyncService;
 
@@ -69,6 +70,7 @@ class SyncSteamReviews extends Command
         $logger->info('Synced ' . $games->count() . ' game(s). Success: ' . $success . ', Failed: ' . $failed . '.');
         if ($failedIds) {
             $logger->warning('Steam sync failed for game IDs: ' . implode(', ', $failedIds));
+            CronRunContext::warn('Steam sync failed for ' . $failed . ' of ' . $games->count() . ' game(s): ' . implode(', ', $failedIds));
         }
     }
 }

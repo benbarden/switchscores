@@ -27,6 +27,5 @@ class Thresholds
     // A Live feed matching fewer titles than this (percent) needs a look at its match rule.
     const FEED_MATCH_RATE_AMBER = 50;
 
-    // A nightly job whose latest trace is older than this has missed a run.
-    const JOBS_STALE_HOURS = 26;
+    // Nightly jobs: see App\Domain\JobRun\CronHealth (#164) for the grace and stuck limits.
 }

@@ -53,7 +53,7 @@
                                 <td>
                                     {% if lr %}
                                         {# Optional badge (status) #}
-                                        <span class="badge bg-{% if lr.status == 'success' %}success{% elseif lr.status == 'running' %}warning{% elseif lr.status == 'queued' %}secondary{% else %}danger{% endif %}">
+                                        <span class="badge bg-{% if lr.status == 'success' %}success{% elseif lr.status == 'running' or lr.status == 'warning' %}warning{% elseif lr.status == 'queued' %}secondary{% else %}danger{% endif %}">
                                             {{ lr.status }}
                                         </span>
                                         {# Timestamp + duration #}

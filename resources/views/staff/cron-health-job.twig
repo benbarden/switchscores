@@ -1,0 +1,44 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    <code>{{ Command }}</code>
+    {% if Job %}
+        &middot; schedule <code>{{ Job.expression }}</code>
+        &middot; last due {{ Job.lastDue|date('Y-m-d H:i') }}
+        &middot; {% include 'staff/cron-health-state-badge.twig' with {state: Job.state} %}
+    {% else %}
+        &middot; <span class="text-muted">not in the cron file any more</span>
+    {% endif %}
+</p>
+<p class="text-muted small">The last {{ RunLimit }} recorded runs, newest first. Runs are kept for {{ RetentionDays }} days. Times are UTC.</p>
+
+{% for run in Runs %}
+    {% set warnings = run.warnings %}
+    <div class="card mb-3">
+        <div class="card-header d-flex flex-wrap gap-2 align-items-center">
+            {% include 'staff/cron-health-state-badge.twig' with {state: run.run.status} %}
+            <strong>{{ run.run.started_at ? run.run.started_at|date('Y-m-d H:i:s') : '-' }}</strong>
+            {% if run.run.duration_ms is not null %}<span class="text-muted">{{ (run.run.duration_ms / 1000)|number_format(1) }}s</span>{% endif %}
+            {% if run.run.exit_code is not null %}<span class="text-muted">exit {{ run.run.exit_code }}</span>{% endif %}
+        </div>
+        <div class="card-body">
+            {% for warning in warnings %}
+                <div class="alert alert-warning py-2 mb-2 small" style="overflow-wrap: anywhere;">{{ warning }}</div>
+            {% endfor %}
+            {% if run.output %}
+                <details{{ loop.first ? ' open' : '' }}>
+                    <summary>Output</summary>
+                    <pre class="small mb-0 mt-2" style="max-height: 500px; overflow: auto;">{{ run.output }}</pre>
+                </details>
+            {% else %}
+                <span class="text-muted small">No output.</span>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <p>No recorded runs yet.</p>
+{% endfor %}
+
+{% endblock page_inner %}

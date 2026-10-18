@@ -16,6 +16,8 @@ Route::prefix('staff')->middleware(['auth.staff'])->name('staff.')->group(functi
     Route::get('/tools', 'Staff\ToolsController@index')->name('tools.index');
     Route::post('/tools/run/{cmd}', 'Staff\ToolsController@run')->name('tools.run');
     Route::post('/tools/run-group/{groupKey}', 'Staff\ToolsController@runGroup')->name('tools.runGroup');
+    Route::get('/cron-health', 'Staff\CronHealthController@index')->name('cron-health');
+    Route::get('/cron-health/job', 'Staff\CronHealthController@job')->name('cron-health.job');
 });
 
 // *************** Staff: Insights *************** //

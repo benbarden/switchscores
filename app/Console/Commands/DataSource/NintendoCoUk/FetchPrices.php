@@ -5,6 +5,7 @@ namespace App\Console\Commands\DataSource\NintendoCoUk;
 use App\Domain\DataSource\NintendoCoUk\NsuidExtractor;
 use App\Domain\DataSource\NintendoCoUk\PriceLookup;
 use App\Domain\DataSource\NintendoCoUk\PriceStore;
+use App\Domain\JobRun\CronRunContext;
 use App\Models\Console;
 use App\Models\DataSource;
 use App\Models\DataSourceRaw;
@@ -133,6 +134,11 @@ class FetchPrices extends Command
         ));
         if ($result->hasFailures()) {
             $logger->warning('Some price API batches failed - those NSUIDs keep their previously stored price');
+            CronRunContext::warn(sprintf(
+                '%d of %d price API batches failed; %d NSUIDs resolved of %d',
+                $result->failedBatches(), (int) ceil($result->requested / PriceLookup::BATCH_SIZE),
+                $result->resolved(), $result->requested
+            ));
         }
 
         $this->reportSkuBreakdown($result);

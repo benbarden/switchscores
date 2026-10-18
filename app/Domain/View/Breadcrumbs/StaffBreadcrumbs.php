@@ -474,6 +474,23 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function cronHealth(): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Cron health'),
+        ]);
+    }
+
+    public static function cronHealthJob($pageTitle): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Cron health', route('staff.cron-health')),
+            new BreadcrumbItem($pageTitle),
+        ]);
+    }
+
     // *** INVITE CODES *** //
     public static function inviteCodesDashboard(): BreadcrumbNav
     {

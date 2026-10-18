@@ -5,6 +5,7 @@ namespace App\Console\Commands\DataSource\NintendoCoUk;
 use App\Domain\DataSource\NintendoCoUk\GamePriceDecision;
 use App\Domain\DataSource\NintendoCoUk\PriceApply;
 use App\Domain\DataSource\NintendoCoUk\PriceDecision;
+use App\Domain\JobRun\CronRunContext;
 use App\Domain\Game\Repository as GameRepository;
 use App\Models\Console;
 use App\Models\DataSource;
@@ -136,6 +137,7 @@ class ApplyPrices extends Command
             $changedIds = array_column(array_filter($report, fn ($row) => $row[0] === PriceDecision::CHANGED), 1);
             if ($changedIds) {
                 $logger->warning('Prices differ from the price API after UpdateGames, game IDs: '.implode(', ', $changedIds));
+                CronRunContext::warn(count($changedIds).' Switch 2 price(s) differ from the price API after UpdateGames: '.implode(', ', $changedIds));
             }
         }
 

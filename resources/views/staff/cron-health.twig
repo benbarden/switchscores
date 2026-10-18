@@ -1,0 +1,59 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p class="text-muted">
+    Every job in <code>scripts/switchscores-cron</code>, from what <code>cron:record</code> saved (#164).
+    A job is <strong>missed</strong> when it hasn't run {{ GraceMinutes }} minutes after it was due.
+    Times are UTC.
+</p>
+
+<p>
+    {% for state, count in CronSummary %}
+        <span class="badge {{ state in ['failed', 'missed', 'stuck'] ? 'bg-danger' : (state == 'warning' ? 'bg-warning text-dark' : (state == 'success' ? 'bg-success' : 'bg-secondary')) }} me-1">{{ count }} {{ state }}</span>
+    {% endfor %}
+</p>
+
+<table class="table ss-table align-middle">
+    <thead>
+    <tr>
+        <th>Command</th>
+        <th>Schedule</th>
+        <th>Last due</th>
+        <th>State</th>
+        <th>Last run</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for job in CronJobs %}
+        {% set run = job.run %}
+        <tr>
+            <td><a href="{{ route('staff.cron-health.job', {command: job.command}) }}"><code>{{ job.command }}</code></a></td>
+            <td><code>{{ job.expression }}</code></td>
+            <td>{{ job.lastDue|date('Y-m-d H:i') }}</td>
+            {# Warnings can be long (ApplyPrices lists game IDs): shortened and wrapped here, in full on the job page #}
+            <td style="max-width: 280px;">
+                {% include 'staff/cron-health-state-badge.twig' with {state: job.state} %}
+                {% for warning in job.warnings %}
+                    <div class="small" style="overflow-wrap: anywhere;" title="{{ warning }}">{{ warning|length > 100 ? warning|slice(0, 100) ~ '…' : warning }}</div>
+                {% endfor %}
+            </td>
+            <td class="small text-nowrap">
+                {% if run %}
+                    {{ run.started_at ? run.started_at|date('Y-m-d H:i') : '-' }}
+                    {% if run.duration_ms is not null %} · {{ (run.duration_ms / 1000)|number_format(1) }}s{% endif %}
+                    {% if run.exit_code is not null and run.exit_code != 0 %} · exit {{ run.exit_code }}{% endif %}
+                {% else %}
+                    Never recorded
+                {% endif %}
+            </td>
+            <td class="small text-nowrap">
+                {% if run %}<a href="{{ route('staff.cron-health.job', {command: job.command}) }}">View runs</a>{% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock page_inner %}

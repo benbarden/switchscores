@@ -4,6 +4,7 @@ namespace App\Domain\StaffDashboard;
 
 use Carbon\Carbon;
 
+use App\Domain\JobRun\CronHealth;
 use App\Models\User;
 use App\Models\UserRole;
 
@@ -23,6 +24,7 @@ class AttentionTiles
 {
     public function __construct(
         private DbQueries $dbQueries,
+        private CronHealth $cronHealth,
     )
     {
     }
@@ -156,7 +158,7 @@ class AttentionTiles
 
         return [
             'key' => 'feeds',
-            'label' => 'Live feeds OK',
+            'label' => 'Live feeds',
             'count' => $total - $flagged,
             'suffix' => '/ '.$total,
             'context' => $parts ? implode(', ', $parts) : 'All Live feeds imported and matching',
@@ -168,44 +170,60 @@ class AttentionTiles
     }
 
     /**
-     * Inferred from what key nightly jobs leave behind (#163, decision 11). Exact per-job
-     * recording is #164.
+     * Every job in the cron file, from what cron:record saved to job_runs (#164). This
+     * replaced the #163 inference from what four of the jobs leave behind.
+     *
+     * Red when a job failed, was missed or is stuck; amber when one raised a warning.
      */
     public function jobsTile(Carbon $now): array
     {
-        $staleBefore = $now->copy()->subHours(Thresholds::JOBS_STALE_HOURS);
-        $latestFeedRun = $this->dbQueries->liveFeedLinks()->max('last_run_at');
+        $jobs = $this->cronHealth->jobs($now);
+        $byState = [];
+        foreach ($jobs as $job) {
+            $byState[$job['state']][] = $job['command'];
+        }
 
-        $signals = [
-            'Nintendo import' => $this->dbQueries->latestNintendoImportCompleted(),
-            'Feed import' => $latestFeedRun ? Carbon::parse($latestFeedRun) : null,
-            'Integrity checks' => $this->dbQueries->latestIntegrityCheckResult(),
-        ];
-        $missed = [];
-        foreach ($signals as $name => $at) {
-            if ($at === null || $at->lt($staleBefore)) {
-                $missed[] = $name;
+        // Names when there are a few; a count when there are many (the Cron health page lists them)
+        $describe = fn ($label, $commands) => count($commands) <= 3
+            ? $label.': '.implode(', ', $commands)
+            : count($commands).' '.strtolower($label);
+
+        $bad = [];
+        foreach (CronHealth::BAD_STATES as $state) {
+            if (!empty($byState[$state])) {
+                $bad[] = $describe(ucfirst($state), $byState[$state]);
             }
         }
-        // The GSC job stamps a date only, so allow for a run earlier in the day: missed if the
-        // latest snapshot is from before yesterday.
-        $gscDate = $this->dbQueries->latestGscSnapshotDate();
-        if ($gscDate === null || $gscDate->lt($now->copy()->subDay()->startOfDay())) {
-            $missed[] = 'GSC snapshots';
+        $warnings = $byState['warning'] ?? [];
+
+        if ($bad) {
+            $state = TileState::RED;
+            $stateLabel = 'Problem';
+            $context = implode('. ', $bad).($warnings ? '. '.$describe('Warning', $warnings) : '');
+        } elseif ($warnings) {
+            $state = TileState::AMBER;
+            $stateLabel = 'Warning';
+            $context = $describe('Warning', $warnings);
+        } else {
+            $state = TileState::OK;
+            $stateLabel = 'Ran';
+            $context = 'All ran when due';
         }
 
-        $total = count($signals) + 1;
-        $ran = $total - count($missed);
+        $badCount = 0;
+        foreach (CronHealth::BAD_STATES as $badState) {
+            $badCount += count($byState[$badState] ?? []);
+        }
 
         return [
             'key' => 'jobs',
-            'label' => 'Nightly jobs ran',
-            'count' => $ran,
-            'suffix' => '/ '.$total,
-            'context' => $missed ? 'Missed: '.implode(', ', $missed) : 'All ran in the last day',
-            'state' => $missed ? TileState::RED : TileState::OK,
-            'stateLabel' => $missed ? 'Missed' : 'Ran',
-            'url' => route('staff.tools.index'),
+            'label' => 'Cron jobs',
+            'count' => count($jobs) - $badCount - count($warnings),
+            'suffix' => '/ '.count($jobs),
+            'context' => $context,
+            'state' => $state,
+            'stateLabel' => $stateLabel,
+            'url' => route('staff.cron-health'),
             'group' => 'health',
         ];
     }

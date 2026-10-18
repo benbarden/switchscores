@@ -6,12 +6,9 @@ use Carbon\Carbon;
 
 use App\Enums\ContactStatus;
 use App\Models\ContactSubmission;
-use App\Models\DataSourceImportRun;
 use App\Models\FeaturedGame;
 use App\Models\GamesCompanySignup;
-use App\Models\GscPageSnapshot;
 use App\Models\IntegrityCheck;
-use App\Models\IntegrityCheckResult;
 use App\Models\PartnerFeedLink;
 use App\Models\QuickReview;
 use App\Models\ReviewDraft;
@@ -54,24 +51,6 @@ class DbQueries
     public function liveFeedLinks()
     {
         return PartnerFeedLink::where('feed_status', PartnerFeedLink::FEED_STATUS_LIVE)->get();
-    }
-
-    public function latestNintendoImportCompleted(): ?Carbon
-    {
-        return $this->asCarbon(DataSourceImportRun::max('completed_at'));
-    }
-
-    public function latestIntegrityCheckResult(): ?Carbon
-    {
-        return $this->asCarbon(IntegrityCheckResult::max('created_at'));
-    }
-
-    /**
-     * The GSC snapshot job stamps the date it ran (date only), not the date of the data.
-     */
-    public function latestGscSnapshotDate(): ?Carbon
-    {
-        return $this->asCarbon(GscPageSnapshot::max('snapshot_date'));
     }
 
     public function countIntegrityChecks(): int
