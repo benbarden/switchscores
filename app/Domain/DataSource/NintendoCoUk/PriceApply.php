@@ -16,9 +16,10 @@ use Carbon\Carbon;
  * the same SKU, so a sale on the deluxe edition or the upgrade pack is never shown
  * as a sale on the game.
  *
- * Runs AFTER DSNintendoCoUkUpdateGames and overwrites what it wrote, for Switch 2
- * only (Ben, 2026-10-18). The scalar-field price from the search payload stays as
- * the fallback for any game this class skips.
+ * Switch 2 only. Called from UpdateGame::updatePrice() via UpdateGameFactory (#183),
+ * so DSNintendoCoUkUpdateGames writes each price once; DSNintendoCoUkApplyPrices runs
+ * the same decision afterwards as the nightly report. The scalar-field price from the
+ * search payload stays as the fallback for any game this class skips.
  *
  * decide() makes no writes, so a dry run and a real run take exactly the same path.
  */

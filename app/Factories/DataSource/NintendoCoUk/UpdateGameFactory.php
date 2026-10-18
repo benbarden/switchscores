@@ -2,6 +2,7 @@
 
 namespace App\Factories\DataSource\NintendoCoUk;
 
+use App\Domain\DataSource\NintendoCoUk\GamePriceDecision;
 use App\Models\DataSourceParsed;
 use App\Models\Game;
 use App\Models\GameImportRuleEshop;
@@ -11,7 +12,10 @@ class UpdateGameFactory
 {
     public static function doUpdate(Game $game, DataSourceParsed $dsItem, GameImportRuleEshop $gameImportRule = null)
     {
-        $serviceUpdateGame = new UpdateGame($game, $dsItem, $gameImportRule);
+        // Null for Switch 1, so its price comes from the search payload as before (#183)
+        $apiPriceDecision = app(GamePriceDecision::class)->forGame($game);
+
+        $serviceUpdateGame = new UpdateGame($game, $dsItem, $gameImportRule, $apiPriceDecision);
         $serviceUpdateGame->updatePrice();
         $serviceUpdateGame->updateReleaseDate();
         $serviceUpdateGame->updatePlayers();

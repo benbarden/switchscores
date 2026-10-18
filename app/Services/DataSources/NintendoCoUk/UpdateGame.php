@@ -2,12 +2,20 @@
 
 namespace App\Services\DataSources\NintendoCoUk;
 
+use App\Domain\DataSource\NintendoCoUk\PriceApply;
+use App\Domain\DataSource\NintendoCoUk\PriceDecision;
 use App\Models\DataSourceParsed;
 use App\Models\Game;
 use App\Models\GameImportRuleEshop;
 
 class UpdateGame
 {
+    /**
+     * PriceApply outcomes where the price API decides the price (#183). Anything else
+     * falls back to the search payload's scalar price.
+     */
+    const API_PRICE_OUTCOMES = [PriceDecision::CHANGED, PriceDecision::UNCHANGED];
+
     /**
      * @var \App\Models\Game
      */
@@ -23,13 +31,24 @@ class UpdateGame
      */
     private $gameImportRule;
 
-    public function __construct(Game $game, DataSourceParsed $dsParsedItem, GameImportRuleEshop $gameImportRule = null)
+    /**
+     * @var PriceDecision|null  the price API's decision, for Switch 2 games only
+     */
+    private $apiPriceDecision;
+
+    public function __construct(
+        Game $game,
+        DataSourceParsed $dsParsedItem,
+        GameImportRuleEshop $gameImportRule = null,
+        ?PriceDecision $apiPriceDecision = null
+    )
     {
         $this->game = $game;
         $this->dsParsedItem = $dsParsedItem;
         if ($gameImportRule) {
             $this->gameImportRule = $gameImportRule;
         }
+        $this->apiPriceDecision = $apiPriceDecision;
     }
 
     public function getGame()
@@ -41,6 +60,14 @@ class UpdateGame
     {
         if ($this->gameImportRule) {
             if ($this->gameImportRule->shouldIgnorePrice()) return false;
+        }
+
+        // Switch 2: the standalone SKU's price from the price API, when there is a usable
+        // one (#162, #183). This used to be a separate ApplyPrices run 13 minutes later,
+        // which meant writing the search payload's (often upgrade-pack) price first.
+        if ($this->apiPriceDecision && in_array($this->apiPriceDecision->outcome, self::API_PRICE_OUTCOMES, true)) {
+            (new PriceApply())->apply($this->game, $this->apiPriceDecision);
+            return true;
         }
 
         $priceStandard = $this->dsParsedItem->price_standard;

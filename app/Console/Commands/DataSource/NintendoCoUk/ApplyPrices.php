@@ -24,12 +24,13 @@ use Illuminate\Support\Facades\Log;
  * DRY RUN BY DEFAULT. It reports what it would change and writes nothing unless
  * --apply is passed. Ben's call (2026-10-18): see real examples of the changes before
  * any live price moves, and don't touch the review flags or the ignore_price freezes
- * yet - frozen games are reported, never written. The cron runs it with --apply from
- * 2026-10-18, after a manual --apply on prod was checked on the staff pages.
+ * yet - frozen games are reported, never written.
  *
- * Order: after DSNintendoCoUkUpdateGames, which still writes the scalar-field price
- * first. This overwrites it for Switch 2 games that have a usable standalone SKU and
- * leaves every other game exactly as UpdateGames left it.
+ * Since #183, DSNintendoCoUkUpdateGames applies the same decision itself, so the cron
+ * runs this as a DRY RUN after it: the nightly report. Its outcome counts go to the cron
+ * log either way. "changed" should be 0 - UpdateGames has already written the API price -
+ * so a non-zero count, with the game IDs logged alongside, is the thing to look at.
+ * --apply is still there for a manual fix.
  *
  * The decision itself is in PriceApply; this command only loads, loops and reports.
  */
@@ -124,13 +125,18 @@ class ApplyPrices extends Command
         }
 
         $this->newLine();
+        $logger = Log::channel('cron');
+        $logger->info(' *************** '.$this->getName().' *************** ');
         if ($apply) {
             $this->info('Applied '.($counts[PriceDecision::CHANGED] ?? 0).' change(s).');
-            $logger = Log::channel('cron');
-            $logger->info(' *************** '.$this->getName().' *************** ');
             $logger->info('Applied: '.json_encode($counts));
         } else {
             $this->warn('DRY RUN - nothing written. Pass --apply to write the changed rows.');
+            $logger->info('Dry run: '.json_encode($counts));
+            $changedIds = array_column(array_filter($report, fn ($row) => $row[0] === PriceDecision::CHANGED), 1);
+            if ($changedIds) {
+                $logger->warning('Prices differ from the price API after UpdateGames, game IDs: '.implode(', ', $changedIds));
+            }
         }
 
         return self::SUCCESS;

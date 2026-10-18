@@ -51,8 +51,11 @@ class GamePriceDecision
     /**
      * The decision for one Switch 2 game, or null when ApplyPrices does not look at
      * this game at all (Switch 1, or no linked Nintendo.co.uk record).
+     *
+     * $ignoreFreeze decides as if the game had no ignore_price rule - what the price
+     * would be if the freeze were removed (DSNintendoCoUkRetirePriceHolds).
      */
-    public function forGame(Game $game, ?Carbon $now = null): ?PriceDecision
+    public function forGame(Game $game, ?Carbon $now = null, bool $ignoreFreeze = false): ?PriceDecision
     {
         if ((int) $game->console_id !== Console::ID_SWITCH_2) {
             return null;
@@ -79,7 +82,7 @@ class GamePriceDecision
             ->get()
             ->keyBy('nsuid');
 
-        $rule = GameImportRuleEshop::where('game_id', $game->id)->first();
+        $rule = $ignoreFreeze ? null : GameImportRuleEshop::where('game_id', $game->id)->first();
 
         return $this->priceApply->decide(
             $game,
