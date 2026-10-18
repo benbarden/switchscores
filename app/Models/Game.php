@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\GameStatus;
 use App\Enums\SteamStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -198,6 +199,37 @@ class Game extends Model implements Auditable
     public function scopeDelisted($query)
     {
         return $query->where('game_status', GameStatus::DELISTED);
+    }
+
+    // Release date scopes
+    // Half-open date ranges rather than whereYear/whereMonth: wrapping eu_release_date in
+    // YEAR()/MONTH() stops MySQL using an index, so every query scanned all of games.
+    // See improvements #181.
+
+    public static function releaseMonthRange($year, $month): array
+    {
+        $start = Carbon::create((int) $year, (int) $month, 1);
+        return [$start->toDateString(), $start->copy()->addMonth()->toDateString()];
+    }
+
+    public static function releaseYearRange($year): array
+    {
+        $start = Carbon::create((int) $year, 1, 1);
+        return [$start->toDateString(), $start->copy()->addYear()->toDateString()];
+    }
+
+    public function scopeReleasedInMonth($query, $year, $month)
+    {
+        [$from, $to] = self::releaseMonthRange($year, $month);
+        return $query->where('games.eu_release_date', '>=', $from)
+            ->where('games.eu_release_date', '<', $to);
+    }
+
+    public function scopeReleasedInYear($query, $year)
+    {
+        [$from, $to] = self::releaseYearRange($year);
+        return $query->where('games.eu_release_date', '>=', $from)
+            ->where('games.eu_release_date', '<', $to);
     }
 
     public function getVideoTypeDesc()

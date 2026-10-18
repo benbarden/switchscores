@@ -29,8 +29,7 @@ class Repository extends AbstractRepository
     public function getListByConsole($consoleId, $year, $month)
     {
         return Game::where('console_id', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
+            ->releasedInMonth($year, $month)
             ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->get();
@@ -39,8 +38,7 @@ class Repository extends AbstractRepository
     public function getListByConsoleAndQualityFilter($consoleId, $year, $month, $isLowQuality)
     {
         return Game::where('console_id', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
+            ->releasedInMonth($year, $month)
             ->where('games.is_low_quality', $isLowQuality)
             ->active()
             ->orderBy('games.eu_release_date', 'asc')
@@ -49,37 +47,40 @@ class Repository extends AbstractRepository
 
     public function getMostCommonCategoryByMonth($consoleId, $year, $month)
     {
+        [$dateFrom, $dateTo] = Game::releaseMonthRange($year, $month);
+
         return DB::select("
             SELECT c.name, count(*) as count
             FROM games g
             JOIN categories c ON c.id = g.category_id
-            WHERE g.console_id = ? AND YEAR(g.eu_release_date) = ? AND MONTH(g.eu_release_date) = ?
+            WHERE g.console_id = ? AND g.eu_release_date >= ? AND g.eu_release_date < ?
             AND g.game_status = ?
             GROUP BY g.category_id
             ORDER BY count DESC, RAND() LIMIT 1
-        ", [$consoleId, $year, $month, GameStatus::ACTIVE->value]);
+        ", [$consoleId, $dateFrom, $dateTo, GameStatus::ACTIVE->value]);
     }
 
     public function getTopPublishersByMonth($consoleId, $year, $month)
     {
+        [$dateFrom, $dateTo] = Game::releaseMonthRange($year, $month);
+
         return DB::select("
             SELECT gc.*, count(*) as count
             FROM games g
             join game_publishers gp on g.id = gp.game_id
             join games_companies gc on gc.id = gp.publisher_id
             where g.console_id = ? and g.is_low_quality = 0
-            and year(g.eu_release_date) = ? and month(g.eu_release_date) = ?
+            and g.eu_release_date >= ? and g.eu_release_date < ?
             AND g.game_status = ?
             group by gc.id
             order by count(*) desc, gc.name asc
-        ", [$consoleId, $year, $month, GameStatus::ACTIVE->value]);
+        ", [$consoleId, $dateFrom, $dateTo, GameStatus::ACTIVE->value]);
     }
 
     public function getMonthlyHiddenGems($consoleId, $year, $month)
     {
         return Game::where('console_id', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
+            ->releasedInMonth($year, $month)
             ->where('games.is_low_quality', 0)
             ->where('review_count', '<', 3)
             ->where('review_count', '>', 0)
@@ -97,8 +98,7 @@ class Repository extends AbstractRepository
      */
     public function getList($year, $month)
     {
-        return Game::whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
+        return Game::releasedInMonth($year, $month)
             ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->get();
@@ -107,7 +107,7 @@ class Repository extends AbstractRepository
     public function byYear($consoleId, $year, $includeLowQuality = true)
     {
         $gameList = Game::where('console_id', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
+            ->releasedInYear($year)
             ->active();
 
         if (!$includeLowQuality) {

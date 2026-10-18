@@ -132,7 +132,7 @@ class Repository
         }
 
         if ($year) {
-            $query->whereYear('eu_release_date', $year);
+            $query->releasedInYear($year);
         }
 
         return $query->limit($limit)->get();
@@ -152,7 +152,7 @@ class Repository
         }
 
         if ($year) {
-            $query->whereYear('eu_release_date', $year);
+            $query->releasedInYear($year);
         }
 
         return $query->count();

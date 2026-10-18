@@ -9,8 +9,7 @@ class Stats
     public function calendarStatCount($consoleId, $year, $month)
     {
         return Game::where('games.console_id', '=', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
+            ->releasedInMonth($year, $month)
             ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->count();
@@ -19,8 +18,7 @@ class Stats
     public function lowQualityCount($consoleId, $year, $month)
     {
         return Game::where('games.console_id', '=', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
-            ->whereMonth('games.eu_release_date', '=', $month)
+            ->releasedInMonth($year, $month)
             ->where('games.is_low_quality', 1)
             ->active()
             ->orderBy('games.eu_release_date', 'asc')
@@ -30,7 +28,7 @@ class Stats
     public function yearCount($consoleId, $year)
     {
         return Game::where('games.console_id', '=', $consoleId)
-            ->whereYear('games.eu_release_date', '=', $year)
+            ->releasedInYear($year)
             ->active()
             ->orderBy('games.eu_release_date', 'asc')
             ->orderBy('games.title', 'asc')->count();
