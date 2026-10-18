@@ -9,6 +9,7 @@ use App\Models\Console;
 use App\Models\DataSource;
 use App\Models\DataSourceRaw;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Fetches per-SKU prices from the Nintendo eShop price API into data_source_prices.
@@ -120,6 +121,19 @@ class FetchPrices extends Command
         $this->info('New SKUs:       '.$stored->created());
         $this->info('Price changed:  '.$stored->changed());
         $this->info('Unchanged:      '.$stored->unchanged());
+
+        // Console output goes to /dev/null under cron, so the nightly run needs a line in
+        // the cron log to be checkable at all (see #159 for jobs that have none).
+        $logger = Log::channel('cron');
+        $logger->info(' *************** '.$this->getName().' *************** ');
+        $logger->info(sprintf(
+            'Console %d: %d NSUIDs, %d resolved, %d not found, %d failed batches; stored %d new, %d changed, %d unchanged',
+            $consoleId, $result->requested, $result->resolved(), $result->notFound(), $result->failedBatches(),
+            $stored->created(), $stored->changed(), $stored->unchanged()
+        ));
+        if ($result->hasFailures()) {
+            $logger->warning('Some price API batches failed - those NSUIDs keep their previously stored price');
+        }
 
         $this->reportSkuBreakdown($result);
 

@@ -1,11 +1,13 @@
 # Switch 2 pricing: telling an upgrade pack from a deluxe edition
 
-Analysis done 2026-07-20. **Status (updated 2026-09-27):** price API layers 1-3 built and deployed
-(July 2026) but inert - the API returns HTTP 403 to prod's datacentre IP. Tracked as **#162** in
-`docs/improvements.md`, which has the next steps. Manual store-edition records are **#161**.
+Analysis done 2026-07-20. **Status (updated 2026-10-18):** price API layers 1-3 built and deployed
+(July 2026). The prod 403 is solved: since 2026-10-16 `PriceLookup` goes through a Cloudflare
+Worker relay, and a prod dry run resolved 833 of 850 NSUIDs. Nothing uses the prices yet - layers
+4-5 are next. Tracked as **#162** in `docs/improvements.md` (reframed 2026-10-18 as accurate
+prices for multi-edition games), which has the next steps. Manual store-edition records are **#161**.
 
-Four games are currently held on manual prices with `ignore_price` as a **temporary** measure
-(flag `price-upgrade-pack`). This task removes the need for that hold.
+Six games are held on manual prices with `ignore_price` as a **temporary** measure (flag
+`price-upgrade-pack`), and 17 games are frozen in all. This task removes the need for those holds.
 
 ## The problem
 
@@ -110,6 +112,33 @@ price API resolves it cleanly: game `70010000111806` regular **£24.99**, discou
 (40% off £24.99 = £14.99 exactly); the £4.99 is the `70050000065152` upgrade pack leaking into
 `price_regular_f`. **Neither scalar field held the right answer**, so this record was unrecoverable
 by any rule operating on the existing payload.
+
+### Re-sweep on localdev, 2026-10-18 (#162)
+
+`DSNintendoCoUkFetchPrices` run for real on localdev (residential IP): 614 live Switch 2 raw
+records, 811 NSUIDs, 791 resolved, 20 not found, 0 failed batches (577 `7001` / 129 `7005` / 85
+`7007`). Each active game's `7001` `regular_price` compared with `games.price_eshop`. **Caveat:**
+localdev's games are the 2026-09-25 prod dump and the API prices are from 2026-10-18, so a few
+differences may be real RRP changes since. Not like-for-like with July either (July separated
+on-sale records; this doesn't).
+
+| | games |
+|---|---|
+| agree | 409 |
+| **live price too low** | **87** |
+| live price too high | 7 |
+| **wrong in total** | **94 of 503 (19%)** |
+
+- **The problem has grown: 94 wrong against 56 in July** (56 of 363 swept then, 15%; 19% now).
+  **82 of the 94 have a `7005` upgrade-pack SKU** - still the dominant failure.
+- **57 of the 94 have no flag at all.** The flags don't find this problem; the API comparison does.
+- **`price-check-deluxe`: 128 of 158 matched games now agree with the API**; 30 are wrong.
+- **All 14 frozen games that matched agree with the API** (the other 3 frozen games didn't
+  match: 2 are Switch 1). So no freeze is still holding back a price the API would get wrong.
+- Wrong prices total £1,382 (API minus live), median £13.50. Worst: Trails in the Sky 1st
+  Chapter S2 Ed £0.89 (API £54.89), Inazuma Eleven: Victory Road S2 Ed £2.04 (£60.03),
+  Pokémon Legends: Z-A S2 Ed £7.99 (£58.99), Super Mario Bros. Wonder S2 Ed £16.99 (£66.99).
+  Highest overstatement: WWE 2K25 Standard Edition £139.99 (API £59.99).
 
 ### Confirmed scale on PROD (dump `switchscores_prod_260720-3.sql`, 2026-07-20 17:10)
 
