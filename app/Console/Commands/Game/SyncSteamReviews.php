@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Game;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 use App\Domain\Steam\Repository as SteamRepository;
 use App\Domain\Steam\SyncService as SteamSyncService;
@@ -25,12 +26,17 @@ class SyncSteamReviews extends Command
 
     public function handle(): void
     {
+        $logger = Log::channel('cron');
+
+        $logger->info(' *************** '.$this->getName().' *************** ');
+
         $limit = (int) $this->option('limit');
         $delay = (int) $this->option('delay');
         $games = $this->repoSteam->getLinkedGames($limit);
 
         if ($games->isEmpty()) {
             $this->info('No games linked to Steam.');
+            $logger->info('No games linked to Steam.');
             return;
         }
 
@@ -38,6 +44,7 @@ class SyncSteamReviews extends Command
 
         $success = 0;
         $failed = 0;
+        $failedIds = [];
 
         foreach ($games as $game) {
             $result = $this->steamSync->syncGame($game->id, $game->steam_id);
@@ -50,6 +57,7 @@ class SyncSteamReviews extends Command
             } else {
                 $this->warn('  [' . $game->id . '] ' . $game->title . ' — failed');
                 $failed++;
+                $failedIds[] = $game->id;
             }
 
             if ($delay > 0) {
@@ -58,5 +66,9 @@ class SyncSteamReviews extends Command
         }
 
         $this->info('Done. Success: ' . $success . ', Failed: ' . $failed . '.');
+        $logger->info('Synced ' . $games->count() . ' game(s). Success: ' . $success . ', Failed: ' . $failed . '.');
+        if ($failedIds) {
+            $logger->warning('Steam sync failed for game IDs: ' . implode(', ', $failedIds));
+        }
     }
 }

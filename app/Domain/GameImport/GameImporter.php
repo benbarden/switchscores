@@ -42,7 +42,6 @@ class GameImporter
      *
      * Returns an array:
      *   'game'           => Game
-     *   'new_publisher'  => string|null  — publisher name if auto-created
      *   'packshot_ok'    => bool
      *   'header_ok'      => bool
      */

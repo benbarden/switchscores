@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\DataSource\NintendoCoUk;
 
-use App\Domain\DataSource\NintendoCoUk\NsuidExtractor;
+use App\Domain\DataSource\NintendoCoUk\GamePriceDecision;
 use App\Domain\DataSource\NintendoCoUk\PriceApply;
 use App\Domain\DataSource\NintendoCoUk\PriceDecision;
 use App\Domain\Game\Repository as GameRepository;
@@ -46,7 +46,7 @@ class ApplyPrices extends Command
         parent::__construct();
     }
 
-    public function handle(NsuidExtractor $extractor, PriceApply $priceApply)
+    public function handle(GamePriceDecision $gamePriceDecision, PriceApply $priceApply)
     {
         $apply = (bool) $this->option('apply');
         $maxAge = (int) $this->option('max-age');
@@ -85,12 +85,7 @@ class ApplyPrices extends Command
                 continue;
             }
 
-            $skuPrices = [];
-            foreach ($extractor->extractFromJson($rawJsonByLink[$parsed->link_id] ?? null) as $nsuid) {
-                if (isset($prices[$nsuid])) {
-                    $skuPrices[] = $prices[$nsuid];
-                }
-            }
+            $skuPrices = $gamePriceDecision->skuPrices($rawJsonByLink[$parsed->link_id] ?? null, $prices);
 
             $decision = $priceApply->decide($game, $skuPrices, $rules[$game->id] ?? null, $now, $maxAge);
             $counts[$decision->outcome] = ($counts[$decision->outcome] ?? 0) + 1;

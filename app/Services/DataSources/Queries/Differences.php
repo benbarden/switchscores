@@ -3,6 +3,7 @@
 
 namespace App\Services\DataSources\Queries;
 
+use App\Models\Console;
 use App\Models\DataSource;
 use Illuminate\Support\Facades\DB;
 
@@ -109,7 +110,10 @@ class Differences
             $gameSql = 'AND dsp.game_id = ?';
             $params = [$sourceId, $gameId];
         } else {
-            $gameSql = '';
+            // Switch 2 prices come from the price API, not this field (#162), so most
+            // Switch 2 games differ here by design. The ApplyPrices dry run is the
+            // Switch 2 report; the game detail page still checks one game either way (#182).
+            $gameSql = 'AND g.console_id != '.Console::ID_SWITCH_2;
             $params = [$sourceId];
         }
 

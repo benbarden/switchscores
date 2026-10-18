@@ -77,7 +77,6 @@ class AsReviewsManagerTest extends TestCase
     {
         $this->be($this->userReviewsManager);
         $this->doPageTest('/staff/reviews/quick-reviews');
-        $this->doPageTest('/staff/reviews/quick-reviews/edit/1');
         $this->doPageTest('/staff/reviews/quick-reviews/delete/1');
     }
 

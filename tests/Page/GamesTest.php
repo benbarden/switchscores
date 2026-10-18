@@ -69,20 +69,29 @@ class GamesTest extends TestCase
         $this->doPageTest("/games/by-collection", HttpStatus::REDIR_PERM);
         $this->doPageTest("/games/by-collection/lego", HttpStatus::REDIR_PERM);
 
-        $this->doPageTest("/c/switch-1/category");
-        $this->doPageTest("/c/switch-1/category/adventure");
-        $this->doPageTest("/c/switch-1/series/pokemon");
-        $this->doPageTest("/c/switch-1/tag");
-        $this->doPageTest("/c/switch-1/tag/mahjong");
-        $this->doPageTest("/c/switch-1/collection");
-        $this->doPageTest("/c/switch-1/collection/lego");
+        // The per-console browse pages redirect to the merged /browse/ pages
+        $this->doPageTest("/c/switch-1/category", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-1/category/adventure", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-1/series/pokemon", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-1/tag", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-1/tag/mahjong", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-1/collection", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-1/collection/lego", HttpStatus::REDIR_PERM);
 
-        $this->doPageTest("/c/switch-2/category");
-        $this->doPageTest("/c/switch-2/category/adventure");
-        $this->doPageTest("/c/switch-2/series/pokemon");
-        $this->doPageTest("/c/switch-2/tag");
-        $this->doPageTest("/c/switch-2/tag/mahjong");
-        $this->doPageTest("/c/switch-2/collection");
-        $this->doPageTest("/c/switch-2/collection/lego");
+        $this->doPageTest("/c/switch-2/category", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-2/category/adventure", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-2/series/pokemon", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-2/tag", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-2/tag/mahjong", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-2/collection", HttpStatus::REDIR_PERM);
+        $this->doPageTest("/c/switch-2/collection/lego", HttpStatus::REDIR_PERM);
+
+        $this->doPageTest("/browse/category");
+        $this->doPageTest("/browse/category/adventure");
+        $this->doPageTest("/browse/series/pokemon");
+        $this->doPageTest("/browse/tag");
+        $this->doPageTest("/browse/tag/mahjong");
+        $this->doPageTest("/browse/collection");
+        $this->doPageTest("/browse/collection/lego");
     }
 }

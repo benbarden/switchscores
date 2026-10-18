@@ -96,7 +96,7 @@ class AsGamesManagerTest extends TestCase
         $this->doPageTest("/staff/games/list/broken-nintendo-co-uk-link");
         $this->doPageTest("/staff/games/list/by-category/1");
         $this->doPageTest("/staff/games/list/by-series/129");
-        $this->doPageTest("/staff/games/list/by-tag/31");
+        $this->doPageTest("/staff/games/list/by-tag/5");
     }
 
     public function testFeaturedGames()

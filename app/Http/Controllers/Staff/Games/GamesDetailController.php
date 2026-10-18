@@ -9,6 +9,8 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
+use App\Domain\DataSource\NintendoCoUk\GamePriceDecision;
+use App\Domain\DataSource\NintendoCoUk\PriceDecision;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\Repository as GameRepository;
@@ -49,6 +51,7 @@ class GamesDetailController extends Controller
         private DownloadPackshotHelper $downloadPackshotHelper,
         private GscPageSnapshotRepository $repoGscPageSnapshot,
         private GameFlagRepository $repoGameFlag,
+        private GamePriceDecision $gamePriceDecision,
     )
     {
     }
@@ -110,6 +113,21 @@ class GamesDetailController extends Controller
 
         $bindings['ReleaseDateEUNintendoCoUkDifferenceCount'] = $releaseDateEUNintendoCoUkDifferenceCount[0]->count;
         $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
+
+        // Switch 2 prices come from the price API (#162), so the search payload's price
+        // differs by design for every game ApplyPrices has corrected (#182). Where the
+        // price API decides the price, show its decision instead. Where it can't (no
+        // standalone SKU, stale, ambiguous, zero), UpdateGames is still the authority,
+        // so the scalar check above stands.
+        $priceDecision = $this->gamePriceDecision->forGame($game);
+        $apiDecidesPrice = $priceDecision && in_array($priceDecision->outcome, [
+            PriceDecision::CHANGED, PriceDecision::UNCHANGED, PriceDecision::FROZEN,
+        ], true);
+        if ($apiDecidesPrice) {
+            $bindings['PriceNintendoCoUkDifferenceCount'] = 0;
+            $bindings['PriceApiDecision'] = $priceDecision->differs() ? $priceDecision : null;
+        }
+
         $bindings['PlayersNintendoCoUkDifferenceCount'] = $playersEUNintendoCoUkDifferenceCount[0]->count;
 
         // Nintendo.co.uk API data

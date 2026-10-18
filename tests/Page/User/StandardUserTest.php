@@ -25,6 +25,8 @@ class StandardUserTest extends TestCase
             'display_name' => 'Spiderman',
             'email' => $userEmail
         ]);
+        // Collection, quick review and featured game pages sit behind the verified middleware
+        $this->activeUser->email_verified_at = now();
     }
 
     public function tearDown(): void

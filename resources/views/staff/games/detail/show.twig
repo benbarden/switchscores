@@ -35,6 +35,21 @@
         <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.price') }}?gameid={{ GameId }}">Review here</a>.
     </div>
 {% endif %}
+{# Switch 2: the price API decides the price (#182). No link to the differences page, which can freeze it #}
+{% if PriceApiDecision is defined and PriceApiDecision %}
+    {% set d = PriceApiDecision %}
+    <div class="alert {{ d.outcome == 'frozen' ? 'alert-info' : 'alert-warning' }}" role="alert">
+        {% if d.outcome == 'frozen' %}
+            Price is frozen (ignore price) and differs from the Nintendo price API.
+        {% else %}
+            Price differs from the Nintendo price API. Tonight's price run will update it.
+        {% endif %}
+        Price: {{ d.oldPrice ?? '-' }} &rarr; {{ d.newPrice ?? '-' }}.
+        Sale: {{ d.oldDiscounted ? d.oldDiscounted ~ ' (' ~ d.oldDiscountPc ~ '%)' : 'none' }}
+        &rarr; {{ d.newDiscounted ? d.newDiscounted ~ ' (' ~ d.newDiscountPc ~ '%)' : 'none' }}.
+        <small class="text-muted">SKU {{ d.nsuid }}</small>
+    </div>
+{% endif %}
 {% if PlayersNintendoCoUkDifferenceCount > 0 %}
     <div class="alert alert-danger" role="alert">
         No of players is different to the Nintendo.co.uk API.

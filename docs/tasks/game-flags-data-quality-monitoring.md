@@ -1,4 +1,6 @@
-# Game flags as the data quality monitoring system
+# Watchlist: game flags as the data quality monitoring system
+
+Improvement #184. Named the Watchlist on 2026-10-18; game flags are the mechanism underneath.
 
 Scoping notes. Not started.
 
@@ -100,6 +102,125 @@ monitoring.
 This table matters more than the flagging mechanism itself. Flags without history reproduce the
 dashboard that already got neglected, with better styling.
 
+## Master list: everything that fits this shape (inventory, 2026-10-18)
+
+Ben's framing (2026-10-18, #184): data checks, integrity checks, cron issues and other manual
+fixes and checks are all "a set of things that need looking at", and should work one way rather
+than several. This is the inventory of what exists today, so nothing is missed and nothing is
+built twice. Keep it up to date: **when a new check, list page or manual action is added, add a
+row here.**
+
+Columns: **Entity** - what the check is about (game, or something else, which matters for the
+`game_flags` vs `entity_flags` decision above). **Found by** - a query that can run on a schedule,
+a cron's output, or a person.
+
+### 1. Integrity checks (`integrity_checks`, `/staff/data-quality/dashboard`)
+
+Counts only - no record of which games fail. Last run dates from localdev's 2026-09-25 dump.
+
+| Check | Entity | Found by | State |
+|---|---|---|---|
+| `GameNoReleaseYear` | game | query | 15 failing, unchanged since 2026-05-05 |
+| `GameWrongReleaseYear` | game | query | passing; last updated 2021-06-27 |
+| `GameMissingRank` | game | query | passing; last updated 2025-09-18 |
+| `GameNoTitleHashes` | game | query | never run (no result recorded) |
+| `GameTitleHashMismatch` | game | query | never run |
+| `TitleHashNoGameMatch` | title hash | query | never run |
+| `ReviewLinkDuplicate` | review link | query | never run |
+
+### 2. Data quality pages (`/staff/data-quality/*`)
+
+| Page | Entity | Found by | Note |
+|---|---|---|---|
+| Duplicate reviews | review link | query | empty; marked Retire below |
+| Category dashboard; games with / without categories by month | game | query | superseded by the Categorisation dashboard; marked Retire below |
+
+### 3. Staff game lists (`/staff/games/list/{listType}`, games dashboard counts)
+
+Work queues that are a live query today. No history, no "accepted" state.
+
+| List | Entity | Found by | Note |
+|---|---|---|---|
+| No category: all / excluding low quality / with collection / with reviews | game | query | #146: these don't filter on game status |
+| No EU release date | game | query | |
+| No eShop price | game | query | |
+| No video type | game | query | |
+| Missing players | game | query | dashboard count only |
+| No Nintendo.co.uk link, and no override URL | game | query | |
+| Broken Nintendo.co.uk link | game | query | fed by `game:crawl-batch` (see 6) |
+| Upcoming (eShop crosscheck) | game | query | |
+| Category unverified / needs review | game | query | dashboard counts |
+| Amazon UK / US unchecked | game | query | dashboard counts |
+| Crawl status: not yet crawled / 404 / 410 / redirect / error | game | cron | dashboard counts, written by `game:crawl-batch` |
+| Missing-category keyword lists (simulation, survival, quiz, puzzle, sports and racing, hidden object, escape, spot the difference, drone/flying, hentai girls) | game | query | `GameLists\MissingCategory`, used through the bulk editor |
+| Title hash list | game | query | `/staff/games/title-hash/list` |
+
+### 4. Differences (`/staff/data-sources/differences/nintendo-co-uk/*`)
+
+The API's value differs from the game's. Mostly transient, since UpdateGames applies what it can
+each night - the lasting value is the anomalies (see `api-no-price` under Candidate checks).
+
+| Difference | Entity | Found by | Note |
+|---|---|---|---|
+| EU release date | game | query | |
+| Players | game | query | |
+| Publishers | game | query | |
+| Price | game | query | Switch 2 now set from the price API (#162), so this flags correct prices as wrong (#182). It can also set `ignore_price` |
+| Genres | game | - | #129: remove; genres never map cleanly |
+
+### 5. Price work (#162, #132)
+
+| Item | Entity | Found by | Note |
+|---|---|---|---|
+| `price-check-deluxe` (161), `price-self-heal` (19), `price-recheck` (10), `price-upgrade-pack` (6), `price-sale-monitor` (4) | game | person | the existing manual flags; mostly answered by the price API now |
+| `ignore_price` freezes (17) | game | person | a freeze with no reason recorded - the "accepted with a reason" state, built by hand |
+| ApplyPrices skips: `no-api-price`, `ambiguous`, `api-zero`, `stale`, frozen but differs | game | cron | natural auto-flags: set when the nightly run skips a game, cleared when it doesn't |
+| Price equals discounted price | game | query | Candidate check 1 below |
+| Switch 1 price mismatches | game | query | #132 |
+
+### 6. Cron issues (seen in the cron log)
+
+| Issue | Entity | Found by | Note |
+|---|---|---|---|
+| Packshot download failures (e.g. redirect limit) | game | cron | #157: also silent in the staff UI; #156 for Switch 2 header URLs |
+| Store URL 404 / 410 / redirect | game | cron | `game:crawl-batch`, see 3 |
+| Steam review sync status | game | cron | `steam_status`; the job doesn't write to the cron log (#159) |
+| Feed errors: "No match rule", "No feed found", blocked or non-RSS responses | feed link | cron | not a game; see #177 |
+| GSC snapshot fetch | none | cron | job health, not a flag; #159, #164 (`job_runs`) |
+
+**Out of scope - normal day-to-day work (Ben, 2026-10-18):** review drafts, and "No rating" in
+the cron log. They aren't games, and they're queues Ben reviews as they come up anyway, so they
+stay as they are. The test for this list: a flag is for something that would otherwise be missed
+or forgotten, not for work that already has a home.
+
+### 7. Manual fixes and checks from the improvements list
+
+| Item | Entity | Found by | Note |
+|---|---|---|---|
+| Games to come back to later | game | person | Ben's use case for #141 |
+| Games without a custom description | game | query | #17 |
+| Games without store links | game | query | #63 |
+| Games saved with no publisher by the single-game add | game | query | #173 |
+| LQ decisions for publishers and keywords | games company | person | #131 |
+| Publisher change monitoring | games company | cron | #116 |
+| Data checks as global lists | game | query | #9 - the earlier version of this idea |
+
+### What the list shows
+
+- **Game flags are the mechanism; most of this is about games** (sections 1, 3, 4, 5, most of 6
+  and 7). What's left is feed links, review links, title hashes and games companies, which is why
+  the `game_flags` vs `entity_flags` decision above needs settling first.
+- **It's called the Watchlist** (Ben, 2026-10-18) - the general name for the idea and for the
+  staff page where all of this goes. Game flags are how it works underneath, not what it's called.
+- **Three kinds of "found by", one mechanism.** A scheduled query, a cron's own output and a
+  person can all set the same flag; the `source` column says which, and only the source that set
+  a flag may clear it.
+- **A live list page isn't wrong; it's missing two things.** Each list in section 3 already works
+  as a query. What a flag adds is history (is it growing?) and the accepted state (looked at,
+  stays). That suggests porting a list only when one of those two is wanted, not all at once.
+- **Job health is separate.** "Did the GSC fetch run?" is about the job, not a game - it belongs
+  in `job_runs` (#164), not in flags.
+
 ## Candidate checks
 
 Starting set, in rough order of value:
@@ -129,7 +250,8 @@ Starting set, in rough order of value:
    never "differences pending" - it was the anomalies, which are exactly what flags should hold.
 
 4. The four game-level checks migrated from `integrity_checks`.
-5. **`data_source_parsed` rows with `link_id IS NULL`** - 6,654 orphans, all created
+5. **Resolved by 2026-09-25 (0 rows on localdev, checked 2026-10-18) - no longer a candidate.**
+   **`data_source_parsed` rows with `link_id IS NULL`** - 6,654 orphans, all created
    2021-11-15, still fed to `DSNintendoCoUkUpdateGames` (8,650 rows processed). Rows are ordered
    by `game_id` only, so where a game has both a real and an orphan row **the winner is
    arbitrary** and 2021 values can overwrite current data. Not a game flag as such, but it needs

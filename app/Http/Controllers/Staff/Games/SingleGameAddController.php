@@ -12,6 +12,8 @@ use App\Domain\GameImport\GameImporter;
 use App\Domain\GameImport\ImportGameData;
 use App\Domain\GameTitleHash\HashGenerator;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
+use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\Url\LinkTitle;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\WeeklyBatch\CategorySuggester;
@@ -50,6 +52,7 @@ class SingleGameAddController extends Controller
         private CategoryRepository $repoCategory,
         private GameRepository $repoGame,
         private GameTitleHashRepository $repoTitleHash,
+        private GamesCompanyRepository $repoGamesCompany,
         private HashGenerator $hashGenerator
     ) {
     }
@@ -215,6 +218,10 @@ class SingleGameAddController extends Controller
             excludeBatchId: null,
         );
 
+        $publisher       = $page['publisher_normalised'] ?? null;
+        $publisherExists = $publisher !== null
+            && $this->repoGamesCompany->findByNameCaseInsensitive($publisher) !== null;
+
         $lqReasons = array_values(array_filter([
             $classification['lq_flag_reason'],
             ($page['lq_flag_reason'] ?? '') ?: null,
@@ -236,7 +243,8 @@ class SingleGameAddController extends Controller
             'nsuid'        => $entry['nsuid'] ?: ($page['nsuid'] ?? null),
             'genres'       => $genres,
             'description'  => $description,
-            'publisher'    => $page['publisher_normalised'] ?? null,
+            'publisher'    => $publisher,
+            'publisher_exists' => $publisherExists,
             'players'      => $page['players'] ?? null,
             'collection'   => $classification['collection'],
             'lq_confirmed' => $page['lq_confirmed'] ?? false,
@@ -263,6 +271,7 @@ class SingleGameAddController extends Controller
             'nintendo_url' => 'required|url',
             'packshot_url' => 'nullable|url',
             'publisher'    => 'nullable|string|max:255',
+            'publisher_is_lq' => 'nullable|boolean',
             'players'      => 'nullable|string|max:50',
             'description'  => 'nullable|string',
         ]);
@@ -275,6 +284,21 @@ class SingleGameAddController extends Controller
             return redirect()->route('staff.games.single-game-add.show')
                 ->withInput()
                 ->with('error', "\"{$title}\" already exists on this console (game {$duplicate['id']}).");
+        }
+
+        // GameImporter only links publishers - the weekly batch creates them in its
+        // Publishers step first. This is that step for one game (#173), so a new
+        // publisher is not silently dropped.
+        $newPublisher = null;
+        $publisherName = trim((string) ($validated['publisher'] ?? ''));
+        $validated['publisher'] = $publisherName !== '' ? $publisherName : null;
+        if ($publisherName !== '' && !$this->repoGamesCompany->findByNameCaseInsensitive($publisherName)) {
+            $this->repoGamesCompany->createCompany(
+                $publisherName,
+                (new LinkTitle())->generate($publisherName),
+                $request->boolean('publisher_is_lq')
+            );
+            $newPublisher = $publisherName;
         }
 
         $data = new ImportGameData(
@@ -325,7 +349,8 @@ class SingleGameAddController extends Controller
 
         $redirect = redirect('/staff/games/detail/'.$game->id.'?lastaction=add&lastgameid='.$game->id)
             ->with('success', "\"{$game->title}\" imported"
-                .($released ? ' and marked as released.' : ', and left as upcoming.'));
+                .($released ? ' and marked as released.' : ', and left as upcoming.')
+                .($newPublisher ? " New publisher \"{$newPublisher}\" created." : ''));
 
         if ($warnings) {
             $redirect->with('warning', 'Imported, but '.implode(' and ', $warnings).'.');
