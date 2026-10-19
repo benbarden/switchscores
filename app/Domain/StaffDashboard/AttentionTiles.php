@@ -113,8 +113,9 @@ class AttentionTiles
 
     /**
      * Live feeds only (#163, decision 11). A feed is flagged if its last import failed, it hasn't
-     * been imported since run recording began, it has missed a nightly run, or its match rule is
-     * catching fewer titles than the threshold.
+     * been imported since run recording began, or it has missed a nightly run. A low match rate
+     * is mentioned in the context but doesn't count against the total or change the state - the
+     * feed is still importing (Ben, 2026-10-19).
      */
     public function feedsTile(Carbon $now): array
     {
@@ -133,7 +134,7 @@ class AttentionTiles
             $notRun += $isNotRun ? 1 : 0;
             $stale += $isStale ? 1 : 0;
             $lowMatch += $isLowMatch ? 1 : 0;
-            if ($isFailed || $isNotRun || $isStale || $isLowMatch) {
+            if ($isFailed || $isNotRun || $isStale) {
                 $flagged++;
             }
         }
