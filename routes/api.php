@@ -37,13 +37,23 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 });
 //Route::get('/v2/game/search', 'Api\V2\Game\SearchController@findByTitle')->name('api.v2.game.search');
 
-// Game
-Route::get('/game/get-by-exact-title-match', 'Api\Game\TitleMatch@getByExactTitleMatch');
+/* Staff tooling - called only from staff pages.
+   Declared before the greedy V1 /game/{id} route below. */
+Route::group(['middleware' => ['auth.staff']], function() {
 
-Route::get('/game/find-by-title', 'Api\Game\GameController@findByTitle');
+    // Game
+    Route::get('/game/get-by-exact-title-match', 'Api\Game\TitleMatch@getByExactTitleMatch');
+    Route::get('/game/find-by-title', 'Api\Game\GameController@findByTitle');
 
-// Partner
-Route::get('/partner/games-company/search', 'Api\Partner\GamesCompanyController@findByName');
+    // Partner
+    Route::get('/partner/games-company/search', 'Api\Partner\GamesCompanyController@findByName');
+
+    // Admin
+    Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
+    Route::get('/url/link-text', 'Api\UrlController@generateLinkText');
+    Route::get('/url/news-url', 'Api\UrlController@generateNewsUrl');
+
+});
 
 /* LP - legacy V1 (unauthenticated). Logged as V1 so we can see when it's hit.
    See docs/api-v1-deprecation-plan.md. */
@@ -67,11 +77,6 @@ Route::group(['middleware' => 'log.api:'. \App\Models\ApiRequestLog::VERSION_V1]
     Route::get('/game/{id}/reviews', 'Api\Game\GameController@getReviews');
 
 });
-
-/* Admin */
-Route::get('/review/site', 'Api\ReviewSiteController@getByDomain');
-Route::get('/url/link-text', 'Api\UrlController@generateLinkText');
-Route::get('/url/news-url', 'Api\UrlController@generateNewsUrl');
 
 // Games manager
 Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\UserRole::ROLE_GAMES_MANAGER]], function() {
