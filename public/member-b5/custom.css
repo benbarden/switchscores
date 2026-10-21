@@ -264,3 +264,15 @@ nav ol.breadcrumb {
     color: #fff;
 }
 
+/* Staff section heading (#112). The reviewers' game page reuses the staff game detail
+   columns, which use heading.renderStaff(); this matches .ss-h2 in staff-b5/custom.css
+   without the staff font variables. */
+.ss-h2 {
+    font-weight: 700;
+    font-size: 17px;
+    color: #1b1c1f;
+    margin: 18px 0 6px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #1b1c1f;
+}
+

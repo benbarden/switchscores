@@ -10,6 +10,12 @@
     </div>
 {% endmacro %}
 
+{# Staff section heading (#112): the staff home's style. Every staff page uses this, so a
+   restyle is a change here and in .ss-h2 in public/staff-b5/custom.css. #}
+{% macro renderStaff(text) %}
+    <h2 class="ss-h2">{{ text }}</h2>
+{% endmacro %}
+
 {% macro renderChunky(text, size) %}
     <{{ size}} class="theme-header theme-rounded theme-padding-10 theme-colour-15">{{ text }}</{{ size }}>
 {% endmacro %}
