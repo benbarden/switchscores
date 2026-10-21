@@ -2,28 +2,35 @@
     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGames" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Games
     </a>
+    {# Same order as the games dashboard, a divider per dashboard section. Archived pages stay off the nav (#189). #}
     <ul class="dropdown-menu" aria-labelledby="navbarDropdownGames">
         <li><a class="dropdown-item" href="{{ route('staff.games.dashboard') }}">Games dashboard</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.search') }}">Search games</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.add') }}">+ Add game</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.single-game-add.show') }}">+ Add game from the store</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.search') }}">Search games</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.weekly-updates.index')}}">Weekly updates</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.release-hub.show')}}">Release hub</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.images.dashboard')}}">Game images</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}">No Nintendo.co.uk link</a></li>
-        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'upcoming-eshop-crosscheck'}) }}">Upcoming (eShop crosscheck)</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.gameGroup.index')}}">Game groups</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.gameGroup.suggestions')}}">Game group suggestions</a></li>
         <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-nintendo-co-uk-link'}) }}">No Nintendo.co.uk link</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'broken-nintendo-co-uk-link'}) }}">Broken Nintendo.co.uk link</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-eu-release-date'}) }}">No EU release date</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-eshop-price'}) }}">No price</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-video-type'}) }}">No video type</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}">No Amazon UK link</a></li>
         <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.stats') }}">Games stats</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.affiliates') }}">Affiliates</a></li>
+        <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'recently-added'}) }}">Recently added</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'recently-released'}) }}">Recently released</a></li>
         <li><a class="dropdown-item" href="{{ route('staff.games.list.showList', {'listType': 'upcoming-games'}) }}">Upcoming games</a></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.flag.index') }}">By flag</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ route('staff.games.featured-games.list') }}">Featured games</a></li>
     </ul>
 </li>

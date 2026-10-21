@@ -39,6 +39,8 @@ Route::group([
     Route::controller(DashboardController::class)->group(function () {
         Route::get('dashboard', 'show')->name('dashboard');
         Route::get('stats', 'stats')->name('stats');
+        Route::get('affiliates', 'affiliates')->name('affiliates');
+        Route::get('go-to-game', 'goToGame')->name('goToGame');
     });
 
     // ---- Game images (packshot storage dashboard + migration) ----

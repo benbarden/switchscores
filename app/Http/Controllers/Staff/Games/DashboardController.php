@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
+use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameStats\Repository as GameStatsRepositoryLegacy;
 use App\Domain\Game\Repository\GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
@@ -21,6 +22,7 @@ class DashboardController extends Controller
         private GameStatsRepositoryLegacy $repoGameStatsLegacy,
         private GameListsRepository $repoGameLists,
         private GameAffiliateRepository $repoGameAffiliate,
+        private GameRepository $repoGame,
     )
     {
     }
@@ -53,15 +55,6 @@ class DashboardController extends Controller
         $bindings['CategoryVerified'] = $this->repoGameStatsLegacy->totalCategoryVerified();
         $bindings['CategoryUnverified'] = $this->repoGameStatsLegacy->totalCategoryUnverified();
         $bindings['CategoryNeedsReview'] = $this->repoGameStatsLegacy->totalCategoryNeedsReview();
-        // Affiliates
-        $bindings['AmazonUSUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('us');
-        $bindings['AmazonUSLinkedCount'] = $this->repoGameAffiliate->countLinked('us');
-        $bindings['AmazonUSNoProductCount'] = $this->repoGameAffiliate->countNoProduct('us');
-        $bindings['AmazonUSIgnoredCount'] = $this->repoGameAffiliate->countIgnored('us');
-        $bindings['AmazonUKUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('uk');
-        $bindings['AmazonUKLinkedCount'] = $this->repoGameAffiliate->countLinked('uk');
-        $bindings['AmazonUKNoProductCount'] = $this->repoGameAffiliate->countNoProduct('uk');
-        $bindings['AmazonUKIgnoredCount'] = $this->repoGameAffiliate->countIgnored('uk');
 
         // Crawl lifecycle stats (active games only)
         $bindings['CrawlNotYetCrawled'] = DB::table('games')
@@ -110,5 +103,40 @@ class DashboardController extends Controller
         $bindings['FormatDemo'] = $this->repoGameStats->getFormatDemo();
 
         return view('staff.games.stats', $bindings);
+    }
+
+    /**
+     * Amazon affiliate counts, moved off the dashboard to their own subpage (#189).
+     */
+    public function affiliates()
+    {
+        $pageTitle = 'Affiliates';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesSubpage($pageTitle))->bindings;
+
+        $bindings['AmazonUSUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('us');
+        $bindings['AmazonUSLinkedCount'] = $this->repoGameAffiliate->countLinked('us');
+        $bindings['AmazonUSNoProductCount'] = $this->repoGameAffiliate->countNoProduct('us');
+        $bindings['AmazonUSIgnoredCount'] = $this->repoGameAffiliate->countIgnored('us');
+        $bindings['AmazonUKUncheckedCount'] = $this->repoGameAffiliate->countUnchecked('uk');
+        $bindings['AmazonUKLinkedCount'] = $this->repoGameAffiliate->countLinked('uk');
+        $bindings['AmazonUKNoProductCount'] = $this->repoGameAffiliate->countNoProduct('uk');
+        $bindings['AmazonUKIgnoredCount'] = $this->repoGameAffiliate->countIgnored('uk');
+
+        return view('staff.games.affiliates', $bindings);
+    }
+
+    /**
+     * "Go to game ID" on the dashboard: straight to that game's detail page (#189).
+     */
+    public function goToGame()
+    {
+        $gameId = trim((string) request()->input('game_id'));
+
+        if (ctype_digit($gameId) && $this->repoGame->findWithoutCache($gameId)) {
+            return redirect()->route('staff.games.detail', ['gameId' => $gameId]);
+        }
+
+        return redirect()->route('staff.games.dashboard')
+            ->with('goToGameError', 'No game with ID '.$gameId.'.');
     }
 }

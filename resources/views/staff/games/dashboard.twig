@@ -5,10 +5,26 @@
 
 {% block page_inner %}
 
-<a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
-<a href="{{ route('staff.games.single-game-add.show') }}" class="btn outline btn-primary ms-2">Add a game from the store</a>
-<br>
-<br>
+{% if session('goToGameError') %}
+    <div class="alert alert-danger">{{ session('goToGameError') }}</div>
+{% endif %}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+    <a href="{{ route('staff.games.add') }}" class="btn outline btn-primary">Add a game</a>
+    <a href="{{ route('staff.games.single-game-add.show') }}" class="btn outline btn-primary">Add a game from the store</a>
+
+    <div class="d-flex flex-wrap gap-2 ms-md-auto">
+        <form method="post" action="{{ route('staff.games.search') }}" class="d-flex gap-2">
+            {{ csrf_field() }}
+            <input type="search" name="search_keywords" class="form-control" placeholder="Search games" minlength="3" required aria-label="Search games">
+            <button type="submit" class="btn btn-outline-secondary">Search</button>
+        </form>
+        <form method="get" action="{{ route('staff.games.goToGame') }}" class="d-flex gap-2">
+            <input type="number" name="game_id" class="form-control" placeholder="Game ID" min="1" required aria-label="Game ID" style="width: 8rem;">
+            <button type="submit" class="btn btn-outline-secondary">Go</button>
+        </form>
+    </div>
+</div>
 
 <div class="row">
 
@@ -35,13 +51,6 @@
             </tr>
             <tr>
                 <td>
-                    <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
-                </td>
-                <td class="text-end">
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <a href="{{ route('staff.games.images.dashboard')}}">Game images</a>
                 </td>
                 <td class="text-end">
@@ -53,14 +62,6 @@
                     (<a href="{{ route('staff.games.gameGroup.suggestions')}}">suggestions</a>)
                 </td>
                 <td class="text-end">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.games.list.showList', {'listType': 'upcoming-eshop-crosscheck'}) }}">Upcoming (eShop crosscheck)</a>
-                </td>
-                <td>
-
                 </td>
             </tr>
             </tbody>
@@ -111,6 +112,13 @@
             </tr>
             <tr>
                 <td>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'no-amazon-uk-link'}) }}">No Amazon UK link</a>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     Missing players
                 </td>
                 <td class="text-end">
@@ -145,6 +153,9 @@
             <tbody>
                 {{ rowstat.renderB5(
                     'Games stats', route('staff.games.stats')
+                ) }}
+                {{ rowstat.renderB5(
+                    'Affiliates', route('staff.games.affiliates')
                 ) }}
             </tbody>
         </table>
@@ -199,6 +210,16 @@
                     <a href="{{ route('staff.games.title-hash.list') }}">All title hashes</a>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.json-import.upload')}}">Import games from JSON</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{{ route('staff.games.list.showList', {'listType': 'upcoming-eshop-crosscheck'}) }}">Upcoming (eShop crosscheck)</a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -228,37 +249,6 @@
             ) }}
             {{ rowstat.renderB5(
                 '5xx - Server error', route('staff.games.list.showList', {'listType': 'crawl-status-error'}), CrawlStatusError
-            ) }}
-            </tbody>
-        </table>
-
-        {{ heading.renderSlick('Affiliates') }}
-
-        <table class="table">
-            <tbody>
-            {{ rowstat.renderB5(
-                'Amazon US: Unchecked', route('staff.games.list.showList', {'listType': 'amazon-us-unchecked'}), AmazonUSUncheckedCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon US: Linked', route('staff.games.list.showList', {'listType': 'amazon-us-linked'}), AmazonUSLinkedCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon US: No product', route('staff.games.list.showList', {'listType': 'amazon-us-noproduct'}), AmazonUSNoProductCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon US: Ignored', route('staff.games.list.showList', {'listType': 'amazon-us-ignored'}), AmazonUSIgnoredCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon UK: Unchecked', route('staff.games.list.showList', {'listType': 'amazon-uk-unchecked'}), AmazonUKUncheckedCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon UK: Linked', route('staff.games.list.showList', {'listType': 'amazon-uk-linked'}), AmazonUKLinkedCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon UK: No product', route('staff.games.list.showList', {'listType': 'amazon-uk-noproduct'}), AmazonUKNoProductCount
-            ) }}
-            {{ rowstat.renderB5(
-                'Amazon UK: Ignored', route('staff.games.list.showList', {'listType': 'amazon-uk-ignored'}), AmazonUKIgnoredCount
             ) }}
             </tbody>
         </table>

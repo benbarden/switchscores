@@ -1,0 +1,58 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import "ui/components/headings/heading.twig" as heading %}
+{% import 'ui/components/table/row-link-stat.twig' as rowstat %}
+
+{% block page_inner %}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        {{ heading.renderSlick('Amazon US') }}
+
+        <table class="table">
+            <tbody>
+            {{ rowstat.renderB5(
+                'Unchecked', route('staff.games.list.showList', {'listType': 'amazon-us-unchecked'}), AmazonUSUncheckedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Linked', route('staff.games.list.showList', {'listType': 'amazon-us-linked'}), AmazonUSLinkedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'No product', route('staff.games.list.showList', {'listType': 'amazon-us-noproduct'}), AmazonUSNoProductCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Ignored', route('staff.games.list.showList', {'listType': 'amazon-us-ignored'}), AmazonUSIgnoredCount
+            ) }}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-4">
+
+        {{ heading.renderSlick('Amazon UK') }}
+
+        <table class="table">
+            <tbody>
+            {{ rowstat.renderB5(
+                'Unchecked', route('staff.games.list.showList', {'listType': 'amazon-uk-unchecked'}), AmazonUKUncheckedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Linked', route('staff.games.list.showList', {'listType': 'amazon-uk-linked'}), AmazonUKLinkedCount
+            ) }}
+            {{ rowstat.renderB5(
+                'No product', route('staff.games.list.showList', {'listType': 'amazon-uk-noproduct'}), AmazonUKNoProductCount
+            ) }}
+            {{ rowstat.renderB5(
+                'Ignored', route('staff.games.list.showList', {'listType': 'amazon-uk-ignored'}), AmazonUKIgnoredCount
+            ) }}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}
