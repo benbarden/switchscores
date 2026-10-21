@@ -93,6 +93,47 @@ class GameGroupLinkTest extends TestCase
         $this->assertNull($switch2->fresh()->game_group_id);
     }
 
+    public function testChangeMatchType()
+    {
+        $switch1 = $this->makeGame('Group Link Test Game', Console::ID_SWITCH_1);
+        $switch2 = $this->makeGame('Group Link Test Game (Switch 2)', Console::ID_SWITCH_2);
+        $owner = $this->owner();
+        $this->actingAs($owner)->post(
+            route('staff.games.gameGroup.link', ['gameId' => $switch2->id]),
+            ['other_game_id' => $switch1->id, 'match_type' => GameGroup::MATCH_IDENTICAL]
+        );
+
+        $response = $this->actingAs($owner)->post(
+            route('staff.games.gameGroup.matchType', ['gameId' => $switch1->id]),
+            ['match_type' => GameGroup::MATCH_ENHANCED]
+        );
+
+        $response->assertRedirect($this->detailUrl($switch1));
+        $this->assertSame(GameGroup::MATCH_ENHANCED, $switch2->fresh()->gameGroup->match_type);
+    }
+
+    public function testGroupsAndSuggestionsPages()
+    {
+        $switch1 = $this->makeGame('Group Link Test Zq Suggest', Console::ID_SWITCH_1);
+        $switch2 = $this->makeGame('Group Link Test Zq Suggest: Nintendo Switch 2 Edition', Console::ID_SWITCH_2);
+        $owner = $this->owner();
+
+        $page = $this->actingAs($owner)->get(route('staff.games.gameGroup.suggestions'));
+        $page->assertStatus(200);
+        $page->assertSee('Group Link Test Zq Suggest: Nintendo Switch 2 Edition');
+
+        $response = $this->actingAs($owner)->post(route('staff.games.gameGroup.suggestions.confirm'), [
+            'switch2_id' => $switch2->id, 'switch1_id' => $switch1->id, 'match_type' => GameGroup::MATCH_ENHANCED,
+        ]);
+        $response->assertRedirect(route('staff.games.gameGroup.suggestions'));
+        $response->assertSessionHas('gameGroupSuccess');
+        $this->assertSame(GameGroup::MATCH_ENHANCED, $switch2->fresh()->gameGroup->match_type);
+
+        $page = $this->actingAs($owner)->get(route('staff.games.gameGroup.index'));
+        $page->assertStatus(200);
+        $page->assertSee('Group Link Test Zq Suggest');
+    }
+
     public function testRefusedLinkReturnsToTheSubPageWithTheReason()
     {
         $a = $this->makeGame('Group Link Test A', Console::ID_SWITCH_1);

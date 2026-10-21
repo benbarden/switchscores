@@ -12,6 +12,7 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\AutoDescription;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
+use App\Domain\GameGroup\Repository as GameGroupRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
@@ -22,6 +23,7 @@ use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 use App\Domain\Steam\Repository as SteamRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Models\Console;
+use App\Models\GameGroup;
 
 class GameShowController extends Controller
 {
@@ -41,6 +43,7 @@ class GameShowController extends Controller
         private ReviewLinkRepository $repoReviewLink,
         private SteamRepository $repoSteam,
         private UserGamesCollectionRepository $repoUserGamesCollection,
+        private GameGroupRepository $repoGameGroup,
     )
     {
     }
@@ -281,8 +284,19 @@ class GameShowController extends Controller
             $bindings['UserCollectionGame'] = $gameData;
         }
 
-        // Other console version (same link_title on different console)
-        $otherConsoleGame = $this->repoGame->getByLinkTitleOnOtherConsole($gameData->link_title, $gameData->console_id);
+        // Other console version: the game group first (#44), then the same link_title on the
+        // other console for games not grouped yet. Only an enhanced link gets a note; an
+        // identical one needs none (Ben, 2026-10-21).
+        $otherConsoleGame = $this->repoGameGroup->getOtherConsoleGame($gameData);
+        if ($otherConsoleGame) {
+            if ($gameData->gameGroup->match_type == GameGroup::MATCH_ENHANCED) {
+                $bindings['OtherConsoleNote'] = $otherConsoleGame->console_id == Console::ID_SWITCH_2
+                    ? 'Enhanced Switch 2 Edition'
+                    : 'Original Switch 1 version';
+            }
+        } else {
+            $otherConsoleGame = $this->repoGame->getByLinkTitleOnOtherConsole($gameData->link_title, $gameData->console_id);
+        }
         if ($otherConsoleGame) {
             $bindings['OtherConsoleGame'] = $otherConsoleGame;
         }

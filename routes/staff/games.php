@@ -87,9 +87,13 @@ Route::group([
 
     // ---- Game groups: other console versions (#44) ----
     Route::controller(GameGroupController::class)->group(function () {
+        Route::get('game-groups', 'index')->name('gameGroup.index');
+        Route::get('game-groups/suggestions', 'suggestions')->name('gameGroup.suggestions');
+        Route::post('game-groups/suggestions/confirm', 'confirmSuggestion')->name('gameGroup.suggestions.confirm');
         Route::get('game-group/{gameId}/edit', 'edit')->name('gameGroup.edit');
         Route::post('game-group/{gameId}/link', 'link')->name('gameGroup.link');
         Route::post('game-group/{gameId}/unlink', 'unlink')->name('gameGroup.unlink');
+        Route::post('game-group/{gameId}/match-type', 'updateMatchType')->name('gameGroup.matchType');
     });
 
     // ---- Game add / edit / delete ----

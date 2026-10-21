@@ -201,6 +201,9 @@
                 {% endif %}
                 <span style="margin-left: 10px;">{{ OtherConsoleGame.title }}</span>
             </a>
+            {% if OtherConsoleNote %}
+                <div class="text-muted small" style="margin-top: 4px;">{{ OtherConsoleNote }}</div>
+            {% endif %}
         {% endif %}
 
         {% if GameData.game_rank or GameData.gameRankYear.game_rank or GameData.gameRankYearMonth.game_rank %}

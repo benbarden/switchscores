@@ -1,0 +1,67 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if session('gameGroupSuccess') %}
+    <div class="alert alert-success">{{ session('gameGroupSuccess') }}</div>
+{% endif %}
+{% if session('gameGroupError') %}
+    <div class="alert alert-danger">{{ session('gameGroupError') }}</div>
+{% endif %}
+
+<p>
+    {{ Suggestions|length }} Switch 2 games not in a group, each with one likely Switch 1 match.
+    Check the pair, set the match type, and confirm. Wrong matches can be left alone, or linked
+    by hand from the game.
+    {% if AmbiguousCount > 0 %}
+        {{ AmbiguousCount }} more match several Switch 1 games and are left for linking by hand.
+    {% endif %}
+</p>
+<p>
+    <a href="{{ route('staff.games.gameGroup.index') }}">All groups</a>
+</p>
+
+<table class="table table-sm align-middle data-sortable">
+    <thead>
+        <tr>
+            <th>Switch 2</th>
+            <th>Switch 1</th>
+            <th>Matched on</th>
+            <th>Match type</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in Suggestions %}
+        <tr>
+            <td><a href="{{ route('staff.games.detail', {'gameId': item.switch2.id}) }}">{{ item.switch2.title }}</a></td>
+            <td><a href="{{ route('staff.games.detail', {'gameId': item.switch1.id}) }}">{{ item.switch1.title }}</a></td>
+            <td>{{ item.source == 'link_title' ? 'Link title' : 'Title' }}</td>
+            <td>
+                <form method="post" action="{{ route('staff.games.gameGroup.suggestions.confirm') }}" class="d-flex gap-2">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="switch2_id" value="{{ item.switch2.id }}">
+                    <input type="hidden" name="switch1_id" value="{{ item.switch1.id }}">
+                    <select name="match_type" class="form-select form-select-sm" style="width: auto;">
+                        <option value="identical">Identical</option>
+                        <option value="enhanced"{% if item.switch2.title matches '/switch 2 edition/i' %} selected{% endif %}>Enhanced</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">Confirm</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        $('.data-sortable').DataTable({
+            "order": [],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 3 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

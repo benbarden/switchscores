@@ -1,0 +1,64 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+<p>
+    {{ GroupRows|length }} groups.
+    {% if TitlesDifferCount > 0 %}
+        <strong>{{ TitlesDifferCount }}</strong> with titles that still differ after normalising - listed first.
+        Fix the title or keep the difference on purpose (e.g. an enhanced edition's subtitle).
+    {% endif %}
+</p>
+<p>
+    <a href="{{ route('staff.games.gameGroup.suggestions') }}">Suggestions</a>
+</p>
+
+<table class="table table-sm data-sortable">
+    <thead>
+        <tr>
+            <th>Group</th>
+            <th>Match</th>
+            <th>Switch 1</th>
+            <th>Switch 2</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for row in GroupRows %}
+        <tr{% if row.titlesDiffer %} class="table-warning"{% endif %}>
+            <td>{{ row.group.name }}</td>
+            <td><span class="badge {{ row.group.match_type == 'enhanced' ? 'bg-info' : 'bg-secondary' }}">{{ row.group.match_type }}</span></td>
+            <td>
+                {% if row.switch1 %}
+                    <a href="{{ route('staff.games.detail', {'gameId': row.switch1.id}) }}">{{ row.switch1.title }}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if row.switch2 %}
+                    <a href="{{ route('staff.games.detail', {'gameId': row.switch2.id}) }}">{{ row.switch2.title }}</a>
+                {% endif %}
+            </td>
+            <td class="text-end">
+                {% set editGame = row.switch2 ?: row.switch1 %}
+                {% if editGame %}
+                    <a href="{{ route('staff.games.gameGroup.edit', {'gameId': editGame.id}) }}">Edit</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% include 'ui/layouts/assets/table-sorting-b5.twig' %}
+<script>
+    $(document).ready(function() {
+        // Server order: titles that differ first, then by name
+        $('.data-sortable').DataTable({
+            "order": [],
+            "pageLength": 25,
+            "columnDefs": [{ "targets": [ 4 ], "orderable": false }]
+        });
+    });
+</script>
+
+{% endblock page_inner %}

@@ -26,6 +26,20 @@ class Repository
         return GameGroup::with('games.console')->orderBy('name')->get();
     }
 
+    /**
+     * The game's version on another console, from its group. Only active games, to match
+     * the link_title fallback on the public page.
+     */
+    public function getOtherConsoleGame(Game $game): ?Game
+    {
+        if (!$game->game_group_id) return null;
+
+        return Game::where('game_group_id', $game->game_group_id)
+            ->where('console_id', '!=', $game->console_id)
+            ->active()
+            ->first();
+    }
+
     public function linkGame(GameGroup $group, Game $game): void
     {
         $game->game_group_id = $group->id;

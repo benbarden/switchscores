@@ -28,6 +28,18 @@
                 {% endfor %}
             </table>
 
+            <form method="post" action="{{ route('staff.games.gameGroup.matchType', {'gameId': GameId}) }}" class="mb-4">
+                {{ csrf_field() }}
+                <label for="match_type" class="form-label">Match type</label>
+                <div class="d-flex gap-2">
+                    <select id="match_type" name="match_type" class="form-select" style="max-width: 32rem;">
+                        <option value="identical"{% if GameGroup.match_type == 'identical' %} selected{% endif %}>Identical - same game, different console</option>
+                        <option value="enhanced"{% if GameGroup.match_type == 'enhanced' %} selected{% endif %}>Enhanced - Switch 2 Edition with material differences</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+
             <form method="post" action="{{ route('staff.games.gameGroup.unlink', {'gameId': GameId}) }}"
                   onsubmit="return confirm('Unlink this game from {{ GameGroup.name|e('js') }}?');">
                 {{ csrf_field() }}
