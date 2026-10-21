@@ -95,7 +95,15 @@ Each step deploys on its own.
    only when exactly one ungrouped Switch 1 game matches (more is counted as ambiguous).
    **Backfill:** `php artisan GameGroupsBackfillLinkTitlePairs` (dry run unless `--apply`;
    DB dump first on prod) groups the `link_title` pairs as `identical` through `Linker` and
-   clears both games' core-data cache. Localdev dry run: 141 pairs, 0 ambiguous. **Pages**
+   clears both games' core-data cache. Localdev dry run: 141 pairs, 0 ambiguous. **Prod dry run
+   2026-10-21: 161 pairs.** No DB dump taken (Ben: non-destructive - it only creates groups and
+   sets `game_group_id` on ungrouped games). To undo, delete the groups it created: the foreign
+   key's `nullOnDelete` clears `game_group_id` on their games. Groups made by hand (e.g. Hades II)
+   must be left out of any such delete. **Applied on prod 2026-10-21**, and Ben confirmed every
+   suggestion the same evening: **259 groups, none with titles that differ after normalising.**
+   Follow-up the same day: the public "Also on" box lays the title and note out beside the image
+   with flexbox, so a long title (Moonlight Peaks: Nintendo Switch 2 Edition) wraps next to it
+   rather than under it. **Pages**
    (linked from the staff games dashboard under Weekly updates): `/staff/games/game-groups`
    lists every group, rows whose titles still differ after normalising first and highlighted,
    each with an Edit link to the game's sub-page; `/staff/games/game-groups/suggestions` lists

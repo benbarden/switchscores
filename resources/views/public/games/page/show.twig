@@ -192,18 +192,23 @@
 
         {% if OtherConsoleGame %}
             {{ heading.renderChunky('Also on ' ~ OtherConsoleGame.console.name, 'h2') }}
-            <a href="{{ game_url(OtherConsoleGame) }}">
-                {% set otherBoxart = ImageHelper.imageSquareUrl(OtherConsoleGame) %}
-                {% if otherBoxart %}
-                    <img src="{{ otherBoxart }}" style="height: 75px; vertical-align: middle; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
-                {% else %}
-                    <img src="/img/placeholder/no-image-found-square.png" style="height: 75px; vertical-align: middle; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
-                {% endif %}
-                <span style="margin-left: 10px;">{{ OtherConsoleGame.title }}</span>
-            </a>
-            {% if OtherConsoleNote %}
-                <div class="text-muted small" style="margin-top: 4px;">{{ OtherConsoleNote }}</div>
-            {% endif %}
+            {# Flex so a long title wraps beside the image, not under it #}
+            <div style="display: flex; align-items: center;">
+                <a href="{{ game_url(OtherConsoleGame) }}" style="flex: 0 0 auto;">
+                    {% set otherBoxart = ImageHelper.imageSquareUrl(OtherConsoleGame) %}
+                    {% if otherBoxart %}
+                        <img src="{{ otherBoxart }}" style="height: 75px; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
+                    {% else %}
+                        <img src="/img/placeholder/no-image-found-square.png" style="height: 75px; margin-bottom: 0;" alt="{{ OtherConsoleGame.title }}">
+                    {% endif %}
+                </a>
+                <div style="margin-left: 10px; min-width: 0;">
+                    <a href="{{ game_url(OtherConsoleGame) }}">{{ OtherConsoleGame.title }}</a>
+                    {% if OtherConsoleNote %}
+                        <div class="text-muted small" style="margin-top: 4px;">{{ OtherConsoleNote }}</div>
+                    {% endif %}
+                </div>
+            </div>
         {% endif %}
 
         {% if GameData.game_rank or GameData.gameRankYear.game_rank or GameData.gameRankYearMonth.game_rank %}
