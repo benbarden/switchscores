@@ -563,24 +563,6 @@ final class StaffBreadcrumbs
         ]);
     }
 
-    // *** OWNER: STATS *** //
-    public static function statsDashboard(): BreadcrumbNav
-    {
-        return new BreadcrumbNav([
-            new BreadcrumbItem('Staff', route('staff.index')),
-            new BreadcrumbItem('Stats dashboard'),
-        ]);
-    }
-
-    public static function statsSubpage(string $title): BreadcrumbNav
-    {
-        return new BreadcrumbNav([
-            new BreadcrumbItem('Staff', route('staff.index')),
-            new BreadcrumbItem('Stats', route('staff.stats.dashboard')),
-            new BreadcrumbItem($title),
-        ]);
-    }
-
     // *** OWNER: AUDIT *** //
     public static function auditDashboard(): BreadcrumbNav
     {

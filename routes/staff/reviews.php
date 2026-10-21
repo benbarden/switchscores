@@ -11,6 +11,10 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/reviews/review-sites', 'Staff\Reviews\ReviewSiteController@index')->name('staff.reviews.reviewSites.index');
     Route::match(['get', 'post'], '/staff/reviews/review-sites/add', 'Staff\Reviews\ReviewSiteController@add')->name('staff.reviews.reviewSites.add');
     Route::match(['get', 'post'], '/staff/reviews/review-sites/edit/{reviewSite}', 'Staff\Reviews\ReviewSiteController@edit')->name('staff.reviews.reviewSites.edit');
+    Route::get('/staff/reviews/review-sites/{siteId}/stats', 'Staff\Reviews\ReviewSiteStatsController@site')->name('staff.reviews.reviewSites.stats');
+
+    // Review site stats (moved from the retired Stats section, #20)
+    Route::get('/staff/reviews/review-site-stats', 'Staff\Reviews\ReviewSiteStatsController@index')->name('staff.reviews.reviewSiteStats');
 
     // Feed links
     Route::get('/staff/reviews/feed-links', 'Staff\Reviews\FeedLinksController@index')->name('staff.reviews.feedLinks.index');

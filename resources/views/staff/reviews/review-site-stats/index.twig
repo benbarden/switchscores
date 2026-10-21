@@ -4,52 +4,7 @@
 
 <div class="row">
 
-    <div class="col-md-3">
-
-        <h2>Overall</h2>
-
-        <table class="table data-sortable">
-            <tbody>
-            <tr>
-                <td>
-                    Released games
-                </td>
-                <td class="text-end">
-                    <span class="h4">{{ ReleasedGameCount }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">Ranked games</a>
-                </td>
-                <td class="text-end">
-                    <a href="#" class="h4">{{ RankedGameCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#">Unranked games</a>
-                </td>
-                <td class="text-end">
-                    <a href="#" class="h4">{{ UnrankedGameCount }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ route('staff.reviews.link.list') }}">Review links</a>
-                </td>
-                <td class="text-end">
-                    <a href="{{ route('staff.reviews.link.list') }}" class="h4">{{ ReviewLinkCount }}</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-md-9">
-
-        <h2>Review sites</h2>
+    <div class="col-md-12">
 
         {% if ReviewSitesArray %}
 
