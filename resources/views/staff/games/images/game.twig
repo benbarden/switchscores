@@ -33,6 +33,17 @@
     <a href="{{ route('staff.games.detail', {'gameId': GameData.id}) }}" class="btn btn-sm btn-outline-secondary">Game detail</a>
 </div>
 
+{% if CanCopyFromProd and IsInSpaces and Packshots|filter(p => p.spacesExists is same as(false))|length > 0 %}
+    <form method="POST" action="{{ route('staff.games.images.copyFromProd', {'gameId': GameData.id}) }}" class="mb-3">
+        {{ csrf_field()|raw }}
+        <button type="submit" class="btn btn-sm btn-success">Copy from prod</button>
+        <span class="text-muted ms-2">
+            Localdev only. Copies the missing objects from the public prod CDN into local MinIO.
+            Nothing on prod or in the database changes.
+        </span>
+    </form>
+{% endif %}
+
 {% if IsInSpaces %}
     <form method="POST" action="{{ route('staff.games.images.migration.revert', {'gameId': GameData.id}) }}" class="mb-4">
         {{ csrf_field()|raw }}

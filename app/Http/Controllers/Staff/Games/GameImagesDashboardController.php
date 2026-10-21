@@ -8,6 +8,7 @@ use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\Game\ImageResolver;
+use App\Domain\Game\PackshotProdCopier;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\Repository\GameImageRepository;
 use App\Models\Console;
@@ -22,6 +23,7 @@ class GameImagesDashboardController extends Controller
         private GameImageRepository $repoGameImage,
         private GameRepository $repoGame,
         private ImageResolver $resolver,
+        private PackshotProdCopier $prodCopier,
     )
     {
     }
@@ -87,6 +89,7 @@ class GameImagesDashboardController extends Controller
         $bindings['GameImage'] = $image;
         $bindings['IsInSpaces'] = $image && $image->location === GameImage::LOCATION_SPACES;
         $bindings['PackshotsConfigured'] = $this->packshotsConfigured();
+        $bindings['CanCopyFromProd'] = $this->prodCopier->isAllowed();
 
         $bindings['Packshots'] = [
             $this->packshotDetail($game, $image, ImageResolver::TYPE_SQUARE, 'Square'),
@@ -94,6 +97,29 @@ class GameImagesDashboardController extends Controller
         ];
 
         return view('staff.games.images.game', $bindings);
+    }
+
+    /**
+     * Localdev only (#191): fill local MinIO with the game's packshots from the prod CDN.
+     */
+    public function copyFromProd($gameId)
+    {
+        if (!$this->prodCopier->isAllowed()) {
+            abort(404);
+        }
+
+        $game = $this->repoGame->findWithoutCache($gameId);
+        if (!$game) {
+            abort(404);
+        }
+
+        $results = $this->prodCopier->copyMissing($game);
+        $summary = collect($results)->map(fn ($result, $type) => ucfirst($type).': '.$result)->implode(', ');
+        $back = redirect()->route('staff.games.images.game', ['gameId' => $game->id]);
+
+        return in_array('not on prod', $results, true)
+            ? $back->with('error', 'Copy from prod - '.$summary.'.')
+            : $back->with('success', 'Copy from prod - '.$summary.'.');
     }
 
     /**

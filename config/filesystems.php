@@ -76,6 +76,8 @@ return [
             'bucket' => env('PACKSHOTS_BUCKET'),
             'endpoint' => env('PACKSHOTS_ENDPOINT'),
             'url' => env('PACKSHOTS_URL'),
+            // Public prod CDN, read by localdev's "Copy from prod" button (#191). Read only.
+            'prod_url' => env('PACKSHOTS_PROD_URL', 'https://switchscores-packshots.lon1.cdn.digitaloceanspaces.com'),
             'use_path_style_endpoint' => env('PACKSHOTS_USE_PATH_STYLE', false),
             'visibility' => 'public',
             'throw' => false,

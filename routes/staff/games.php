@@ -49,6 +49,7 @@ Route::group([
         // Under images/game/ rather than images/{gameId}, so it can never shadow the
         // images/migration routes below regardless of registration order.
         Route::get('images/game/{gameId}', 'game')->name('images.game');
+        Route::post('images/game/{gameId}/copy-from-prod', 'copyFromProd')->name('images.copyFromProd');
     });
     Route::controller(ImageMigrationController::class)->group(function () {
         Route::get('images/migration', 'show')->name('images.migration.show');
