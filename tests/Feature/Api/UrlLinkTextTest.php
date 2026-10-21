@@ -6,10 +6,18 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\User;
 
 class UrlLinkTextTest extends TestCase
 {
     const API_URL_LINK_TEXT = '/api/url/link-text';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Staff-only since #152; anonymous access is covered by StaffToolingAuthTest
+        $this->actingAs(new User(['display_name' => 'Api Test', 'is_staff' => 1]));
+    }
 
     public function testBasicNoParams()
     {

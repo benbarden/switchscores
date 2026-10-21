@@ -1,0 +1,22 @@
+{% import "ui/components/headings/heading.twig" as heading %}
+
+{{ heading.renderSlick('Other console versions') }}
+
+<table class="table table-sm table-responsive">
+    <tr>
+        <td>
+            <a href="{{ route('staff.games.gameGroup.edit', {'gameId': GameId}) }}"><strong>Linked to</strong></a>
+        </td>
+        <td>
+            {% if GameGroup %}
+                {% for member in GameGroupOthers %}
+                    <a href="{{ route('staff.games.detail', {'gameId': member.id}) }}">{{ member.title }}</a>
+                    ({{ member.console.name }})<br>
+                {% endfor %}
+                <span class="badge {{ GameGroup.match_type == 'enhanced' ? 'bg-info' : 'bg-secondary' }}">{{ GameGroup.match_type }}</span>
+            {% else %}
+                <em>Not linked.</em>
+            {% endif %}
+        </td>
+    </tr>
+</table>

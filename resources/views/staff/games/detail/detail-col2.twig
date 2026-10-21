@@ -47,6 +47,10 @@
     </tr>
 </table>
 
+{% if mode != 'reviewers' %}
+    {% include 'staff/games/detail/game-group.twig' %}
+{% endif %}
+
 {{ heading.renderSlick('Categorisation') }}
 
 <table class="table table-sm table-responsive">

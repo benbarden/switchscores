@@ -144,6 +144,12 @@ class GamesDetailController extends Controller
         // Flags
         $bindings['GameFlags'] = $this->repoGameFlag->getByGameId($gameId);
 
+        // Other console versions (#44). Bound here rather than read as GameData.gameGroup:
+        // for an ungrouped game Twig falls back to the gameGroup() relation object, which is truthy.
+        $gameGroup = $game->gameGroup;
+        $bindings['GameGroup'] = $gameGroup;
+        $bindings['GameGroupOthers'] = $gameGroup ? $gameGroup->games->where('id', '!=', $game->id) : collect();
+
         // Checks
         $checks = [
             [

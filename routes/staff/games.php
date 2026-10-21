@@ -9,6 +9,7 @@ use App\Http\Controllers\Staff\Games\ReleaseHubController;
 use App\Http\Controllers\Staff\Games\SearchController;
 use App\Http\Controllers\Staff\Games\SingleGameAddController;
 use App\Http\Controllers\Staff\Games\GamesDetailController;
+use App\Http\Controllers\Staff\Games\GameGroupController;
 use App\Http\Controllers\Staff\Games\GamesEditorController;
 use App\Http\Controllers\Staff\Games\BulkEditorController;
 use App\Http\Controllers\Staff\Games\JsonImportController;
@@ -82,6 +83,13 @@ Route::group([
         Route::get('detail/{gameId}/redownload-packshots', 'redownloadPackshots')->name('detail.redownloadPackshots');
         Route::post('detail/{gameId}/update-status', 'updateStatus')->name('detail.updateStatus');
         Route::post('detail/{gameId}/queue-crawl', 'queueCrawl')->name('detail.queueCrawl');
+    });
+
+    // ---- Game groups: other console versions (#44) ----
+    Route::controller(GameGroupController::class)->group(function () {
+        Route::get('game-group/{gameId}/edit', 'edit')->name('gameGroup.edit');
+        Route::post('game-group/{gameId}/link', 'link')->name('gameGroup.link');
+        Route::post('game-group/{gameId}/unlink', 'unlink')->name('gameGroup.unlink');
     });
 
     // ---- Game add / edit / delete ----

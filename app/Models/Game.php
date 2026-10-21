@@ -71,6 +71,11 @@ class Game extends Model implements Auditable
         return $this->hasOne('App\Models\Console', 'id', 'console_id');
     }
 
+    public function gameGroup()
+    {
+        return $this->belongsTo('App\Models\GameGroup', 'game_group_id', 'id');
+    }
+
     public function images()
     {
         return $this->hasOne('App\Models\GameImage', 'game_id', 'id');

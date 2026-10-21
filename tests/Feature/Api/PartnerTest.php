@@ -2,11 +2,19 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\User;
 use Tests\TestCase;
 
 class PartnerTest extends TestCase
 {
     const API_URL_REVIEW_SITE = '/api/review/site';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Staff-only since #152; anonymous access is covered by StaffToolingAuthTest
+        $this->actingAs(new User(['display_name' => 'Api Test', 'is_staff' => 1]));
+    }
 
     private $siteSwitchPlayer = [
         'siteId' => 2,

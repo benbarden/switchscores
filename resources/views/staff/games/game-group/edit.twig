@@ -1,0 +1,94 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if session('gameGroupError') %}
+    <div class="alert alert-danger">{{ session('gameGroupError') }}</div>
+{% endif %}
+
+<div class="row">
+
+    <div class="col-md-8">
+
+        {% if GameGroup %}
+
+            <table class="table table-sm">
+                <tr>
+                    <td><strong>Group</strong></td>
+                    <td>
+                        {{ GameGroup.name }}
+                        <span class="badge {{ GameGroup.match_type == 'enhanced' ? 'bg-info' : 'bg-secondary' }}">{{ GameGroup.match_type }}</span>
+                    </td>
+                </tr>
+                {% for member in GameGroupOthers %}
+                <tr>
+                    <td><strong>{{ member.console.name }}</strong></td>
+                    <td><a href="{{ route('staff.games.detail', {'gameId': member.id}) }}">{{ member.title }}</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <form method="post" action="{{ route('staff.games.gameGroup.unlink', {'gameId': GameId}) }}"
+                  onsubmit="return confirm('Unlink this game from {{ GameGroup.name|e('js') }}?');">
+                {{ csrf_field() }}
+                <button type="submit" class="btn btn-outline-danger">Unlink this game</button>
+                <a href="{{ route('staff.games.detail', {'gameId': GameId}) }}" class="btn btn-link">Back to game</a>
+            </form>
+
+        {% else %}
+
+            <p>Not linked. Find the same game on the other console.</p>
+
+            <form method="post" action="{{ route('staff.games.gameGroup.link', {'gameId': GameId}) }}">
+                {{ csrf_field() }}
+                <div class="mb-3">
+                    <label for="game-group-other" class="form-label">Other console version</label>
+                    <select id="game-group-other" name="other_game_id" class="form-control" style="width: 100%;"></select>
+                </div>
+                <div class="mb-3">
+                    <label for="match_type" class="form-label">Match type</label>
+                    <select id="match_type" name="match_type" class="form-select">
+                        <option value="identical">Identical - same game, different console</option>
+                        <option value="enhanced"{% if GameData.title matches '/switch 2 edition/i' %} selected{% endif %}>Enhanced - Switch 2 Edition with material differences</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Link</button>
+                <a href="{{ route('staff.games.detail', {'gameId': GameId}) }}" class="btn btn-link">Cancel</a>
+            </form>
+
+            <script>
+                $(function () {
+                    var currentConsoleId = {{ GameData.console_id }};
+                    $('#game-group-other').select2({
+                        placeholder: 'Search for the other console version',
+                        minimumInputLength: 2,
+                        ajax: {
+                            url: '/api/game/find-by-title',
+                            dataType: 'json',
+                            delay: 500,
+                            data: function (params) {
+                                return { title: params.term };
+                            },
+                            processResults: function (data) {
+                                // Only games on the other console can be linked
+                                var games = data.games.filter(function (game) {
+                                    return game.console_id != currentConsoleId;
+                                });
+                                return {
+                                    results: games.map(function (game) {
+                                        return { id: game.id, text: game.display_title };
+                                    })
+                                };
+                            }
+                        }
+                    });
+                });
+            </script>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock page_inner %}

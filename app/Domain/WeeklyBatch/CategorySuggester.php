@@ -8,6 +8,7 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameSeries\Repository as GameSeriesRepository;
 use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\GameGroup\TitleMatchKey;
 
 class CategorySuggester
 {
@@ -181,7 +182,8 @@ class CategorySuggester
         private WeeklyBatchItemRepository $repoItem,
         private CategoryRepository $repoCategory,
         private GameRepository $repoGame,
-        private GameSeriesRepository $repoGameSeries
+        private GameSeriesRepository $repoGameSeries,
+        private TitleMatchKey $titleMatchKey
     ) {
         $this->buildParentMap();
         $this->seriesList = $this->repoGameSeries->getAll()
@@ -383,7 +385,7 @@ class CategorySuggester
     {
         $otherConsoleId = $consoleSlug === 'switch-2' ? Console::ID_SWITCH_1 : Console::ID_SWITCH_2;
 
-        $titlesToTry = array_unique([$title, $this->stripConsoleSuffix($title)]);
+        $titlesToTry = array_unique([$title, $this->titleMatchKey->stripConsoleSuffix($title)]);
 
         foreach ($titlesToTry as $title) {
             $game = $this->repoGame->findByTitleAndConsole($title, $otherConsoleId);
@@ -392,27 +394,6 @@ class CategorySuggester
                 return;
             }
         }
-    }
-
-    private function stripConsoleSuffix(string $title): string
-    {
-        $suffixes = [
-            ': Nintendo Switch 2 Edition',
-            ' Nintendo Switch 2 Edition',
-            ' Switch 2 Edition',
-            ' (Nintendo Switch 2 Edition)',
-            ' (Switch 2 Edition)',
-            ' for Nintendo Switch 2',
-            ' (Switch 2)',
-        ];
-
-        foreach ($suffixes as $suffix) {
-            if (str_ends_with($title, $suffix)) {
-                return substr($title, 0, -strlen($suffix));
-            }
-        }
-
-        return $title;
     }
 
     private function addScore(array &$scores, array &$signals, string $category, int $score, string $label): void
