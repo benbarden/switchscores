@@ -409,6 +409,36 @@ class Repository
             ->update(['item_status' => WeeklyBatchItem::STATUS_LOW_QUALITY]);
     }
 
+    /**
+     * Earlier decisions to keep each title out of the DB - LQ, bundle or excluded -
+     * keyed by title. Covers items that never reached the exclusion list: auto-LQ
+     * title prefixes and bundles detected at parse time are skipped without being
+     * added to it, as is anything excluded before the list existed.
+     *
+     * Where a title was skipped more than once, an explicit LQ or bundle decision is
+     * preferred over a plain exclusion, then the most recent batch.
+     */
+    public function getPriorExclusions(array $titles, string $console): Collection
+    {
+        if (empty($titles)) return collect();
+
+        $reasonRank = [
+            WeeklyBatchItem::STATUS_LOW_QUALITY => 0,
+            WeeklyBatchItem::STATUS_BUNDLE      => 0,
+            WeeklyBatchItem::STATUS_EXCLUDED    => 1,
+        ];
+
+        return WeeklyBatchItem::with('batch')
+            ->where('console', $console)
+            ->whereIn('title', $titles)
+            ->whereIn('item_status', array_keys($reasonRank))
+            ->orderByDesc('batch_id')
+            ->get()
+            ->sortBy(fn($i) => $reasonRank[$i->item_status])
+            ->groupBy('title')
+            ->map(fn($rows) => $rows->first());
+    }
+
     public function getCategoryHistoryByCollection(string $collection, ?int $excludeBatchId): ?string
     {
         $row = WeeklyBatchItem::where('collection', $collection)

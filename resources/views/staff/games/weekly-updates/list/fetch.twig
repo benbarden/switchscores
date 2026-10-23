@@ -72,16 +72,15 @@
     <p class="text-muted">No pages uploaded yet.</p>
 {% else %}
 
-    {% for page in RawPages %}
-        {% set pageItems = FetchItemsByPage[page.page_number] ?? [] %}
-        {% if pageItems|length > 0 %}
+        {% if FetchItems|length > 0 %}
 
-        <h2 class="mt-4">Page {{ page.page_number }}</h2>
+        <h2 class="mt-4">Games to fetch</h2>
 
-        <table class="table table-sm table-bordered table-striped" id="fetch-table-{{ page.page_number }}">
+        <table class="table table-sm table-bordered table-striped" id="fetch-table">
             <thead class="table-dark">
                 <tr>
-                    <th style="width: 35%;">Title</th>
+                    <th class="text-center" style="width: 5%;">Page</th>
+                    <th style="width: 30%;">Title</th>
                     <th class="text-center" style="width: 8%;">Nintendo page</th>
                     <th style="width: 18%;">Publisher</th>
                     <th style="width: 8%;">Players</th>
@@ -91,12 +90,13 @@
                 </tr>
             </thead>
             <tbody>
-            {% for item in pageItems %}
+            {% for item in FetchItems %}
                 <tr id="fetch-row-{{ item.id }}"
                     data-item-id="{{ item.id }}"
-                    data-page="{{ page.page_number }}"
+                    data-page="{{ item.page_number }}"
                     data-item-status="{{ item.item_status }}"
                     data-fetch-status="{{ item.fetch_status ?? 'pending' }}">
+                    <td class="text-center align-middle">{{ item.page_number }}</td>
                     <td class="align-middle">{{ item.title }}</td>
                     <td class="text-center align-middle">
                         {% if item.nintendo_url %}
@@ -151,26 +151,25 @@
             </tbody>
         </table>
 
-        {% set pendingCount = pageItems|filter(i => i.item_status == 'fetch_pending')|length %}
-        {% set noUrlCount   = pageItems|filter(i => i.item_status == 'pending')|length %}
+        {% set pendingCount = FetchItems|filter(i => i.item_status == 'fetch_pending')|length %}
+        {% set noUrlCount   = FetchItems|filter(i => i.item_status == 'pending')|length %}
         {% if pendingCount > 0 %}
             <button type="button"
-                    class="btn btn-primary btn-fetch-page mb-4"
-                    data-page="{{ page.page_number }}"
+                    class="btn btn-primary btn-fetch-all mb-4"
                     data-fetch-url="{{ route('staff.games.weekly-updates.list.fetch.item', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': '__ITEM_ID__'}) }}">
-                Fetch page {{ page.page_number }} ({{ pendingCount }} item{{ pendingCount != 1 ? 's' : '' }})
+                Fetch all ({{ pendingCount }} item{{ pendingCount != 1 ? 's' : '' }})
             </button>
-            <div id="fetch-progress-{{ page.page_number }}" class="mb-4 d-none">
+            <div id="fetch-progress" class="mb-4 d-none">
                 <div class="progress" style="max-width: 400px;">
                     <div class="progress-bar progress-bar-striped progress-bar-animated"
-                         id="fetch-bar-{{ page.page_number }}"
+                         id="fetch-bar"
                          role="progressbar" style="width: 0%"></div>
                 </div>
-                <small class="text-muted mt-1 d-block" id="fetch-label-{{ page.page_number }}"></small>
+                <small class="text-muted mt-1 d-block" id="fetch-label"></small>
             </div>
         {% else %}
             <p class="text-success mb-4">
-                <strong>✓</strong> All items on page {{ page.page_number }} fetched.
+                <strong>✓</strong> All items fetched.
                 {% if noUrlCount > 0 %}
                     <span class="text-muted">({{ noUrlCount }} item{{ noUrlCount != 1 ? 's' : '' }} had no URL and could not be fetched.)</span>
                 {% endif %}
@@ -178,7 +177,6 @@
         {% endif %}
 
         {% endif %}
-    {% endfor %}
 
 {% endif %}
 
@@ -243,14 +241,13 @@
     const CSRF_TOKEN = '{{ csrf_token() }}';
     const DELAY_MS   = 1500;
 
-    document.querySelectorAll('.btn-fetch-page').forEach(function (btn) {
+    document.querySelectorAll('.btn-fetch-all').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            const page      = btn.dataset.page;
             const urlTpl    = btn.dataset.fetchUrl;
-            const tableBody = document.querySelector('#fetch-table-' + page + ' tbody');
-            const progress  = document.getElementById('fetch-progress-' + page);
-            const bar       = document.getElementById('fetch-bar-' + page);
-            const label     = document.getElementById('fetch-label-' + page);
+            const tableBody = document.querySelector('#fetch-table tbody');
+            const progress  = document.getElementById('fetch-progress');
+            const bar       = document.getElementById('fetch-bar');
+            const label     = document.getElementById('fetch-label');
 
             const pendingRows = Array.from(tableBody.querySelectorAll('tr[data-item-status="fetch_pending"]'));
             if (pendingRows.length === 0) return;

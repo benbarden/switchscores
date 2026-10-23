@@ -198,30 +198,54 @@
     {# Adding is done over AJAX so the page keeps its scroll position and several
        items can be added in a row. See improvements #149/#150. #}
     {% if ListType == 'new' and outOfRangeNotInDb|length > 0 %}
+    {% set priorExcludedCount = outOfRangeNotInDb|filter(i => PriorExclusions[i.title] ?? null)|length %}
     <div id="out-of-range-not-in-db">
         <div class="alert alert-warning mt-4">
             <strong>⚠ <span class="oor-remaining-count">{{ outOfRangeNotInDb|length }}</span> out-of-range game(s) not found in DB</strong> - these may have been missed in a previous week.
+            {% if priorExcludedCount > 0 %}
+                {{ priorExcludedCount }} of these {{ priorExcludedCount == 1 ? 'was' : 'were' }} skipped in an earlier batch (greyed out below).
+            {% endif %}
             <span class="oor-added-note d-none"> <strong class="oor-added-count">0</strong> added to this batch.</span>
         </div>
-        <table class="table table-sm table-bordered table-warning" style="max-width: 800px;">
+        <table class="table table-sm table-bordered table-warning" style="max-width: 900px;">
             <thead class="table-dark">
                 <tr>
                     <th class="text-center" style="width: 6%;">Page</th>
                     <th>Title</th>
                     <th class="text-center" style="width: 14%;">Date</th>
+                    <th style="width: 24%;">Previously excluded</th>
                     <th style="width: 10%;"></th>
                 </tr>
             </thead>
             <tbody>
             {% for item in outOfRangeNotInDb %}
-                <tr>
+                {% set prior = PriorExclusions[item.title] ?? null %}
+                {% set priorLabel = prior ? {'low_quality': 'Low quality', 'bundle': 'Bundle', 'excluded': 'Excluded'}[prior.item_status] : '' %}
+                <tr{% if prior %} class="table-secondary text-muted"{% endif %}>
                     <td class="text-center">{{ item.page_number }}</td>
                     <td>{{ item.title_raw }}</td>
                     <td class="text-center" style="white-space: nowrap;">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>
+                    <td>
+                        {% if prior %}
+                            {% if prior.item_status == 'low_quality' %}
+                                <span class="badge bg-danger">{{ priorLabel }}</span>
+                            {% elseif prior.item_status == 'bundle' %}
+                                <span class="badge bg-info text-dark">{{ priorLabel }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ priorLabel }}</span>
+                            {% endif %}
+                            <small>
+                                <a href="{{ route('staff.games.weekly-updates.show', {'batchId': prior.batch_id}) }}" class="text-muted">{{ prior.batch.batch_date|date('d M Y') }}</a>
+                            </small>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
                     <td class="text-center">
-                        <button type="button" class="btn btn-sm btn-primary oor-activate"
+                        <button type="button" class="btn btn-sm {{ prior ? 'btn-outline-secondary' : 'btn-primary' }} oor-activate"
                                 data-activate-url="{{ route('staff.games.weekly-updates.list.raw.activate-out-of-range', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}"
-                                data-title="{{ item.title_raw|e('html_attr') }}">Add to batch</button>
+                                data-title="{{ item.title_raw|e('html_attr') }}"
+                                {% if prior %}data-prior="{{ (priorLabel ~ ' in the ' ~ prior.batch.batch_date|date('d M Y') ~ ' batch')|e('html_attr') }}"{% endif %}>Add to batch</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -424,7 +448,10 @@
 
         section.querySelectorAll('.oor-activate').forEach(function (button) {
             button.addEventListener('click', function () {
-                if (!confirm('Add ' + button.dataset.title + ' to this batch?')) return;
+                const prompt = button.dataset.prior
+                    ? button.dataset.title + ' was marked ' + button.dataset.prior + '. Add it to this batch anyway?'
+                    : 'Add ' + button.dataset.title + ' to this batch?';
+                if (!confirm(prompt)) return;
 
                 button.disabled = true;
                 button.textContent = 'Adding…';

@@ -116,6 +116,16 @@ class WeeklyBatchListController extends Controller
             ];
         }
 
+        // Out-of-range games not in the DB can be added to the batch, but some were
+        // skipped on purpose in an earlier week. Flag those so they aren't re-added by mistake.
+        $outOfRangeNotInDbTitles = $items
+            ->where('item_status', WeeklyBatchItem::STATUS_OUT_OF_RANGE)
+            ->whereNull('game_id')
+            ->pluck('title')
+            ->unique()
+            ->values()
+            ->all();
+
         $bindings['Batch']          = $batch;
         $bindings['Console']        = $console;
         $bindings['ListType']       = $listType;
@@ -124,6 +134,7 @@ class WeeklyBatchListController extends Controller
         $bindings['Items']          = $items;
         $bindings['Counts']         = $counts;
         $bindings['PageCounts']     = $pageCounts;
+        $bindings['PriorExclusions'] = $this->repoItem->getPriorExclusions($outOfRangeNotInDbTitles, $console);
         $bindings['ExpectedPageSize'] = self::NINTENDO_PAGE_SIZE;
         $bindings['NextPageNumber'] = $this->repoRawPage->getNextPageNumber($batchId, $console, $listType);
         $bindings['DateFrom']       = $dateFrom;
@@ -445,9 +456,11 @@ class WeeklyBatchListController extends Controller
             WeeklyBatchItem::STATUS_LOW_QUALITY,
             WeeklyBatchItem::STATUS_EXCLUDED,
         ];
-        $fetchItemsByPage = $allItems
+        // One list across all pages (already ordered by page, then position), so a
+        // single fetch run covers everything.
+        $fetchItems = $allItems
             ->filter(fn($i) => !in_array($i->item_status, $skippedStatuses))
-            ->groupBy('page_number');
+            ->values();
 
         $skippedItems = $allItems->filter(fn($i) => in_array($i->item_status, [
             WeeklyBatchItem::STATUS_LOW_QUALITY,
@@ -462,7 +475,7 @@ class WeeklyBatchListController extends Controller
         $bindings['Label']            = $label;
         $bindings['RawPages']         = $rawPages;
         $bindings['Counts']           = $counts;
-        $bindings['FetchItemsByPage'] = $fetchItemsByPage;
+        $bindings['FetchItems']       = $fetchItems;
         $bindings['LqItems']          = $lqItems;
         $bindings['SkippedItems']     = $skippedItems;
         $bindings['Stages']           = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
