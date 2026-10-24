@@ -15,6 +15,7 @@ use App\Domain\DataSourceImportRun\Repository as DataSourceImportRunRepository;
 use App\Domain\DataSourceImportLog\Repository as DataSourceImportLogRepository;
 
 use App\Domain\WeeklyBatch\DateDifferences;
+use App\Domain\WeeklyBatch\MissingFromPaste;
 use App\Services\DataSources\Queries\Differences;
 
 class DashboardController extends Controller
@@ -60,6 +61,7 @@ class DashboardController extends Controller
 
         // Differences: weekly paste (#194)
         $bindings['ReleaseDateWeeklyPasteDifferenceCount'] = (new DateDifferences())->count();
+        $bindings['MissingFromPasteCount'] = app(MissingFromPaste::class)->countNotChecked();
 
         // Stats: Nintendo.co.uk
         $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();

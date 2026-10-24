@@ -32,6 +32,9 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::post('/staff/data-sources/differences/weekly-paste/release-date/ignore', 'Staff\DataSources\WeeklyPasteDateDifferencesController@ignore')->name('staff.data-sources.differences.weekly-paste.release-date.ignore');
     Route::get('/staff/data-sources/differences/weekly-paste/release-date/ignored', 'Staff\DataSources\WeeklyPasteDateDifferencesController@ignored')->name('staff.data-sources.differences.weekly-paste.release-date.ignored');
     Route::post('/staff/data-sources/differences/weekly-paste/release-date/ignored/remove', 'Staff\DataSources\WeeklyPasteDateDifferencesController@removeIgnored')->name('staff.data-sources.differences.weekly-paste.release-date.ignored.remove');
+    Route::get('/staff/data-sources/differences/weekly-paste/missing', 'Staff\DataSources\WeeklyPasteMissingController@show')->name('staff.data-sources.differences.weekly-paste.missing');
+    Route::post('/staff/data-sources/differences/weekly-paste/missing/check', 'Staff\DataSources\WeeklyPasteMissingController@check')->name('staff.data-sources.differences.weekly-paste.missing.check');
+    Route::post('/staff/data-sources/differences/weekly-paste/missing/uncheck', 'Staff\DataSources\WeeklyPasteMissingController@uncheck')->name('staff.data-sources.differences.weekly-paste.missing.uncheck');
 
     // Data sources: Nintendo.co.uk
     Route::get('/staff/data-sources/nintendo-co-uk/unlinked', 'Staff\DataSources\DataSourceParsedController@nintendoCoUkUnlinkedItems')->name('staff.data-sources.nintendo-co-uk.unlinked');

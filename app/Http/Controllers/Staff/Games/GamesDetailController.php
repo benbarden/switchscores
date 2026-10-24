@@ -31,6 +31,7 @@ use App\Models\Game;
 use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 
 use App\Domain\WeeklyBatch\DateDifferences;
+use App\Domain\WeeklyBatch\MissingFromPaste;
 use App\Services\DataSources\Queries\Differences;
 
 class GamesDetailController extends Controller
@@ -115,6 +116,7 @@ class GamesDetailController extends Controller
         $bindings['ReleaseDateEUNintendoCoUkDifferenceCount'] = $releaseDateEUNintendoCoUkDifferenceCount[0]->count;
         $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
         $bindings['ReleaseDateWeeklyPasteDifferenceCount'] = count((new DateDifferences())->get($gameId));
+        $bindings['MissingFromPaste'] = app(MissingFromPaste::class)->isMissingAndNotChecked($gameId);
 
         // Switch 2 prices come from the price API (#162), so the search payload's price
         // differs by design for every game ApplyPrices has corrected (#182). Where the

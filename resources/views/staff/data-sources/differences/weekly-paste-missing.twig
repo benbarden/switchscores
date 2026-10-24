@@ -1,0 +1,83 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
+{% macro missingTable(rows, highlightGameId, checked) %}
+    {% import 'ui/components/game/console-badge.twig' as consolebadge %}
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">Game date</th>
+                <th class="text-center">Added</th>
+                <th class="text-center">Last seen in a paste</th>
+                {% if checked %}<th class="text-center">Checked</th>{% endif %}
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr{% if highlightGameId and highlightGameId == row.id %} class="table-active"{% endif %}>
+                <td><a href="{{ route('staff.games.detail', {'gameId': row.id}) }}">{{ row.title }}</a></td>
+                <td class="text-center">{{ consolebadge.standard(row) }}</td>
+                <td class="text-center">{{ row.eu_release_date ?: 'No date' }}</td>
+                <td class="text-center">{{ row.created_at ? row.created_at|date('Y-m-d') : '-' }}</td>
+                <td class="text-center">{{ row.last_seen ?: 'Never' }}</td>
+                {% if checked %}<td class="text-center">{{ row.checked_on }}</td>{% endif %}
+                <td class="text-end text-nowrap">
+                    <a href="{{ route('staff.games.edit', {'gameId': row.id}) }}" class="btn btn-sm btn-outline-secondary">Edit game</a>
+                    <form method="post" action="{{ route(checked ? 'staff.data-sources.differences.weekly-paste.missing.uncheck' : 'staff.data-sources.differences.weekly-paste.missing.check') }}" class="d-inline">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="game_id" value="{{ row.id }}">
+                        <button type="submit" class="btn btn-sm {{ checked ? 'btn-outline-secondary' : 'btn-primary' }}">{{ checked ? 'Uncheck' : 'Checked' }}</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% block page_inner %}
+
+{% if session('pasteMissingSuccess') %}
+    <div class="alert alert-success">{{ session('pasteMissingSuccess') }}</div>
+{% endif %}
+{% if session('pasteMissingError') %}
+    <div class="alert alert-danger">{{ session('pasteMissingError') }}</div>
+{% endif %}
+
+<p style="max-width: 760px;">
+    Unreleased games, dated after the batch or with no date, that weren't in their console's latest
+    Upcoming paste. They may have been delisted, renamed, or just on a page that wasn't pasted.
+    Checked hides a game until it appears in a paste again. To de-list a game, use Edit game.
+</p>
+
+<table class="table table-sm w-auto">
+    <thead>
+        <tr><th>Console</th><th class="text-center">Latest Upcoming batch</th><th class="text-end">Pages pasted</th></tr>
+    </thead>
+    <tbody>
+    {% for batch in LatestBatches %}
+        <tr>
+            <td>{{ consolebadge.standard(batch) }}</td>
+            <td class="text-center">{{ batch.batch_date }}</td>
+            <td class="text-end">{{ batch.page_count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2 class="h4 mt-4">Not checked ({{ NotCheckedList|length }})</h2>
+{% if NotCheckedList|length > 0 %}
+    {{ _self.missingTable(NotCheckedList, HighlightGameId, false) }}
+{% else %}
+    <p>Nothing missing.</p>
+{% endif %}
+
+{% if CheckedList|length > 0 %}
+    <h2 class="h4 mt-4">Checked ({{ CheckedList|length }})</h2>
+    {{ _self.missingTable(CheckedList, HighlightGameId, true) }}
+{% endif %}
+
+{% endblock page_inner %}
