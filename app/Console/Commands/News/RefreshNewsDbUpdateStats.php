@@ -75,7 +75,7 @@ class RefreshNewsDbUpdateStats extends Command
                 $statsStandard = $this->repoGameStats->totalYearWeekStandardQuality($year, $week);
                 $statsLowQuality = $this->repoGameStats->totalYearWeekLowQuality($year, $week);
 
-                $logger->info('Week '.$week.' --- Standard quality: '.$statsStandard.' ; Low quality: '.$statsLowQuality);
+                // No per-week totals in the log (Ben, 2026-10-24): one line per year is enough
 
                 $newsDbUpdate = $this->repoNewsDbUpdate->get($year, $week);
 
@@ -88,7 +88,6 @@ class RefreshNewsDbUpdateStats extends Command
 
                     // We need to create it first, but only if it has games
                     if (($statsStandard == 0) && ($statsLowQuality == 0)) {
-                        $logger->error('No games; skipping');
                         continue;
                     }
                     $logger->info('Creating entry for '.$year.' week '.$week);

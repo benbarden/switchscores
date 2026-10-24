@@ -78,8 +78,6 @@ class SeriesImage extends Command
                 $series->landing_image = $seriesFilename;
                 $series->save();
                 continue;
-            } else {
-                $logger->info('Found '.count($gamesWithSeries).' game(s) for series '.$seriesName);
             }
 
             $imageCounter = 0;
