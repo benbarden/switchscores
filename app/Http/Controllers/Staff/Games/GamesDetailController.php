@@ -11,6 +11,7 @@ use App\Domain\Audit\Repository as AuditRepository;
 use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
 use App\Domain\DataSource\NintendoCoUk\GamePriceDecision;
 use App\Domain\DataSource\NintendoCoUk\PriceDecision;
+use App\Domain\DataSource\NintendoCoUk\StoreEditions;
 use App\Domain\DataSource\NintendoCoUk\Repository as DataSourceRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\Repository as GameRepository;
@@ -54,6 +55,7 @@ class GamesDetailController extends Controller
         private GscPageSnapshotRepository $repoGscPageSnapshot,
         private GameFlagRepository $repoGameFlag,
         private GamePriceDecision $gamePriceDecision,
+        private StoreEditions $storeEditions,
     )
     {
     }
@@ -117,6 +119,9 @@ class GamesDetailController extends Controller
         $bindings['PriceNintendoCoUkDifferenceCount'] = $priceNintendoCoUkDifferenceCount[0]->count;
         $bindings['ReleaseDateWeeklyPasteDifferenceCount'] = count((new DateDifferences())->get($gameId));
         $bindings['MissingFromPaste'] = app(MissingFromPaste::class)->isMissingAndNotChecked($gameId);
+
+        // Store editions from the price API (#161)
+        $bindings['StoreEditions'] = $this->storeEditions->forGame($game);
 
         // Switch 2 prices come from the price API (#162), so the search payload's price
         // differs by design for every game ApplyPrices has corrected (#182). Where the

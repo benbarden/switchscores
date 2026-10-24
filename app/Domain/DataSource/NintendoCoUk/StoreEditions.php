@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Domain\DataSource\NintendoCoUk;
+
+use App\Models\DataSource;
+use App\Models\DataSourceParsed;
+use App\Models\DataSourcePrice;
+use App\Models\DataSourceRaw;
+use App\Models\Game;
+
+/**
+ * A game's purchase options on the Nintendo store, from the price API data (#161).
+ *
+ * The NSUIDs in the game's raw API record are its SKUs, and data_source_prices holds each
+ * one's price. The NSUID prefix gives the type: 7001 the standard game, 7005 an upgrade pack
+ * (Switch 2 Edition upgrades), 7007 a deluxe edition or bundle. On Switch 1, deluxe, ultimate
+ * and bundle editions all share 7007, so the type says "an edition" but not which one.
+ *
+ * Read only, both consoles. Prices are as fresh as the last DSNintendoCoUkFetchPrices run for
+ * the console - nightly for Switch 2; Switch 1 once #132 adds it to the nightly run.
+ */
+class StoreEditions
+{
+    const TYPE_STANDARD = 'standard';
+    const TYPE_UPGRADE  = 'upgrade';
+    const TYPE_EDITION  = 'edition';
+    const TYPE_OTHER    = 'other';
+
+    const LABELS = [
+        self::TYPE_STANDARD => 'Standard',
+        self::TYPE_UPGRADE  => 'Upgrade pack',
+        self::TYPE_EDITION  => 'Deluxe edition or bundle',
+        self::TYPE_OTHER    => 'Other',
+    ];
+
+    public function __construct(private NsuidExtractor $extractor)
+    {
+    }
+
+    public static function typeFor(string $nsuid): string
+    {
+        return match (true) {
+            str_starts_with($nsuid, NsuidPrice::PREFIX_GAME)    => self::TYPE_STANDARD,
+            str_starts_with($nsuid, NsuidPrice::PREFIX_UPGRADE) => self::TYPE_UPGRADE,
+            str_starts_with($nsuid, NsuidPrice::PREFIX_DELUXE)  => self::TYPE_EDITION,
+            default                                             => self::TYPE_OTHER,
+        };
+    }
+
+    /**
+     * Every SKU on the game's raw record, standard first. A SKU with no stored price (not
+     * fetched yet) is still listed, with price null.
+     *
+     * @return array<int, array{nsuid: string, type: string, label: string, price: ?DataSourcePrice}>
+     */
+    public function forGame(Game $game): array
+    {
+        $parsed = DataSourceParsed::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
+            ->where('console_id', $game->console_id)
+            ->where('game_id', $game->id)
+            ->whereNotNull('link_id')
+            ->first(['link_id']);
+        if (!$parsed) {
+            return [];
+        }
+
+        $rawJson = DataSourceRaw::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
+            ->where('console_id', $game->console_id)
+            ->where('link_id', $parsed->link_id)
+            ->value('source_data_json');
+
+        $nsuids = $this->extractor->extractFromJson($rawJson);
+        $prices = DataSourcePrice::whereIn('nsuid', $nsuids)->get()->keyBy('nsuid');
+
+        return $this->rows($nsuids, $prices);
+    }
+
+    /**
+     * Linked games on a console that have more than the standard SKU: a deluxe edition,
+     * bundle or upgrade pack. For the staff list.
+     *
+     * Reads the raw records in chunks: Switch 1 has about 9,000, too many to hold at once
+     * in a web request.
+     *
+     * @return array<int, array{game: Game, skus: array}>
+     */
+    public function gamesWithEditions(int $consoleId): array
+    {
+        $linkToGame = DataSourceParsed::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
+            ->where('console_id', $consoleId)
+            ->whereNotNull('game_id')
+            ->whereNotNull('link_id')
+            ->pluck('game_id', 'link_id');
+
+        $nsuidsByGame = [];
+        DataSourceRaw::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
+            ->where('console_id', $consoleId)
+            ->where('is_delisted', 0)
+            ->select(['id', 'link_id', 'source_data_json'])
+            ->chunkById(500, function ($records) use ($linkToGame, &$nsuidsByGame) {
+                foreach ($records as $record) {
+                    $gameId = $linkToGame[$record->link_id] ?? null;
+                    if (!$gameId || isset($nsuidsByGame[$gameId])) continue;
+
+                    $nsuids = $this->extractor->extractFromJson($record->source_data_json);
+                    foreach ($nsuids as $nsuid) {
+                        if (self::typeFor($nsuid) !== self::TYPE_STANDARD) {
+                            $nsuidsByGame[$gameId] = $nsuids;
+                            break;
+                        }
+                    }
+                }
+            });
+
+        if (!$nsuidsByGame) {
+            return [];
+        }
+
+        $prices = DataSourcePrice::whereIn('nsuid', array_merge(...array_values($nsuidsByGame)))->get()->keyBy('nsuid');
+        $games = Game::whereIn('id', array_keys($nsuidsByGame))->orderBy('title')->get();
+
+        return $games->map(fn (Game $game) => [
+            'game' => $game,
+            'skus' => $this->rows($nsuidsByGame[$game->id], $prices),
+        ])->all();
+    }
+
+    private function rows(array $nsuids, $prices): array
+    {
+        $order = [self::TYPE_STANDARD => 0, self::TYPE_EDITION => 1, self::TYPE_UPGRADE => 2, self::TYPE_OTHER => 3];
+
+        $rows = array_map(function ($nsuid) use ($prices) {
+            $type = self::typeFor($nsuid);
+            return [
+                'nsuid' => $nsuid,
+                'type' => $type,
+                'label' => self::LABELS[$type],
+                'price' => $prices[$nsuid] ?? null,
+            ];
+        }, $nsuids);
+
+        usort($rows, fn ($a, $b) => [$order[$a['type']], $a['nsuid']] <=> [$order[$b['type']], $b['nsuid']]);
+
+        return $rows;
+    }
+}

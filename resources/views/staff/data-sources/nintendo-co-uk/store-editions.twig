@@ -1,0 +1,34 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import 'staff/data-sources/nintendo-co-uk/store-editions-skus.twig' as editions %}
+
+{% block page_inner %}
+
+<p>
+    <a href="{{ route('staff.data-sources.nintendo-co-uk.store-editions', {'console': 2}) }}" class="btn btn-sm {{ ConsoleId == 2 ? 'btn-primary' : 'btn-outline-primary' }}">Switch 2</a>
+    <a href="{{ route('staff.data-sources.nintendo-co-uk.store-editions', {'console': 1}) }}" class="btn btn-sm {{ ConsoleId == 1 ? 'btn-primary' : 'btn-outline-primary' }}">Switch 1</a>
+</p>
+
+<p style="max-width: 760px;">
+    Linked games with more than the standard edition on the Nintendo store: a deluxe edition,
+    bundle or upgrade pack. From the price API data. Switch 1 deluxe, ultimate and bundle
+    editions all show as "Deluxe edition or bundle", since the API doesn't tell them apart.
+    {% if ConsoleId == 1 %}<strong>Switch 1 prices aren't fetched nightly yet (#132)</strong>, so check the Fetched date.{% endif %}
+</p>
+
+<h2 class="h4">{{ GameList|length }} games</h2>
+
+{% for row in GameList %}
+    <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between">
+            <a href="{{ route('staff.games.detail', {'gameId': row.game.id}) }}">{{ row.game.title }}</a>
+            <span>Site price: {{ row.game.price_eshop is not null ? '£' ~ row.game.price_eshop : '-' }}</span>
+        </div>
+        <div class="card-body p-2">
+            {{ editions.table(row.skus) }}
+        </div>
+    </div>
+{% else %}
+    <p>No games with more than one edition.</p>
+{% endfor %}
+
+{% endblock page_inner %}

@@ -1,0 +1,32 @@
+{# One game's store SKUs from the price API (#161). Expects `skus` from StoreEditions. #}
+{% macro table(skus) %}
+    <table class="table table-sm align-middle mb-0">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Sale</th>
+                <th>Status</th>
+                <th>NSUID</th>
+                <th>Fetched</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sku in skus %}
+            {% set p = sku.price %}
+            <tr>
+                <td>{{ sku.label }}</td>
+                <td class="text-end">{{ p and p.regular_price is not null ? '£' ~ p.regular_price : '-' }}</td>
+                <td class="text-end">
+                    {% if p and p.hasLiveDiscount() %}
+                        £{{ p.discount_price }}{% if p.discount_end_at %} <small class="text-muted">until {{ p.discount_end_at|date('j M') }}</small>{% endif %}
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ p ? p.sales_status : 'Not fetched' }}</td>
+                <td><code>{{ sku.nsuid }}</code></td>
+                <td>{{ p and p.fetched_at ? p.fetched_at|date('Y-m-d H:i') : '-' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
