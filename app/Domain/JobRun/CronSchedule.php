@@ -29,13 +29,38 @@ class CronSchedule
 
         $jobs = [];
         foreach (file($this->path, FILE_IGNORE_NEW_LINES) as $line) {
-            $job = $this->parseLine($line);
-            if ($job) {
-                $jobs[] = $job;
-            }
+            $jobs = array_merge($jobs, $this->parseLineJobs($line));
         }
 
         return $jobs;
+    }
+
+    /**
+     * The jobs on one cron line. A cron:group line (#185) is one job per step, each due at the
+     * group's time, since cron:group records every step on its own:
+     *   30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group games >/dev/null 2>&1
+     * Any other line is at most one job (parseLine). An unknown group has none.
+     *
+     * @return array<int, array{expression: string, command: string}>
+     */
+    public function parseLineJobs(string $line): array
+    {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) {
+            return [];
+        }
+
+        $parts = preg_split('/\s+/', $line, 7);
+        if (count($parts) === 7 && preg_match('/php artisan cron:group ([\w-]+)/', $parts[6], $m)) {
+            $expression = implode(' ', array_slice($parts, 0, 5));
+            $steps = config('cron-groups.'.$m[1]);
+            return is_array($steps)
+                ? array_map(fn ($step) => ['expression' => $expression, 'command' => $step], $steps)
+                : [];
+        }
+
+        $job = $this->parseLine($line);
+        return $job ? [$job] : [];
     }
 
     /**

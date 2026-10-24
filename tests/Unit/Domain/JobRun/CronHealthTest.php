@@ -62,12 +62,45 @@ class CronHealthTest extends TestCase
         $this->assertNull($schedule->parseLine(''));
     }
 
+    public function testAGroupLineBecomesOneJobPerStep()
+    {
+        // #185: cron:group runs each step on its own row, so each step is an expected job
+        config(['cron-groups.test-games' => ['UpdateGameReviewStats', 'UpdateGameRanks']]);
+
+        $jobs = (new CronSchedule('/nonexistent'))->parseLineJobs(
+            '30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group test-games >/dev/null 2>&1'
+        );
+
+        $this->assertSame([
+            ['expression' => '30 5 * * *', 'command' => 'UpdateGameReviewStats'],
+            ['expression' => '30 5 * * *', 'command' => 'UpdateGameRanks'],
+        ], $jobs);
+    }
+
+    public function testAnUnknownGroupHasNoJobs()
+    {
+        $jobs = (new CronSchedule('/nonexistent'))->parseLineJobs(
+            '30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group no-such-group >/dev/null 2>&1'
+        );
+
+        $this->assertSame([], $jobs);
+    }
+
     public function testTheRepoCronFileParsesEveryJobLine()
     {
         $path = base_path('scripts/switchscores-cron');
+        $schedule = new CronSchedule($path);
         $jobLines = array_filter(file($path, FILE_IGNORE_NEW_LINES), fn ($l) => trim($l) !== '' && !str_starts_with(trim($l), '#'));
 
-        $this->assertCount(count($jobLines), (new CronSchedule($path))->jobs());
+        // Every line is a known group or a single job, and the cron file uses every group
+        $expected = 0;
+        foreach ($jobLines as $line) {
+            $jobs = $schedule->parseLineJobs($line);
+            $this->assertNotEmpty($jobs, 'Line has no jobs: '.$line);
+            $expected += count($jobs);
+        }
+        $this->assertCount($expected, $schedule->jobs());
+        $this->assertCount(array_sum(array_map('count', config('cron-groups'))), $schedule->jobs());
     }
 
     public function testARunSinceItWasDueKeepsItsStatus()

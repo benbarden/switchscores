@@ -13,14 +13,15 @@ use App\Domain\Game\DbQueries as DbGame;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\GameImportRuleEshop\Repository as GameImportRuleEshopRepository;
 
-class GameUpdateQualityScores extends Command
+class UpdateGameQualityScores extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'GameUpdateQualityScores {gameId?}';
+    // Renamed from GameUpdateQualityScores (#185), to match the other UpdateGame* jobs
+    protected $signature = 'UpdateGameQualityScores {gameId?}';
 
     /**
      * The console command description.

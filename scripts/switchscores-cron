@@ -1,51 +1,18 @@
 # Cron jobs for Switch Scores
 #
-# Every job runs through cron:record, which saves the run to job_runs so the staff home's
-# Nightly jobs tile and /staff/cron-health can show whether it ran (#164). The schedule on
-# that page is read from this file, so a new job only needs a line here - wrapped the same way.
+# Each line runs a group of jobs from config/cron-groups.php through cron:group (#185), in its
+# own 30-minute slot. cron:group records every step in job_runs, so the staff home's Nightly
+# jobs tile and /staff/cron-health show each job, not just the group (#164). Cron health reads
+# this file and the groups, so a new job only needs a line in its group.
+# Times are UTC.
 # Not installed by deploy.sh: after changing it, run
 #   sudo install -m 644 -o root -g root scripts/switchscores-cron /etc/cron.d/switchscores-cron
 
-# Data ingestion
-0 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "DSNintendoCoUkImportParseLink" >/dev/null 2>&1
-10 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "DSNintendoCoUkUpdateAvailability" >/dev/null 2>&1
-# Per-SKU prices from the price API (via the relay), Switch 2 only (#162). FetchPrices stores
-# them before UpdateGames, which sets each Switch 2 game's price from its standalone SKU and
-# falls back to the search payload's price when there isn't a usable one (#183).
-12 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "DSNintendoCoUkFetchPrices" >/dev/null 2>&1
-15 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "DSNintendoCoUkUpdateGames" >/dev/null 2>&1
-20 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "DSNintendoCoUkDownloadPackshots" >/dev/null 2>&1
-# Dry run only: the nightly price report. "changed" should be 0 each night, since UpdateGames
-# has already applied the API prices; anything else shows as a warning on the staff home.
-28 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "DSNintendoCoUkApplyPrices" >/dev/null 2>&1
-
-# Review pipeline
-30 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "PartnerImportActiveFeeds" >/dev/null 2>&1
-35 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "ReviewImportByScraper" >/dev/null 2>&1
-40 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "PartnerParseReviewDrafts" >/dev/null 2>&1
-45 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "ReviewConvertDraftsToReviews" >/dev/null 2>&1
-47 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "UpdateGameCalendarStats" >/dev/null 2>&1
-50 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "ReviewSiteUpdateStats" >/dev/null 2>&1
-52 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "UpdateGameReviewStats" >/dev/null 2>&1
-54 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "UpdateGameRanks" >/dev/null 2>&1
-# Must run after PartnerImportActiveFeeds so the night's new drafts are in the sample
-56 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "PartnerUpdateTitleMatchRates" >/dev/null 2>&1
-
-# Content
-0 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "SitemapGenerate" >/dev/null 2>&1
-5 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "IGSeriesImage" >/dev/null 2>&1
-10 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "ReviewCampaignUpdateProgress" >/dev/null 2>&1
-15 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "RefreshNewsDbUpdateStats" >/dev/null 2>&1
-
-# Quality and integrity
-30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "GameUpdateQualityScores" >/dev/null 2>&1
-35 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "IntegrityCheckChecker" >/dev/null 2>&1
-
-# GSC
-0 6 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "app:fetch-gsc-page-snapshots" >/dev/null 2>&1
-
-# URL crawl - check Nintendo URLs for 404s (100 games/night, ~5 min runtime)
-30 6 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "game:crawl-batch --limit=100 --delay=3" >/dev/null 2>&1
-
-# Steam reviews - nightly batch (100 games, oldest-synced first, ~3-4 min runtime)
-0 3 * * * www-data cd /var/www/switchscores.com && php artisan cron:record "game:sync-steam-reviews" >/dev/null 2>&1
+0 3 * * * www-data cd /var/www/switchscores.com && php artisan cron:group steam >/dev/null 2>&1
+30 3 * * * www-data cd /var/www/switchscores.com && php artisan cron:group nintendo-import >/dev/null 2>&1
+0 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:group nintendo-process >/dev/null 2>&1
+30 4 * * * www-data cd /var/www/switchscores.com && php artisan cron:group reviews-import >/dev/null 2>&1
+0 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group reviews-drafts >/dev/null 2>&1
+30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group games >/dev/null 2>&1
+0 6 * * * www-data cd /var/www/switchscores.com && php artisan cron:group site >/dev/null 2>&1
+30 6 * * * www-data cd /var/www/switchscores.com && php artisan cron:group crawl >/dev/null 2>&1

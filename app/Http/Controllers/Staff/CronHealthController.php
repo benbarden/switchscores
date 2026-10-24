@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as Controller;
 
-use App\Console\Commands\CronRecord;
 use App\Domain\JobRun\CronHealth;
+use App\Domain\JobRun\JobRecorder;
 use App\Domain\JobRun\Repository as JobRunRepository;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
@@ -70,7 +70,7 @@ class CronHealthController extends Controller
             'output' => $this->withoutWarnings($run->output),
         ])->all();
         $bindings['RunLimit'] = self::RUN_LIMIT;
-        $bindings['RetentionDays'] = CronRecord::RETENTION_DAYS;
+        $bindings['RetentionDays'] = JobRecorder::RETENTION_DAYS;
 
         return view('staff.cron-health-job', $bindings);
     }

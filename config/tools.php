@@ -41,7 +41,7 @@ return [
         'quality_integrity' => [
             'label' => 'Quality & integrity',
             'jobs'  => [
-                ['cmd' => 'GameUpdateQualityScores',      'desc' => 'Update quality score fields'],
+                ['cmd' => 'UpdateGameQualityScores',      'desc' => 'Update quality score fields'],
                 ['cmd' => 'IntegrityCheckChecker',        'desc' => 'Run integrity checks'],
             ],
         ],
