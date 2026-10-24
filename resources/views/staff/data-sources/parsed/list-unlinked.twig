@@ -8,6 +8,11 @@
 
     <div class="col-md-12">
 
+        <p>
+            <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked.suggestions') }}" class="btn btn-outline-primary btn-sm">Suggestions</a>
+            - games these items probably belong to, linked in one click.
+        </p>
+
         {% include 'staff/data-sources/parsed/table.twig' with {'ItemList': ItemsWithEUDate} %}
 
     </div>

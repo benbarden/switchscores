@@ -78,6 +78,31 @@ class TitleMatchKeyTest extends TestCase
         $this->assertSameGame('MotoGP™ 26', 'MotoGP 26');
     }
 
+    public function testEnDashAndTrademarkSuffix()
+    {
+        // As the Nintendo API writes it (#192)
+        $this->assertSameGame("Twofold \u{2013} Nintendo Switch\u{2122} 2 Edition", 'Twofold');
+        $this->assertSameGame("Harvest Moon\u{00AE}: Echoes of Teradea - Nintendo Switch\u{2122} 2 Edition", 'Harvest Moon: Echoes of Teradea');
+        $this->assertSameGame("Spirit Valor Nintendo Switch\u{2122} 2 Edition", 'Spirit Valor');
+    }
+
+    public function testEmDashSuffix()
+    {
+        $this->assertSameGame("Some Game \u{2014} Nintendo Switch 2 Edition", 'Some Game');
+    }
+
+    public function testStripConsoleSuffixKeepsTheRestOfTheTitle()
+    {
+        $this->assertSame(
+            "Moomintroll: Winter's Warmth",
+            (new TitleMatchKey())->stripConsoleSuffix("Moomintroll: Winter's Warmth \u{2013} Nintendo Switch\u{2122} 2 Edition")
+        );
+        $this->assertSame(
+            "MotoGP\u{2122} 26 \u{2013} Deluxe",
+            (new TitleMatchKey())->stripConsoleSuffix("MotoGP\u{2122} 26 \u{2013} Deluxe \u{2013} Nintendo Switch 2 Edition")
+        );
+    }
+
     public function testKeyShape()
     {
         $this->assertSame(

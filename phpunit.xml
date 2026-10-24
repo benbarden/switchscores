@@ -16,6 +16,8 @@
     </testsuite>
   </testsuites>
   <php>
+    <!-- The Fast suite peaked at ~175 MB on 2026-10-24, over the container's 128M CLI default -->
+    <ini name="memory_limit" value="512M"/>
     <env name="APP_ENV" value="testing"/>
     <env name="CACHE_DRIVER" value="array"/>
     <env name="SESSION_DRIVER" value="array"/>

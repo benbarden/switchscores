@@ -16,7 +16,7 @@ use App\Construction\Game\GameDirector;
 
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Console\Repository as ConsoleRepository;
-use App\Domain\DataSource\NintendoCoUk\DownloadPackshotHelper;
+use App\Domain\DataSource\NintendoCoUk\GameLinker;
 use App\Domain\DataSourceIgnore\Repository as DataSourceIgnoreRepository;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\FormatOptions as GameFormatOptions;
@@ -39,7 +39,6 @@ use App\Enums\AmazonAffiliateStatus;
 use App\Enums\GameStatus;
 
 use App\Events\GameCreated;
-use App\Factories\DataSource\NintendoCoUk\UpdateGameFactory;
 use App\Factories\GameDirectorFactory;
 use App\Models\Game;
 
@@ -82,7 +81,7 @@ class GamesEditorController extends Controller
         private GamesCompanyRepository $repoGamesCompany,
         private NewsRepository $repoNews,
         private ReviewLinkRepository $repoReviewLink,
-        private DownloadPackshotHelper $downloadPackshotHelper
+        private GameLinker $gameLinker
     )
     {
     }
@@ -285,76 +284,8 @@ class GamesEditorController extends Controller
                 $dsNewParsedItem = null;
             }
 
-            if ($dsCurrentParsedItem) {
-
-                // If game is currently linked to a different API item, we need to break the link
-                if ($nintendoCoUkLinkId != $dsCurrentParsedItem->link_id) {
-
-                    $dsCurrentParsedItem->game_id = null;
-                    $dsCurrentParsedItem->save();
-
-                    // Only delete the packshots when a replacement link is being set, so the
-                    // new item's images take their place. Clearing the link entirely used to
-                    // delete them too, which is destructive and has no way back: the objects
-                    // are removed from storage, and a game with no link and no store URL has
-                    // nothing left to re-download from. Unlinking says "this record is not
-                    // this game", not "this game has no artwork" - and the artwork is usually
-                    // still right, since the wrong record is normally another edition of the
-                    // same game.
-                    if ($nintendoCoUkLinkId) {
-
-                        $serviceGameImages = new GameImages($game);
-                        $serviceGameImages->deleteSquare();
-                        $serviceGameImages->deleteHeader();
-
-                        $game->image_square = null;
-                        $game->image_header = null;
-
-                    }
-
-                    // Link state goes either way: it describes the link, not the game.
-                    $game->eshop_europe_fs_id = null;
-                    $game->save();
-
-                }
-
-            }
-
-            if ($dsNewParsedItem) {
-
-                if ($game->eshop_europe_fs_id != $dsNewParsedItem->link_id) {
-
-                    // Link the game to the parsed item (not sure we need a two-way link?)
-                    $game->eshop_europe_fs_id = $dsNewParsedItem->link_id;
-
-                    // Update availability
-                    $game->format_digital = Game::FORMAT_AVAILABLE;
-
-                    $game->save();
-
-                }
-
-                // Link the parsed item to the game
-                $dsNewParsedItem->game_id = $gameId;
-                $dsNewParsedItem->save();
-
-                UpdateGameFactory::doUpdate($game, $dsNewParsedItem);
-
-                // Download packshots
-                $this->downloadPackshotHelper->downloadForGame($game);
-
-            } else {
-
-                // Clear digital status - Removed, we can keep the previous value.
-                //$game->format_digital = null;
-                // Clear fs_id
-                $game->eshop_europe_fs_id = null;
-                $game->save();
-
-            }
-
-            // Clear cache
-            $this->repoGame->clearCacheCoreData($gameId);
+            // Shared with Unlinked suggestions (#192)
+            $this->gameLinker->link($game, $dsNewParsedItem);
 
             // Done
             return redirect('/staff/games/detail/'.$gameId.'?lastaction=edit&lastgameid='.$gameId);

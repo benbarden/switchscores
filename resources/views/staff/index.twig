@@ -71,10 +71,10 @@
             {% if auth_user().hasRole('Data source manager') or auth_user().isOwner() %}
                 <tr>
                     <td>
-                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}">Nintendo.co.uk API: Unlinked items</a>
+                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked.suggestions') }}">Nintendo.co.uk API: Unlinked items (Suggestions)</a>
                     </td>
                     <td class="text-end">
-                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
+                        <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked.suggestions') }}" class="h4">{{ NintendoCoUkUnlinkedCount }}</a>
                     </td>
                 </tr>
             {% endif %}

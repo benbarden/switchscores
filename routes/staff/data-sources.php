@@ -30,6 +30,8 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
 
     // Data sources: Nintendo.co.uk
     Route::get('/staff/data-sources/nintendo-co-uk/unlinked', 'Staff\DataSources\DataSourceParsedController@nintendoCoUkUnlinkedItems')->name('staff.data-sources.nintendo-co-uk.unlinked');
+    Route::get('/staff/data-sources/nintendo-co-uk/unlinked/suggestions', 'Staff\DataSources\NintendoCoUkUnlinkedSuggestionsController@show')->name('staff.data-sources.nintendo-co-uk.unlinked.suggestions');
+    Route::post('/staff/data-sources/nintendo-co-uk/unlinked/suggestions/link', 'Staff\DataSources\NintendoCoUkUnlinkedSuggestionsController@link')->name('staff.data-sources.nintendo-co-uk.unlinked.suggestions.link');
     Route::get('/staff/data-sources/nintendo-co-uk/ignored', 'Staff\DataSources\DataSourceParsedController@nintendoCoUkIgnoredItems')->name('staff.data-sources.nintendo-co-uk.ignored');
     Route::match(['get', 'post'], '/staff/data-sources/nintendo-co-uk/add-game/{itemId}', 'Staff\DataSources\DataSourceParsedController@addGameNintendoCoUk')->name('staff.data-sources.nintendo-co-uk.add-game');
 

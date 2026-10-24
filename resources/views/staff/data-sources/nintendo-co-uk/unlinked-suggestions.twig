@@ -1,0 +1,147 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
+{% block page_inner %}
+
+{% if session('unlinkedSuccess') %}
+    <div class="alert alert-success">
+        Linked <a href="{{ route('staff.games.detail', {'gameId': session('unlinkedSuccess')}) }}">{{ session('unlinkedSuccessTitle') }}</a>.
+    </div>
+{% endif %}
+{% if session('unlinkedError') %}
+    <div class="alert alert-danger">{{ session('unlinkedError') }}</div>
+{% endif %}
+
+<p>
+    <a href="{{ route('staff.data-sources.nintendo-co-uk.unlinked') }}" class="btn btn-outline-primary btn-sm">View all unlinked</a>
+</p>
+
+<p style="max-width: 760px;">
+    Unlinked Nintendo.co.uk API items (the same list as View all unlinked), matched by title to a
+    game on the same console that has no API link yet. Linking does the same as the game's Edit
+    link page. Nothing links until you click.
+</p>
+
+<h2 class="h4 mt-4">Likely matches ({{ Matches|length }})</h2>
+
+{% if Matches|length > 0 %}
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>API item</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">API date</th>
+                <th>Game</th>
+                <th class="text-center">Game date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in Matches %}
+            {% set datesDiffer = row.game.eu_release_date and row.game.eu_release_date != row.item.release_date_eu %}
+            <tr>
+                <td><a href="{{ route('staff.data-sources.detail', {'sourceId': row.item.source_id, 'linkId': row.item.link_id}) }}">{{ row.item.title }}</a></td>
+                <td class="text-center">{{ consolebadge.standard(row.item) }}</td>
+                <td class="text-center">{{ row.item.release_date_eu }}</td>
+                <td><a href="{{ route('staff.games.detail', {'gameId': row.game.id}) }}">{{ row.game.title }}</a></td>
+                <td class="text-center{% if datesDiffer %} table-warning{% endif %}"{% if datesDiffer %} title="Dates differ"{% endif %}>{{ row.game.eu_release_date }}</td>
+                <td class="text-end">
+                    <form method="post" action="{{ route('staff.data-sources.nintendo-co-uk.unlinked.suggestions.link') }}">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="link_id" value="{{ row.item.link_id }}">
+                        <input type="hidden" name="game_id" value="{{ row.game.id }}">
+                        <button type="submit" class="btn btn-sm btn-primary">Link</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No likely matches.</p>
+{% endif %}
+
+{% if Several|length > 0 %}
+    <h2 class="h4 mt-4">Several possible games ({{ Several|length }})</h2>
+    <p>More than one unlinked game on the same console has this title. Pick the right one.</p>
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>API item</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">API date</th>
+                <th>Game</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in Several %}
+            <tr>
+                <td><a href="{{ route('staff.data-sources.detail', {'sourceId': row.item.source_id, 'linkId': row.item.link_id}) }}">{{ row.item.title }}</a></td>
+                <td class="text-center">{{ consolebadge.standard(row.item) }}</td>
+                <td class="text-center">{{ row.item.release_date_eu }}</td>
+                <td>
+                    <form method="post" action="{{ route('staff.data-sources.nintendo-co-uk.unlinked.suggestions.link') }}" class="d-flex gap-2">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="link_id" value="{{ row.item.link_id }}">
+                        <select name="game_id" class="form-select form-select-sm" style="width: auto;">
+                            {% for game in row.games %}
+                                <option value="{{ game.id }}">{{ game.title }} [{{ game.id }}] - {{ game.eu_release_date ?: 'no date' }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Link</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<h2 class="h4 mt-4">No match ({{ NoMatch|length }})</h2>
+<p style="max-width: 760px;">
+    No unlinked game on the same console has this title. The game may need adding: find it on
+    the Nintendo search, then use
+    <a href="{{ route('staff.games.single-game-add.show') }}">Add a game from the store</a>.
+    Once it's added, it shows under Likely matches.
+</p>
+
+{% if NoMatch|length > 0 %}
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>API item</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">API date</th>
+                <th>Notes</th>
+                <th class="text-end" style="white-space: nowrap;">Find it</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in NoMatch %}
+            <tr>
+                <td><a href="{{ route('staff.data-sources.detail', {'sourceId': row.item.source_id, 'linkId': row.item.link_id}) }}">{{ row.item.title }}</a></td>
+                <td class="text-center">{{ consolebadge.standard(row.item) }}</td>
+                <td class="text-center">{{ row.item.release_date_eu }}</td>
+                <td>
+                    {% if row.linkedGame %}
+                        Already in the DB and linked to another API item:
+                        <a href="{{ route('staff.games.detail', {'gameId': row.linkedGame.id}) }}">{{ row.linkedGame.title }}</a>
+                    {% elseif row.otherConsoleGame %}
+                        Other console:
+                        <a href="{{ route('staff.games.detail', {'gameId': row.otherConsoleGame.id}) }}">{{ row.otherConsoleGame.title }}</a>
+                        {{ consolebadge.standard(row.otherConsoleGame) }}
+                    {% endif %}
+                </td>
+                <td class="text-end" style="white-space: nowrap;">
+                    <a href="{{ row.searchUrl }}" target="_blank">Search Nintendo</a>
+                    {% if row.item.url %}
+                        : <a href="{{ eshop_url('eu', row.item.url) }}" target="_blank">Store page</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock page_inner %}

@@ -50,11 +50,24 @@ class TitleMatchKey
     public function stripConsoleSuffix(string $title): string
     {
         foreach (self::CONSOLE_SUFFIXES as $suffix) {
-            if (str_ends_with(mb_strtolower($title), mb_strtolower($suffix))) {
-                return substr($title, 0, -strlen($suffix));
+            $pattern = '/'.$this->suffixPattern($suffix).'$/iu';
+            if (preg_match($pattern, $title)) {
+                return preg_replace($pattern, '', $title);
             }
         }
 
         return $title;
+    }
+
+    /**
+     * Nintendo's API titles write the suffix as "– Nintendo Switch™ 2 Edition", so a hyphen in a
+     * suffix also matches an en or em dash, and "Switch" may carry ™ or ®. Only the suffix is
+     * matched loosely: the rest of the title is returned as it was.
+     */
+    private function suffixPattern(string $suffix): string
+    {
+        $pattern = preg_quote($suffix, '/');
+        $pattern = str_replace('\-', '[-\x{2013}\x{2014}]', $pattern);
+        return str_replace('Switch', 'Switch[™®]?', $pattern);
     }
 }
