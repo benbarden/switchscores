@@ -42,7 +42,9 @@ class FetchPrices extends Command
     protected $signature = 'DSNintendoCoUkFetchPrices
                             {--console=2 : Console id to fetch prices for (2 = Switch 2)}
                             {--dry-run : Call the API and report, but write nothing}
-                            {--include-delisted : Also fetch prices for delisted records}';
+                            {--include-delisted : Also fetch prices for delisted records}
+                            {--limit= : Only this many raw records, in id order (for testing, or a large catalogue in slices)}
+                            {--offset=0 : Skip this many raw records first, in id order}';
 
     protected $description = 'Fetches per-SKU prices from the Nintendo eShop price API into data_source_prices.';
 
@@ -70,7 +72,24 @@ class FetchPrices extends Command
             $query->where('is_delisted', 0);
         }
 
+        // A slice of the catalogue (#132): Switch 1 has about 9,000 records, so it's tested
+        // narrow first and fetched in slices. Id order keeps consecutive slices from overlapping.
+        $total = $query->count();
+        $limit = $this->option('limit');
+        $offset = (int) $this->option('offset');
+        $query->orderBy('id');
+        if ($limit !== null) {
+            $query->limit((int) $limit);
+        }
+        if ($offset > 0) {
+            $query->offset($offset);
+        }
+
         $records = $query->get(['id', 'link_id', 'source_data_json']);
+
+        if ($limit !== null || $offset > 0) {
+            $this->info(sprintf('Slice: records %d to %d of %d', $offset + 1, $offset + $records->count(), $total));
+        }
 
         $nsuids = [];
 
