@@ -3,6 +3,7 @@
 namespace Tests\Feature\Staff;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 /**
@@ -10,6 +11,9 @@ use Tests\TestCase;
  */
 class GamesDashboardTest extends TestCase
 {
+    // The request middleware saves the logged-in user (last_access_date); roll it back (#200)
+    use DatabaseTransactions;
+
     private function owner(): User
     {
         return new User([

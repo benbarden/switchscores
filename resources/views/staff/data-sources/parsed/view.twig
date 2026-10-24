@@ -1,5 +1,6 @@
 {% import 'ui/components/headings/heading.twig' as heading %}
 {% import 'ui/components/links/game.twig' as gamelink %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
 
 {% extends 'theme/staff-b5/layout-default.twig' %}
 
@@ -39,7 +40,7 @@
                         </tr>
                         <tr>
                             <td><strong>Console</strong></td>
-                            <td>{{ DSParsedItem.console ? DSParsedItem.console.name : '-' }}</td>
+                            <td>{{ DSParsedItem.console ? consolebadge.standard(DSParsedItem) : '-' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Status</strong></td>

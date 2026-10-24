@@ -29,9 +29,10 @@
         <thead>
             <tr>
                 <th>API item</th>
-                <th class="text-center">Console</th>
+                <th class="text-center">Console (API)</th>
                 <th class="text-center">API date</th>
                 <th>Game</th>
+                <th class="text-center">Console (Game)</th>
                 <th class="text-center">Game date</th>
                 <th></th>
             </tr>
@@ -44,6 +45,7 @@
                 <td class="text-center">{{ consolebadge.standard(row.item) }}</td>
                 <td class="text-center">{{ row.item.release_date_eu }}</td>
                 <td><a href="{{ route('staff.games.detail', {'gameId': row.game.id}) }}">{{ row.game.title }}</a></td>
+                <td class="text-center">{{ consolebadge.standard(row.game) }}</td>
                 <td class="text-center{% if datesDiffer %} table-warning{% endif %}"{% if datesDiffer %} title="Dates differ"{% endif %}>{{ row.game.eu_release_date }}</td>
                 <td class="text-end">
                     <form method="post" action="{{ route('staff.data-sources.nintendo-co-uk.unlinked.suggestions.link') }}">
@@ -85,7 +87,7 @@
                         <input type="hidden" name="link_id" value="{{ row.item.link_id }}">
                         <select name="game_id" class="form-select form-select-sm" style="width: auto;">
                             {% for game in row.games %}
-                                <option value="{{ game.id }}">{{ game.title }} [{{ game.id }}] - {{ game.eu_release_date ?: 'no date' }}</option>
+                                <option value="{{ game.id }}">{{ game.title }} [{{ game.id }}] - {{ game.console_id == 2 ? 'Switch 2' : 'Switch 1' }} - {{ game.eu_release_date ?: 'no date' }}</option>
                             {% endfor %}
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Link</button>
