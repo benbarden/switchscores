@@ -16,9 +16,15 @@ use Symfony\Component\DomCrawler\Crawler;
  * Output entries use the same keys as RawTextParser (title_raw, release_date,
  * price_gbp, etc.) plus: nsuid, nintendo_url, packshot_url, has_demo,
  * is_download_only, console_raw.
+ *
+ * Rows are found by their title attribute, not data-nsuid (#210): games far ahead
+ * sometimes have no NSUID yet, and selecting on it dropped them without the count
+ * check noticing. nsuid is null for those rows.
  */
 class HtmlListParser
 {
+    private const ROW_SELECTOR = 'li[data-nt-item-title], li[data-nt-item-title-master]';
+
     public function parse(string $html): array
     {
         if (trim($html) === '') {
@@ -26,7 +32,7 @@ class HtmlListParser
         }
 
         $crawler = new Crawler($html);
-        $rows    = $crawler->filter('li[data-nsuid]');
+        $rows    = $crawler->filter(self::ROW_SELECTOR);
 
         $entries = [];
         foreach ($rows as $node) {
@@ -49,7 +55,8 @@ class HtmlListParser
             return 0;
         }
 
-        return (new Crawler($html))->filter('li[data-nsuid]')->count();
+        // Wider than ROW_SELECTOR, so a game row the parser can't read still shows as a drop
+        return (new Crawler($html))->filter('li[data-nsuid], '.self::ROW_SELECTOR)->count();
     }
 
     /**
@@ -58,7 +65,8 @@ class HtmlListParser
      */
     public function looksLikeHtml(string $content): bool
     {
-        return str_contains($content, '<li') && str_contains($content, 'data-nsuid');
+        return str_contains($content, '<li')
+            && (str_contains($content, 'data-nsuid') || str_contains($content, 'data-nt-item-title'));
     }
 
     private function buildEntry(Crawler $li): ?array
@@ -75,7 +83,7 @@ class HtmlListParser
         [$priceRaw, $priceGbp, $priceFlag, $priceFlagReason] = $this->parsePrice($li);
 
         return [
-            'nsuid'             => $this->attr($li, 'data-nsuid'),
+            'nsuid'             => $this->attr($li, 'data-nsuid') ?: null,
             'title_raw'         => $titleRaw,
             'nintendo_url'      => $this->firstAttr($li, 'a[href]', 'href'),
             'packshot_url'      => $this->firstImageUrl($li),

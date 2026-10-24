@@ -20,6 +20,19 @@ class Repository
         return WeeklyBatchItem::find($id);
     }
 
+    /**
+     * Items whose title was edited by hand (#199), newest batch first.
+     */
+    public function getManualTitleEdits(): Collection
+    {
+        return WeeklyBatchItem::with('batch')
+            ->whereNotNull('title_auto')
+            ->orderByDesc('batch_id')
+            ->orderBy('console')
+            ->orderBy('title')
+            ->get();
+    }
+
     public function getForList(int $batchId, string $console, string $listType): Collection
     {
         return WeeklyBatchItem::where('batch_id', $batchId)
@@ -296,6 +309,13 @@ class Repository
 
     public function restoreSnapshot(WeeklyBatchItem $item, WeeklyBatchItem $snapshot): void
     {
+        // A title edited by hand survives a re-parse of its page (#199). The fresh item already
+        // has the normaliser's current title, so the edit is re-applied on top of it.
+        if ($snapshot->hasManualTitle()) {
+            $item->setManualTitle($snapshot->title);
+            $item->save();
+        }
+
         $noActionTaken = in_array($snapshot->item_status, [
             WeeklyBatchItem::STATUS_PENDING,
             WeeklyBatchItem::STATUS_ALREADY_IN_DB,

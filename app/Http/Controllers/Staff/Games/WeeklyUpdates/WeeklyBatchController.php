@@ -37,6 +37,20 @@ class WeeklyBatchController extends Controller
         return view('staff.games.weekly-updates.index', $bindings);
     }
 
+    /**
+     * Every title edited by hand in a weekly update (#199), with the normaliser's version - the
+     * list to review for TitleNormaliser changes.
+     */
+    public function titleEdits()
+    {
+        $pageTitle = 'Title edits';
+        $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::weeklyUpdatesSubpage($pageTitle))->bindings;
+
+        $bindings['Items'] = $this->repoItem->getManualTitleEdits();
+
+        return view('staff.games.weekly-updates.title-edits', $bindings);
+    }
+
     public function create()
     {
         $pageTitle = 'New weekly batch';

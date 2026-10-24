@@ -208,12 +208,17 @@
 
     pasteBox.addEventListener('paste', function (e) {
         const html = (e.clipboardData || window.clipboardData).getData('text/html');
-        if (html && html.indexOf('data-nsuid') !== -1) {
+        // Same rows as HtmlListParser (#210): a game far ahead can have no NSUID, so its
+        // row is recognised by its title attribute too
+        const isStoreHtml = html && html.indexOf('<li') !== -1
+            && (html.indexOf('data-nsuid') !== -1 || html.indexOf('data-nt-item-title') !== -1);
+        if (isStoreHtml) {
             rawHtmlField.value = html;
             justPasted = true;
-            const n = (html.match(/data-nsuid/g) || []).length;
+            const n = new DOMParser().parseFromString(html, 'text/html')
+                .querySelectorAll('li[data-nsuid], li[data-nt-item-title], li[data-nt-item-title-master]').length;
             pasteStatus.textContent = '✓ Captured store row' + (n === 1 ? '' : 's')
-                + ' - ' + n + ' game' + (n === 1 ? '' : 's') + ' with URL, packshot, price and NSUID.';
+                + ' - ' + n + ' game' + (n === 1 ? '' : 's') + ' with URL, packshot and price.';
             pasteStatus.classList.add('text-success');
         } else {
             rawHtmlField.value = '';

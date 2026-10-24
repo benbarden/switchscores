@@ -196,6 +196,8 @@ Route::group([
         Route::get('weekly-updates', 'index')->name('weekly-updates.index');
         Route::get('weekly-updates/create', 'create')->name('weekly-updates.create');
         Route::post('weekly-updates/store', 'store')->name('weekly-updates.store');
+        // Before {batchId}, which would otherwise catch it
+        Route::get('weekly-updates/title-edits', 'titleEdits')->name('weekly-updates.title-edits');
         Route::get('weekly-updates/{batchId}', 'show')->name('weekly-updates.show');
     });
 
@@ -232,6 +234,7 @@ Route::group([
 
             Route::get('confirm', 'confirm')->name('confirm');
             Route::post('confirm/save-publisher/{itemId}', 'saveItemPublisher')->name('confirm.save-publisher');
+            Route::post('item/{itemId}/title', 'saveItemTitle')->name('item.save-title');
             Route::post('import', 'import')->name('import');
         });
 

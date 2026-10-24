@@ -177,6 +177,29 @@ class HtmlListParserTest extends TestCase
         $this->assertEquals('Nintendo Switch', $entries[0]['console_raw']);
     }
 
+    // ---- Games further ahead: year-only date, and TBD with no NSUID (#210) ----
+
+    public function testFarAheadRowsAreAllParsed()
+    {
+        $html = file_get_contents(__DIR__.'/fixtures/nintendo-far-ahead.html');
+        $entries = $this->parser->parse($html);
+
+        $this->assertCount(2, $entries);
+        $this->assertSame(2, $this->parser->countGameBlocks($html));
+
+        $this->assertEquals('Pikuniku 2', $entries[0]['title_raw']);
+        $this->assertEquals('70010000123249', $entries[0]['nsuid']);
+        $this->assertNull($entries[0]['release_date']);
+        $this->assertEquals('Adventure, Platformer, Puzzle', $entries[0]['nintendo_genres']);
+
+        // No NSUID: this row used to be skipped, and not counted either
+        $this->assertEquals('Enter the Gungeon 2', $entries[1]['title_raw']);
+        $this->assertNull($entries[1]['nsuid']);
+        $this->assertNull($entries[1]['release_date']);
+        $this->assertEquals('Nintendo Switch 2', $entries[1]['console_raw']);
+        $this->assertStringContainsString('Enter-the-Gungeon-2', $entries[1]['nintendo_url']);
+    }
+
     // ---- Empty input ----
 
     public function testEmptyInput()

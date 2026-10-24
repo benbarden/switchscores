@@ -30,8 +30,10 @@ class RawTextParser
     // The console portion varies: "Nintendo Switch", "Nintendo Switch 2",
     // "Nintendo Switch, Nintendo Switch 2", etc. Match anything from "Nintendo Switch"
     // up to the "• date" separator. The genres segment is optional — some games list none.
+    // The date can also be a year ("2027") or "Release date: TBD" for games further ahead
+    // (#210) - those used to drop the whole game; they now come through undated.
     // Uses \S for the separator (bullet char) to avoid UTF-8 encoding issues with literal • in const strings
-    private const META_PATTERN = '/^Nintendo Switch.*?\s\S\s+(\d{2}\/\d{2}\/\d{4})(?:\s+\S\s+(.+))?$/u';
+    private const META_PATTERN = '/^Nintendo Switch.*?\s\S\s+(\d{2}\/\d{2}\/\d{4}|\d{4}|(?:Release date:\s*)?TBD)(?:\s+\S\s+(.+))?$/u';
 
     // Price patterns
     private const PRICE_PATTERN = '/^(?:Starting from:\s*)?£([\d.]+)/';
@@ -57,11 +59,15 @@ class RawTextParser
                 $dateRaw  = $metaMatches[1]; // DD/MM/YYYY
                 $genresRaw = isset($metaMatches[2]) ? trim($metaMatches[2]) : '';
 
-                // Skip blank lines after meta, then get price
+                // Skip blank lines after meta, then get price. Games further ahead often have
+                // no price yet, so the next line is the description, not a price (#210).
                 $j = $i + 1;
                 while ($j < $total && $lines[$j] === '') $j++;
-                $priceRaw = ($j < $total) ? $lines[$j] : '';
-                $j++;
+                $priceRaw = '';
+                if ($j < $total && $this->looksLikePrice($lines[$j])) {
+                    $priceRaw = $lines[$j];
+                    $j++;
+                }
 
                 // Skip blank lines, then collect description
                 while ($j < $total && $lines[$j] === '') $j++;
@@ -152,6 +158,11 @@ class RawTextParser
             return [$date, true];
         }
         return [null, false];
+    }
+
+    private function looksLikePrice(string $line): bool
+    {
+        return str_starts_with($line, '£') || str_starts_with(strtolower($line), 'starting from');
     }
 
     private function parsePrice(string $priceRaw): array

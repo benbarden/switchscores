@@ -1,0 +1,20 @@
+{# An item's title with an inline "edit by hand" box (#199), on the Raw and Confirm screens.
+   Needs _title-edit-script.twig on the page. title_auto is shown once the title has been
+   edited, so it's clear what the normaliser produced. #}
+<div class="js-title-edit"
+     data-url="{{ route('staff.games.weekly-updates.list.item.save-title', {'batchId': Batch.id, 'console': Console, 'listType': ListType, 'itemId': item.id}) }}">
+    <span class="js-title-text">{{ item.title }}</span>
+    {% if not item.isImported() %}
+        <button type="button" class="btn btn-outline-secondary btn-sm py-0 ms-1 js-title-edit-open" title="Edit title" tabindex="-1">Edit ✎</button>
+    {% endif %}
+    <small class="text-muted js-title-auto d-block"{% if not item.title_auto %} style="display: none !important;"{% endif %}>
+        Edited - auto: <span class="js-title-auto-text">{{ item.title_auto }}</span>
+    </small>
+    <div class="js-title-edit-form mt-1" style="display: none;">
+        <div class="d-flex gap-1">
+            <input type="text" class="form-control form-control-sm js-title-input" value="{{ item.title }}" maxlength="255">
+            <button type="button" class="btn btn-primary btn-sm js-title-save">Save</button>
+            <button type="button" class="btn btn-link btn-sm js-title-cancel">Cancel</button>
+        </div>
+    </div>
+</div>

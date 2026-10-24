@@ -1,0 +1,66 @@
+{# Behaviour for _title-edit.twig (#199). Delegated, so it also works for rows the Raw screen
+   adds without a reload. #}
+<script>
+    (function () {
+        function box(el) { return el.closest('.js-title-edit'); }
+
+        function showForm(editBox, show) {
+            editBox.querySelector('.js-title-edit-form').style.display = show ? '' : 'none';
+            if (show) {
+                const input = editBox.querySelector('.js-title-input');
+                input.value = editBox.querySelector('.js-title-text').textContent.trim();
+                input.focus();
+                input.select();
+            }
+        }
+
+        function save(editBox) {
+            const input = editBox.querySelector('.js-title-input');
+            const title = input.value.trim();
+            if (title === '') return;
+
+            fetch(editBox.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ title: title })
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Could not save the title (' + res.status + ')');
+                    return res.json();
+                })
+                .then(data => {
+                    editBox.querySelector('.js-title-text').textContent = data.title;
+                    const auto = editBox.querySelector('.js-title-auto');
+                    editBox.querySelector('.js-title-auto-text').textContent = data.title_auto || '';
+                    auto.style.setProperty('display', data.title_auto ? 'block' : 'none', 'important');
+                    showForm(editBox, false);
+                })
+                .catch(err => alert(err.message));
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target.matches('.js-title-edit-open')) {
+                e.preventDefault();
+                showForm(box(e.target), true);
+            } else if (e.target.matches('.js-title-cancel')) {
+                showForm(box(e.target), false);
+            } else if (e.target.matches('.js-title-save')) {
+                save(box(e.target));
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (!e.target.matches('.js-title-input')) return;
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                save(box(e.target));
+            } else if (e.key === 'Escape') {
+                showForm(box(e.target), false);
+            }
+        });
+    })();
+</script>

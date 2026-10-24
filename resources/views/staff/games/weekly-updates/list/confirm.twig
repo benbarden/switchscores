@@ -59,7 +59,7 @@
     {% for item in ReadyItems %}
         <tr>
             <td class="align-middle">
-                {{ item.title }}
+                {% include 'staff/games/weekly-updates/list/_title-edit.twig' %}
                 {% if item.nintendo_url %}
                     <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo ↗</a>
                 {% endif %}
@@ -137,5 +137,7 @@
     </tbody>
 </table>
 {% endif %}
+
+{% include 'staff/games/weekly-updates/list/_title-edit-script.twig' %}
 
 {% endblock page_inner %}

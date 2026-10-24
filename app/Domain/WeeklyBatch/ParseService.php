@@ -131,7 +131,7 @@ class ParseService
             }
 
             // Date range filter
-            if (!$releaseDate || $releaseDate < $dateFrom || $releaseDate > $dateTo) {
+            if (!$this->isInRange($releaseDate, $dateFrom, $dateTo)) {
                 $outOfRangeGame = $this->matchGame($nsuid, $title, $consoleId);
                 $this->repoItem->create($baseData + [
                     'item_status' => 'out_of_range',
@@ -222,7 +222,8 @@ class ParseService
     /**
      * Returns [dateFrom, dateTo] as Y-m-d strings based on batch date and list type.
      * New:      previous Saturday → batch date (Friday)
-     * Upcoming: batch date (Friday) → following Sunday
+     * Upcoming: batch date (Friday) onwards - dateTo is null (#193: no upper limit, so games
+     *           further ahead on Nintendo's Upcoming pages are added too)
      */
     public function getDateRange(string $batchDate, string $listType): array
     {
@@ -233,15 +234,30 @@ class ParseService
             $to   = $friday->toDateString();
         } else {
             $from = $friday->toDateString();
-            $to   = $friday->copy()->addDays(9)->toDateString(); // following Sunday
+            $to   = null;
         }
 
         return [$from, $to];
     }
 
     /**
+     * Whether a release date falls in a range from getDateRange(). An undated item never does;
+     * a null dateTo means no upper limit.
+     */
+    public function isInRange($releaseDate, string $dateFrom, ?string $dateTo): bool
+    {
+        if (!$releaseDate) {
+            return false;
+        }
+        $date = $releaseDate instanceof \DateTimeInterface ? $releaseDate->format('Y-m-d') : (string) $releaseDate;
+
+        return $date >= $dateFrom && ($dateTo === null || $date <= $dateTo);
+    }
+
+    /**
      * Re-run normalisation on a single item's title_raw and update its derived fields.
-     * Preserves existing status, URLs, and fetched data.
+     * Preserves existing status, URLs, and fetched data, and a title edited by hand (#199):
+     * only the normaliser's version is refreshed then.
      */
     public function reparseItem(\App\Models\WeeklyBatchItem $item): void
     {
@@ -251,7 +267,11 @@ class ParseService
         $isBundle   = $this->detectBundle($title);
         $lqReason   = $isAutoLq ? 'Auto-LQ title prefix: '.$title : $this->detectLqSignals($title, $item->price_gbp);
 
-        $item->title          = $title;
+        if ($item->hasManualTitle()) {
+            $item->title_auto = $title === $item->title ? null : $title;
+        } else {
+            $item->title = $title;
+        }
         $item->collection     = $collection;
         if ($isAutoLq) {
             $item->item_status = WeeklyBatchItem::STATUS_LOW_QUALITY;

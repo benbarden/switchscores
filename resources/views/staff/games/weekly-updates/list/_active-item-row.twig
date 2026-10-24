@@ -4,7 +4,7 @@
 <tr data-page="{{ item.page_number }}" data-sort="{{ item.sort_order }}">
     <td class="text-center">{{ item.page_number }}</td>
     <td>
-        {{ item.title }}
+        {% include 'staff/games/weekly-updates/list/_title-edit.twig' %}
         {% if item.title != item.title_raw %}
             <br><small class="text-muted">Original: {{ item.title_raw }}</small>
         {% endif %}

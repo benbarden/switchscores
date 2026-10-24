@@ -54,7 +54,7 @@ class WeeklyBatchItem extends Model
 
     protected $fillable = [
         'batch_id', 'console', 'list_type', 'page_number', 'sort_order',
-        'title', 'title_raw', 'nsuid', 'release_date', 'price_gbp', 'price_raw',
+        'title', 'title_auto', 'title_raw', 'nsuid', 'release_date', 'price_gbp', 'price_raw',
         'nintendo_genres', 'description',
         'nintendo_url', 'packshot_url',
         'publisher_raw', 'publisher_normalised', 'players',
@@ -96,6 +96,33 @@ class WeeklyBatchItem extends Model
     public function isImported(): bool
     {
         return $this->item_status === self::STATUS_IMPORTED;
+    }
+
+    /**
+     * Whether the title was edited by hand (#199). title_auto then keeps the normaliser's version.
+     */
+    public function hasManualTitle(): bool
+    {
+        return $this->title_auto !== null;
+    }
+
+    /**
+     * The normaliser's title, even when it was edited by hand. Exclusions are keyed on this,
+     * because each new paste is matched by its normalised title (#199).
+     */
+    public function autoTitle(): string
+    {
+        return $this->title_auto ?? $this->title;
+    }
+
+    /**
+     * Set the title by hand. Setting it back to the normaliser's title clears the edit.
+     */
+    public function setManualTitle(string $title): void
+    {
+        $auto = $this->autoTitle();
+        $this->title = $title;
+        $this->title_auto = $title === $auto ? null : $auto;
     }
 
     /**

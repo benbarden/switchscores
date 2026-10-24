@@ -11,6 +11,7 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatch\CategorySuggester;
+use App\Domain\WeeklyBatch\LqPublisherRecorder;
 use App\Domain\WeeklyBatch\ParseService;
 use App\Domain\GameImport\GameImporter;
 use App\Domain\WeeklyBatch\NintendoPageFetcher;
@@ -37,7 +38,8 @@ class WeeklyBatchListController extends Controller
         private GamesCompanyRepository $repoGamesCompany,
         private GameRepository $repoGame,
         private GameImporter $gameImporter,
-        private WeeklyBatchExclusionRepository $repoExclusion
+        private WeeklyBatchExclusionRepository $repoExclusion,
+        private LqPublisherRecorder $lqPublisherRecorder
     ) {
     }
 
@@ -529,7 +531,7 @@ class WeeklyBatchListController extends Controller
             $this->repoItem->markFetchComplete($item, $data, $result['lq_confirmed']);
 
             if ($result['lq_confirmed']) {
-                $this->repoExclusion->add($item->title, $item->console);
+                $this->repoExclusion->add($item->autoTitle(), $item->console);
             }
 
             return response()->json([
@@ -571,7 +573,10 @@ class WeeklyBatchListController extends Controller
                     'low_quality' => $this->repoItem->markLowQuality($item),
                     'bundle'      => $this->repoItem->markBundle($item),
                 };
-                $this->repoExclusion->add($item->title, $item->console);
+                if ($decision === 'low_quality') {
+                    $this->lqPublisherRecorder->recordFor($item);
+                }
+                $this->repoExclusion->add($item->autoTitle(), $item->console);
             } else {
                 match ($decision) {
                     'keep'  => $this->repoItem->keepDespiteLqFlag($item),
@@ -645,7 +650,10 @@ class WeeklyBatchListController extends Controller
                 'bundle'      => $this->repoItem->markBundle($item),
                 'low_quality' => $this->repoItem->markLowQuality($item),
             };
-            $this->repoExclusion->add($item->title, $item->console);
+            if ($action === 'low_quality') {
+                $this->lqPublisherRecorder->recordFor($item);
+            }
+            $this->repoExclusion->add($item->autoTitle(), $item->console);
         } else {
             match($action) {
                 'reset'   => $this->repoItem->resetItem($item),
@@ -834,6 +842,31 @@ class WeeklyBatchListController extends Controller
         return response()->json(['status' => 'ok', 'exists' => $exists, 'name' => $name]);
     }
 
+    /**
+     * Edit an item's title by hand (#199), from the Raw and Confirm screens. The normaliser's
+     * version is kept in title_auto so the edits can be listed and reviewed.
+     */
+    public function saveItemTitle($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
+    {
+        $this->getBatch($batchId);
+
+        $item = $this->repoItem->find((int) $itemId);
+        if (!$item || $item->batch_id != $batchId) abort(404);
+        if ($item->isImported()) abort(422);
+
+        $title = trim($request->input('title', ''));
+        if ($title === '' || mb_strlen($title) > 255) abort(422);
+
+        $item->setManualTitle($title);
+        $item->save();
+
+        return response()->json([
+            'status'     => 'ok',
+            'title'      => $item->title,
+            'title_auto' => $item->title_auto,
+        ]);
+    }
+
     // ---- Confirm & import ----
 
     public function confirm($batchId, $console, $listType)
@@ -850,7 +883,7 @@ class WeeklyBatchListController extends Controller
 
         [$dateFrom, $dateTo] = $this->parseService->getDateRange($batch->batch_date->toDateString(), $listType);
         $hasOutOfRangeReadyItems = $readyItems->contains(function ($item) use ($dateFrom, $dateTo) {
-            return $item->release_date && ($item->release_date < $dateFrom || $item->release_date > $dateTo);
+            return $item->release_date && !$this->parseService->isInRange($item->release_date, $dateFrom, $dateTo);
         });
         $rawPageCount  = $this->repoRawPage->countForList($batchId, $console, $listType);
 

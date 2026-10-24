@@ -21,7 +21,7 @@
             {% if ListType == 'new' %}
                 New releases: {{ DateFrom }} – {{ DateTo }}
             {% else %}
-                Upcoming: {{ DateFrom }} – {{ DateTo }}
+                Upcoming: {{ DateFrom }} onwards
             {% endif %}
         </p>
     </div>
@@ -57,8 +57,9 @@
                 </td>
                 <td class="text-center">
                     {% set total = pc['total'] ?? 0 %}
-                    {% if page.isParsed() and total != ExpectedPageSize %}
-                        <span class="badge bg-warning text-dark" title="Nintendo pages normally have {{ ExpectedPageSize }} games. A different total may mean a partial paste — fine if this is the last page.">{{ total }} ⚠</span>
+                    {# The last page is usually short, so only flag the others (#193) #}
+                    {% if page.isParsed() and total != ExpectedPageSize and not loop.last %}
+                        <span class="badge bg-warning text-dark" title="Nintendo pages normally have {{ ExpectedPageSize }} games. A different total may mean a partial paste.">{{ total }} ⚠</span>
                     {% else %}
                         <span class="fw-semibold">{{ total }}</span>
                     {% endif %}
@@ -314,18 +315,26 @@
 
         var justPasted = false;
 
+        // Same rows as HtmlListParser counts (#210): games far ahead can have no NSUID,
+        // so rows are found by their title attribute as well
         function countRows(html) {
-            return (html.match(/data-nsuid/g) || []).length;
+            var doc = new DOMParser().parseFromString(html, 'text/html');
+            return doc.querySelectorAll('li[data-nsuid], li[data-nt-item-title], li[data-nt-item-title-master]').length;
+        }
+
+        function looksLikeStoreHtml(html) {
+            return html && html.indexOf('<li') !== -1
+                && (html.indexOf('data-nsuid') !== -1 || html.indexOf('data-nt-item-title') !== -1);
         }
 
         textarea.addEventListener('paste', function (e) {
             var html = (e.clipboardData || window.clipboardData).getData('text/html');
-            if (html && html.indexOf('data-nsuid') !== -1) {
+            if (looksLikeStoreHtml(html)) {
                 hidden.value = html;
                 justPasted = true;
                 if (status) {
                     var n = countRows(html);
-                    status.textContent = '✓ Captured rich HTML — ' + n + ' game' + (n === 1 ? '' : 's') + ' with URLs, packshots and NSUIDs.';
+                    status.textContent = '✓ Captured rich HTML — ' + n + ' game' + (n === 1 ? '' : 's') + ' with URLs and packshots.';
                     status.classList.add('text-success');
                 }
             } else {
@@ -505,4 +514,5 @@
     })();
 })();
 </script>
+{% include 'staff/games/weekly-updates/list/_title-edit-script.twig' %}
 {% endblock page_body %}

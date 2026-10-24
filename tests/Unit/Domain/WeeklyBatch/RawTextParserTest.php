@@ -120,4 +120,40 @@ class RawTextParserTest extends TestCase
         $this->assertEquals(1, $this->parser->countGameBlocks($raw));
         $this->assertCount(1, $this->parser->parse($raw));
     }
+
+    // ---- Games further ahead: year-only date, TBD, no price (#210) ----
+
+    public function testYearOnlyAndTbdRowsComeThroughUndated()
+    {
+        // Real shapes from the 2026-10-24 Switch 2 Upcoming paste
+        $raw = "Metroid Ravenous\nMetroid Ravenous\n\n"
+            . "Nintendo Switch 2 • 28/01/2027 • Action, Adventure, Shooter\n\n£49.99*\n\n"
+            . "The latest game in the 2D Metroid series, is coming to Nintendo Switch 2.\n\n"
+            . "Pikuniku 2\nPikuniku 2\n\n"
+            . "Nintendo Switch 2 • 2027 • Adventure, Platformer, Puzzle\n\n"
+            . "Absurd puzzle-exploration adventure Pikuniku 2 brings the whimsy!\n\n"
+            . "Enter the Gungeon 2\nEnter the Gungeon 2\n\n"
+            . "Nintendo Switch 2 • Release date: TBD • Action, Adventure\n\n"
+            . "Experience the reloaded sequel to the iconic bullet dungeon crawler on Nintendo Switch 2.\n";
+
+        $entries = $this->parser->parse($raw);
+
+        $this->assertEquals(3, $this->parser->countGameBlocks($raw));
+        $this->assertCount(3, $entries);
+
+        $this->assertEquals('2027-01-28', $entries[0]['release_date']);
+        $this->assertEquals(49.99, $entries[0]['price_gbp']);
+
+        $this->assertEquals('Pikuniku 2', $entries[1]['title_raw']);
+        $this->assertNull($entries[1]['release_date']);
+        $this->assertEquals('Adventure, Platformer, Puzzle', $entries[1]['nintendo_genres']);
+        // No price yet: the next line is the description, not a price
+        $this->assertNull($entries[1]['price_gbp']);
+        $this->assertEquals('price missing', $entries[1]['price_flag_reason']);
+        $this->assertStringStartsWith('Absurd puzzle-exploration', $entries[1]['description']);
+
+        $this->assertEquals('Enter the Gungeon 2', $entries[2]['title_raw']);
+        $this->assertNull($entries[2]['release_date']);
+        $this->assertEquals('Action, Adventure', $entries[2]['nintendo_genres']);
+    }
 }
