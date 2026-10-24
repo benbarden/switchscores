@@ -16,6 +16,7 @@ use App\Domain\Url\LinkTitle;
 use App\Events\GameCreated;
 use App\Models\Console;
 use App\Models\Game;
+use Illuminate\Support\Facades\DB;
 
 class GameImporter
 {
@@ -89,21 +90,33 @@ class GameImporter
             $game->nintendo_description = $this->cleanNintendoDescription($data->description);
         }
 
-        // Crawl priority is set by PrioritiseNewGameForCrawl on the GameCreated event.
-        $game->save();
-        $gameId = $game->id;
-
-        // Title hash
-        $this->repoTitleHash->create($data->title, $titleHash, $gameId, $consoleId);
-
-        // Publisher — link to existing record (created in the Publishers step)
-        if ($data->publisher) {
-            $company = $this->repoGamesCompany->findByNameCaseInsensitive($data->publisher);
-            if ($company) {
-                $this->repoGamePublisher->create($gameId, $company->id);
-                $this->gameQualityFilter->updateGame($game, $company);
-            }
+        // So the next paste matches this game by NSUID, not by title (#211)
+        if ($data->nsuid) {
+            $game->eshop_europe_nsuid = $data->nsuid;
         }
+
+        // Callers check for an existing game first; this is the last line. Checked before
+        // saving, and the writes go in one transaction, so a failure leaves no half-made game
+        // (#211: the game was saved, then its title hash hit the unique key).
+        if ($this->repoTitleHash->titleHashExistsForConsole($titleHash, $consoleId)) {
+            throw new \RuntimeException('A game with this title is already in the DB for this console.');
+        }
+
+        DB::transaction(function () use ($game, $data, $titleHash, $consoleId) {
+            // Crawl priority is set by PrioritiseNewGameForCrawl on the GameCreated event.
+            $game->save();
+
+            $this->repoTitleHash->create($data->title, $titleHash, $game->id, $consoleId);
+
+            // Publisher — link to existing record (created in the Publishers step)
+            if ($data->publisher) {
+                $company = $this->repoGamesCompany->findByNameCaseInsensitive($data->publisher);
+                if ($company) {
+                    $this->repoGamePublisher->create($game->id, $company->id);
+                    $this->gameQualityFilter->updateGame($game, $company);
+                }
+            }
+        });
 
         // Packshot (square image)
         $packshotOk = false;

@@ -150,6 +150,7 @@ class WeeklyBatchItem extends Model
             consoleSlug: $this->console,
             sourceFile: null,
             description: $this->description,
+            nsuid: $this->nsuid,
         );
     }
 

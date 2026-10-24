@@ -47,7 +47,8 @@ class ParseService
         private GameRepository $repoGame,
         private WeeklyBatchExclusionRepository $repoExclusion,
         private WeeklyBatchItemRepository $repoItem,
-        private WeeklyBatchRawPageRepository $repoRawPage
+        private WeeklyBatchRawPageRepository $repoRawPage,
+        private ExistingGameMatcher $existingGameMatcher
     ) {
     }
 
@@ -132,7 +133,7 @@ class ParseService
 
             // Date range filter
             if (!$this->isInRange($releaseDate, $dateFrom, $dateTo)) {
-                $outOfRangeGame = $this->matchGame($nsuid, $title, $consoleId);
+                $outOfRangeGame = $this->matchGame($nsuid, $title, $titleRaw, $consoleId);
                 $this->repoItem->create($baseData + [
                     'item_status' => 'out_of_range',
                     'game_id'     => $outOfRangeGame ? $outOfRangeGame->id : null,
@@ -145,7 +146,7 @@ class ParseService
             }
 
             // DB duplicate check
-            $existingGame = $this->matchGame($nsuid, $title, $consoleId);
+            $existingGame = $this->matchGame($nsuid, $title, $titleRaw, $consoleId);
             if ($existingGame) {
                 $this->repoItem->create($baseData + [
                     'item_status' => 'already_in_db',
@@ -284,19 +285,11 @@ class ParseService
     }
 
     /**
-     * Find an existing game for an item. Prefers the stable NSUID (when the HTML
-     * paste supplied one and a game has been backfilled with it); falls back to
-     * title + console matching.
+     * Find an existing game for an item: NSUID, then title hashes, then title (#211).
      */
-    private function matchGame(?string $nsuid, string $title, int $consoleId)
+    private function matchGame(?string $nsuid, string $title, string $titleRaw, int $consoleId)
     {
-        if ($nsuid) {
-            $byNsuid = $this->repoGame->getByEshopEuropeNsuid($nsuid, $consoleId);
-            if ($byNsuid) {
-                return $byNsuid;
-            }
-        }
-        return $this->repoGame->getByTitleAndConsole($title, $consoleId);
+        return $this->existingGameMatcher->find($nsuid, $title, $titleRaw, $consoleId);
     }
 
     private function matchCollection(string $title): ?string

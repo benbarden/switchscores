@@ -25,6 +25,7 @@ class ImportGameData
         public readonly string $consoleSlug,
         public readonly ?string $sourceFile,
         public readonly ?string $description = null,
+        public readonly ?string $nsuid = null,
     ) {
     }
 

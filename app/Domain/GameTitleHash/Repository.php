@@ -73,6 +73,16 @@ class Repository
     }
 
     /**
+     * The title hash on a console, or null. A hash is unique per console.
+     */
+    public function getByHashAndConsole($hash, $consoleId): ?GameTitleHash
+    {
+        return GameTitleHash::where('title_hash', $hash)
+            ->where('console_id', $consoleId)
+            ->first();
+    }
+
+    /**
      * @deprecated Use hashExistsForOtherGameOnConsole() instead
      */
     public function hashExistsForOtherGame($hash, $excludeGameId): bool

@@ -11,6 +11,7 @@ use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatch\CategorySuggester;
+use App\Domain\WeeklyBatch\ExistingGameMatcher;
 use App\Domain\WeeklyBatch\LqPublisherRecorder;
 use App\Domain\WeeklyBatch\ParseService;
 use App\Domain\GameImport\GameImporter;
@@ -39,7 +40,8 @@ class WeeklyBatchListController extends Controller
         private GameRepository $repoGame,
         private GameImporter $gameImporter,
         private WeeklyBatchExclusionRepository $repoExclusion,
-        private LqPublisherRecorder $lqPublisherRecorder
+        private LqPublisherRecorder $lqPublisherRecorder,
+        private ExistingGameMatcher $existingGameMatcher
     ) {
     }
 
@@ -991,9 +993,23 @@ class WeeklyBatchListController extends Controller
         $errors         = [];
         $packshotFailed = [];
         $headerFailed   = [];
+        $alreadyInDb    = [];
+
+        $consoleId = $console === 'switch-2' ? 2 : 1;
 
         foreach ($readyItems as $item) {
             $eshopOrder = $eshopOrderMap[$item->id] ?? null;
+
+            // Check again: the duplicate check ran at parse time, and the title may have been
+            // edited since (#211)
+            $existingGame = $this->existingGameMatcher->find($item->nsuid, $item->title, $item->title_raw, $consoleId);
+            if ($existingGame) {
+                $item->item_status = WeeklyBatchItem::STATUS_ALREADY_IN_DB;
+                $item->game_id     = $existingGame->id;
+                $item->save();
+                $alreadyInDb[] = "{$item->title} (game {$existingGame->id})";
+                continue;
+            }
 
             try {
                 $result = $this->gameImporter->importItem($item->toImportGameData(), $eshopOrder);
@@ -1012,6 +1028,10 @@ class WeeklyBatchListController extends Controller
         }
 
         $parts = ["{$imported} game".($imported !== 1 ? 's' : '')." imported."];
+
+        if ($alreadyInDb) {
+            $parts[] = 'Already in DB, not imported: '.implode(', ', $alreadyInDb).'.';
+        }
 
         if ($packshotFailed) {
             $parts[] = 'Packshot failed: '.implode(', ', $packshotFailed).'.';
