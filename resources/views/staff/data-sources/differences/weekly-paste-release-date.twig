@@ -1,0 +1,74 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
+{% block page_inner %}
+
+{% if session('pasteDatesSuccess') %}
+    <div class="alert alert-success">{{ session('pasteDatesSuccess') }}</div>
+{% endif %}
+{% if session('pasteDatesError') %}
+    <div class="alert alert-danger">{{ session('pasteDatesError') }}</div>
+{% endif %}
+
+<p>
+    <a href="{{ route('staff.data-sources.differences.weekly-paste.release-date.ignored') }}" class="btn btn-outline-primary btn-sm">Ignored dates ({{ IgnoredCount }})</a>
+</p>
+
+<p style="max-width: 760px;">
+    Games whose EU release date differs from the latest weekly paste. Upcoming only, from the most
+    recent batch with Upcoming pasted for each console. Apply copies the pasted date onto the game
+    and updates its release year; it doesn't change whether the game is marked as released.
+    Ignore hides that date for that game until a paste shows a different one.
+</p>
+
+{% if DifferenceList|length > 0 %}
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">Game date</th>
+                <th class="text-center">Pasted date</th>
+                <th class="text-end">Days moved</th>
+                <th class="text-center">Batch</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in DifferenceList %}
+            <tr{% if HighlightGameId and HighlightGameId == row.id %} class="table-active"{% endif %}>
+                <td>
+                    <a href="{{ route('staff.games.detail', {'gameId': row.id}) }}">{{ row.title }}</a>
+                    {% if row.status_warning %}
+                        <div class="text-danger small">{{ row.status_warning }}</div>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ consolebadge.standard(row) }}</td>
+                <td class="text-center">{{ row.eu_release_date ?: '-' }}</td>
+                <td class="text-center">{{ row.paste_release_date }}</td>
+                <td class="text-end">{{ row.days_moved is null ? '-' : row.days_moved }}</td>
+                <td class="text-center">{{ row.batch_date }}</td>
+                <td class="text-end text-nowrap">
+                    <form method="post" action="{{ route('staff.data-sources.differences.weekly-paste.release-date.apply') }}" class="d-inline"
+                        {% if row.status_warning %}onsubmit="return confirm('{{ row.status_warning|e('js') }} Apply anyway?');"{% endif %}>
+                        {{ csrf_field() }}
+                        <input type="hidden" name="game_id" value="{{ row.id }}">
+                        <input type="hidden" name="release_date" value="{{ row.paste_release_date }}">
+                        <button type="submit" class="btn btn-sm {% if row.status_warning %}btn-outline-danger{% else %}btn-primary{% endif %}">Apply</button>
+                    </form>
+                    <form method="post" action="{{ route('staff.data-sources.differences.weekly-paste.release-date.ignore') }}" class="d-inline">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="game_id" value="{{ row.id }}">
+                        <input type="hidden" name="release_date" value="{{ row.paste_release_date }}">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Ignore</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No differences.</p>
+{% endif %}
+
+{% endblock page_inner %}

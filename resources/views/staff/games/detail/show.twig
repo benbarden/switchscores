@@ -29,6 +29,12 @@
         <a href="{{ route('staff.data-sources.differences.nintendo-co-uk.eu-release-date') }}?gameid={{ GameId }}">Review here</a>.
     </div>
 {% endif %}
+{% if ReleaseDateWeeklyPasteDifferenceCount > 0 %}
+    <div class="alert alert-danger" role="alert">
+        EU release date is different to the latest weekly paste.
+        <a href="{{ route('staff.data-sources.differences.weekly-paste.release-date') }}?gameid={{ GameId }}">Review here</a>.
+    </div>
+{% endif %}
 {% if PriceNintendoCoUkDifferenceCount > 0 %}
     <div class="alert alert-danger" role="alert">
         Price is different to the Nintendo.co.uk API.

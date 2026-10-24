@@ -14,6 +14,7 @@ use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\DataSourceImportRun\Repository as DataSourceImportRunRepository;
 use App\Domain\DataSourceImportLog\Repository as DataSourceImportLogRepository;
 
+use App\Domain\WeeklyBatch\DateDifferences;
 use App\Services\DataSources\Queries\Differences;
 
 class DashboardController extends Controller
@@ -56,6 +57,9 @@ class DashboardController extends Controller
         $dsDifferences = new Differences();
         $nintendoCoUkPublishers = $dsDifferences->getPublishersNintendoCoUk();
         $bindings['PublishersNintendoCoUkDifferenceCount'] = count($nintendoCoUkPublishers);
+
+        // Differences: weekly paste (#194)
+        $bindings['ReleaseDateWeeklyPasteDifferenceCount'] = (new DateDifferences())->count();
 
         // Stats: Nintendo.co.uk
         $ignoreIdList = $this->repoDataSourceIgnore->getNintendoCoUkLinkIdList();

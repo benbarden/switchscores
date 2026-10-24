@@ -27,6 +27,11 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::get('/staff/data-sources/differences/nintendo-co-uk/publishers', 'Staff\DataSources\DifferencesController@nintendoCoUkPublishers')->name('staff.data-sources.differences.nintendo-co-uk.publishers');
     Route::get('/staff/data-sources/differences/apply-change', 'Staff\DataSources\DifferencesController@applyChange')->name('staff.data-sources.differences.apply-change');
     Route::get('/staff/data-sources/differences/ignore-change', 'Staff\DataSources\DifferencesController@ignoreChange')->name('staff.data-sources.differences.ignore-change');
+    Route::get('/staff/data-sources/differences/weekly-paste/release-date', 'Staff\DataSources\WeeklyPasteDateDifferencesController@show')->name('staff.data-sources.differences.weekly-paste.release-date');
+    Route::post('/staff/data-sources/differences/weekly-paste/release-date/apply', 'Staff\DataSources\WeeklyPasteDateDifferencesController@apply')->name('staff.data-sources.differences.weekly-paste.release-date.apply');
+    Route::post('/staff/data-sources/differences/weekly-paste/release-date/ignore', 'Staff\DataSources\WeeklyPasteDateDifferencesController@ignore')->name('staff.data-sources.differences.weekly-paste.release-date.ignore');
+    Route::get('/staff/data-sources/differences/weekly-paste/release-date/ignored', 'Staff\DataSources\WeeklyPasteDateDifferencesController@ignored')->name('staff.data-sources.differences.weekly-paste.release-date.ignored');
+    Route::post('/staff/data-sources/differences/weekly-paste/release-date/ignored/remove', 'Staff\DataSources\WeeklyPasteDateDifferencesController@removeIgnored')->name('staff.data-sources.differences.weekly-paste.release-date.ignored.remove');
 
     // Data sources: Nintendo.co.uk
     Route::get('/staff/data-sources/nintendo-co-uk/unlinked', 'Staff\DataSources\DataSourceParsedController@nintendoCoUkUnlinkedItems')->name('staff.data-sources.nintendo-co-uk.unlinked');

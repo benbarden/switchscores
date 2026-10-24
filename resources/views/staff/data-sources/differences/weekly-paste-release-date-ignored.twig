@@ -1,0 +1,57 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% block page_inner %}
+
+{% if session('pasteDatesSuccess') %}
+    <div class="alert alert-success">{{ session('pasteDatesSuccess') }}</div>
+{% endif %}
+
+<p>
+    <a href="{{ route('staff.data-sources.differences.weekly-paste.release-date') }}" class="btn btn-outline-primary btn-sm">Back to differences</a>
+</p>
+
+<p style="max-width: 760px;">
+    Pasted release dates that were ignored. Removing one shows the difference again, if the latest
+    paste still has that date.
+</p>
+
+{% if IgnoredList|length > 0 %}
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th class="text-center">Game date</th>
+                <th class="text-center">Ignored date</th>
+                <th class="text-center">Ignored on</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ignore in IgnoredList %}
+            <tr>
+                <td>
+                    {% if ignore.game %}
+                        <a href="{{ route('staff.games.detail', {'gameId': ignore.game.id}) }}">{{ ignore.game.title }}</a>
+                    {% else %}
+                        Game {{ ignore.game_id }} (deleted)
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ ignore.game ? ignore.game.eu_release_date : '-' }}</td>
+                <td class="text-center">{{ ignore.release_date }}</td>
+                <td class="text-center">{{ ignore.created_at|date('Y-m-d') }}</td>
+                <td class="text-end">
+                    <form method="post" action="{{ route('staff.data-sources.differences.weekly-paste.release-date.ignored.remove') }}">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id" value="{{ ignore.id }}">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No ignored dates.</p>
+{% endif %}
+
+{% endblock page_inner %}
