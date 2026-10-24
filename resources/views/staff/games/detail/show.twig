@@ -355,7 +355,7 @@
                 <h2>Store editions</h2>
                 {% if StoreEditions %}
                     {% import 'staff/data-sources/nintendo-co-uk/store-editions-skus.twig' as editions %}
-                    <p>The purchase options on the Nintendo store, from the price API. On Switch 2 the game's price comes from the standard edition (Switch 1 to follow, #132).</p>
+                    <p>The purchase options on the Nintendo store, from the price API. On Switch 2 the game's price comes from the standard edition.</p>
                     {{ editions.table(StoreEditions) }}
                 {% else %}
                     <p>No price API data for this game: it isn't linked to a Nintendo.co.uk API record.</p>
