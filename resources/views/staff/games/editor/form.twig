@@ -247,9 +247,9 @@
                     <div class="col-md-6">
                         <select id="video_type" name="video_type" class="form-select">
                             <option value=""></option>
-                            <option value="0">No video</option>
-                            <option value="1">Trailer</option>
-                            <option value="2">Gameplay</option>
+                            {% for value, label in VideoTypeList %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

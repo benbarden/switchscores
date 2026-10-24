@@ -37,6 +37,7 @@ use App\Domain\ReviewLink\Repository as ReviewLinkRepository;
 
 use App\Enums\AmazonAffiliateStatus;
 use App\Enums\GameStatus;
+use App\Enums\VideoType;
 
 use App\Events\GameCreated;
 use App\Factories\GameDirectorFactory;
@@ -170,6 +171,7 @@ class GamesEditorController extends Controller
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['AffiliateStatusList'] = AmazonAffiliateStatus::options();
+        $bindings['VideoTypeList'] = VideoType::options();
 
         $bindings['FormatDigitalList'] = $this->formatOptions->getOptionsDigital();
         $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();
@@ -248,6 +250,7 @@ class GamesEditorController extends Controller
         $bindings['CollectionList'] = $this->repoGameCollection->getAll();
 
         $bindings['AffiliateStatusList'] = AmazonAffiliateStatus::options();
+        $bindings['VideoTypeList'] = VideoType::options();
 
         $bindings['FormatDigitalList'] = $this->formatOptions->getOptionsDigital();
         $bindings['FormatPhysicalList'] = $this->formatOptions->getOptionsPhysical();

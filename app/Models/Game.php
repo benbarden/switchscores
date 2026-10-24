@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\GameStatus;
 use App\Enums\SteamStatus;
+use App\Enums\VideoType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -17,10 +18,6 @@ class Game extends Model implements Auditable
     const FORMAT_LIMITED_EDITION = 'Limited edition';
     const FORMAT_NOT_AVAILABLE = 'Not available';
     const FORMAT_DELISTED = 'De-listed';
-
-    const VIDEO_TYPE_NONE = 0;
-    const VIDEO_TYPE_TRAILER = 1;
-    const VIDEO_TYPE_GAMEPLAY = 2;
 
     const VERIF_UNVERIFIED = 0;
     const VERIF_VERIFIED = 1;
@@ -239,18 +236,9 @@ class Game extends Model implements Auditable
 
     public function getVideoTypeDesc()
     {
-        switch ($this->video_type) {
-            case self::VIDEO_TYPE_TRAILER:
-                $videoType = 'trailer';
-                break;
-            case self::VIDEO_TYPE_GAMEPLAY:
-                $videoType = 'gameplay';
-                break;
-            default:
-                $videoType = '';
-        }
+        if ($this->video_type === null || $this->video_type === '') return '';
 
-        return $videoType;
+        return VideoType::tryFrom((int) $this->video_type)?->publicLabel() ?? '';
     }
 
     // Searches
