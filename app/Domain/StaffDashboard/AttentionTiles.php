@@ -54,6 +54,11 @@ class AttentionTiles
                 $this->dbQueries->oldestPendingFeaturedGame(),
                 Thresholds::FEATURED_GAMES_AMBER_DAYS, Thresholds::FEATURED_GAMES_RED_DAYS,
                 route('staff.games.featured-games.list'), $now);
+            // Aged by release date: how long the oldest game has been due (#197)
+            $tiles[] = $this->queueTile('games-to-release', 'Games to release', $this->dbQueries->countGamesToRelease(),
+                $this->dbQueries->oldestGameToRelease(),
+                Thresholds::GAMES_TO_RELEASE_AMBER_DAYS, Thresholds::GAMES_TO_RELEASE_RED_DAYS,
+                route('staff.games.games-to-release'), $now);
         }
 
         if ($user->isOwner()) {

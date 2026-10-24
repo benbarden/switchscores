@@ -358,9 +358,15 @@ class Repository extends AbstractRepository
         return $games;
     }
 
+    /**
+     * Games to release (#197): active games past their release date and not marked released.
+     * The staff home tile counts the same rule (StaffDashboard\DbQueries).
+     */
     public function gamesForRelease()
     {
-        $games = Game::where('eu_is_released', 0)
+        $games = Game::active()
+            ->with(['console', 'dspNintendoCoUk'])
+            ->where('eu_is_released', 0)
             ->whereRaw('DATE(games.eu_release_date) <= CURDATE()')
             ->orderBy('eu_release_date', 'asc')
             ->orderBy('title', 'asc')

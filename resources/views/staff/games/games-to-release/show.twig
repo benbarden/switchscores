@@ -1,0 +1,85 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+{% import 'ui/components/game/console-badge.twig' as consolebadge %}
+
+{% block page_inner %}
+
+<p style="max-width: 760px;">
+    Games past their release date that aren't marked released. Release the ones that are out;
+    if a game's date has moved, edit it instead. For linked games, the Nintendo API date is shown
+    too - when it differs from ours, the date has probably moved (the nightly update never changes
+    a date once it's set).
+</p>
+
+{% if GameList|length > 0 %}
+    <table class="table table-sm align-middle" id="games-to-release">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th class="text-center">Console</th>
+                <th class="text-center">Release date</th>
+                <th class="text-center">Days past</th>
+                <th class="text-center">API date</th>
+                <th class="text-end"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for game in GameList %}
+            {% set apiItem = game.dspNintendoCoUk.first() %}
+            {% set apiDateDiffers = apiItem and apiItem.release_date_eu and apiItem.release_date_eu != game.eu_release_date %}
+            <tr id="release-row-{{ game.id }}">
+                <td><a href="{{ route('staff.games.detail', {'gameId': game.id}) }}">{{ game.title }}</a></td>
+                <td class="text-center">{{ consolebadge.standard(game) }}</td>
+                <td class="text-center">{{ game.eu_release_date }}</td>
+                <td class="text-center">{{ date(game.eu_release_date).diff(date('today')).days }}</td>
+                <td class="text-center{% if apiDateDiffers %} table-warning{% endif %}"{% if apiDateDiffers %} title="Differs from our date"{% endif %}>
+                    {{ apiItem ? (apiItem.release_date_eu ?: '-') : '' }}
+                </td>
+                <td class="text-end" style="white-space: nowrap;">
+                    <a href="{{ route('staff.games.edit', {'gameId': game.id}) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                    <button type="button" class="btn btn-success btn-sm js-release"
+                            data-url="{{ route('staff.games.release-hub.toggle', {'id': game.id}) }}"
+                            data-id="{{ game.id }}">Release</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<p id="games-to-release-empty"{% if GameList|length > 0 %} style="display: none;"{% endif %}>Nothing to release.</p>
+
+<script>
+    // Releases through the Release hub's toggle, which refuses a game before its date
+    document.addEventListener('click', function(e) {
+        if (!e.target.matches('.js-release')) return;
+        const btn = e.target;
+        btn.disabled = true;
+
+        fetch(btn.dataset.url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    btn.disabled = false;
+                    alert(data.error || data.message || 'Could not release this game.');
+                    return;
+                }
+                document.querySelector('#release-row-' + btn.dataset.id).remove();
+                if (!document.querySelector('#games-to-release tbody tr')) {
+                    document.querySelector('#games-to-release').remove();
+                    document.querySelector('#games-to-release-empty').style.display = '';
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                console.error(err);
+            });
+    });
+</script>
+
+{% endblock page_inner %}

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Enums\ContactStatus;
 use App\Models\ContactSubmission;
 use App\Models\FeaturedGame;
+use App\Models\Game;
 use App\Models\GamesCompanySignup;
 use App\Models\IntegrityCheck;
 use App\Models\PartnerFeedLink;
@@ -32,6 +33,27 @@ class DbQueries
     public function oldestPendingFeaturedGame(): ?Carbon
     {
         return $this->asCarbon(FeaturedGame::where('status', FeaturedGame::STATUS_PENDING)->min('created_at'));
+    }
+
+    /**
+     * Games to release (#197): active games past their release date and not marked released.
+     * Same rule as GameLists\Repository::gamesForRelease(), which lists them.
+     */
+    public function countGamesToRelease(): int
+    {
+        return $this->gamesToRelease()->count();
+    }
+
+    public function oldestGameToRelease(): ?Carbon
+    {
+        return $this->asCarbon($this->gamesToRelease()->min('eu_release_date'));
+    }
+
+    private function gamesToRelease()
+    {
+        return Game::active()
+            ->where('eu_is_released', 0)
+            ->whereRaw('DATE(games.eu_release_date) <= CURDATE()');
     }
 
     public function oldestNewContactSubmission(): ?Carbon

@@ -44,7 +44,7 @@ class StaffDashboardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Needs attention');
-        foreach (['review-drafts', 'quick-reviews', 'featured-games', 'contact', 'feeds', 'jobs',
+        foreach (['review-drafts', 'quick-reviews', 'featured-games', 'games-to-release', 'contact', 'feeds', 'jobs',
                      'integrity', 'signups'] as $key) {
             $response->assertSee('data-tile="'.$key.'"', false);
         }
@@ -71,7 +71,7 @@ class StaffDashboardTest extends TestCase
         $response->assertSee('data-tile="review-drafts"', false);
         $response->assertSee('data-tile="quick-reviews"', false);
         $response->assertSee('data-tile="feeds"', false);
-        foreach (['featured-games', 'contact', 'jobs', 'integrity', 'signups'] as $key) {
+        foreach (['featured-games', 'games-to-release', 'contact', 'jobs', 'integrity', 'signups'] as $key) {
             $response->assertDontSee('data-tile="'.$key.'"', false);
         }
     }
@@ -82,6 +82,7 @@ class StaffDashboardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('data-tile="featured-games"', false);
+        $response->assertSee('data-tile="games-to-release"', false);
         $response->assertDontSee('data-tile="review-drafts"', false);
         $response->assertDontSee('data-tile="jobs"', false);
     }

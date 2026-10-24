@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\UserRole;
 
 use App\Http\Controllers\Staff\Games\DashboardController;
+use App\Http\Controllers\Staff\Games\GamesToReleaseController;
 use App\Http\Controllers\Staff\Games\ReleaseHubController;
 use App\Http\Controllers\Staff\Games\SearchController;
 use App\Http\Controllers\Staff\Games\SingleGameAddController;
@@ -73,6 +74,9 @@ Route::group([
         Route::post('release-hub/toggle/{id}', 'toggleRelease')->name('release-hub.toggle');
         Route::post('release-hub/reorder', 'reorder')->name('release-hub.reorder');
     });
+
+    // ---- Games to release (#197) ----
+    Route::get('games-to-release', [GamesToReleaseController::class, 'show'])->name('games-to-release');
 
     // ---- Search ----
     Route::match(['get', 'post'], 'search', [SearchController::class, 'show'])

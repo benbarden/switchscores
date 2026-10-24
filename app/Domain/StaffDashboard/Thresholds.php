@@ -22,6 +22,10 @@ class Thresholds
     const CONTACT_AMBER_DAYS = 3;
     const CONTACT_RED_DAYS = null;
 
+    // Games to release (#197): days since the oldest unreleased game's release date (Ben, 2026-10-24).
+    const GAMES_TO_RELEASE_AMBER_DAYS = 3;
+    const GAMES_TO_RELEASE_RED_DAYS = 7;
+
     // A Live feed not imported for this long has missed a nightly run.
     const FEED_STALE_HOURS = 26;
     // A Live feed matching fewer titles than this (percent) needs a look at its match rule.
