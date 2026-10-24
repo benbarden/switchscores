@@ -51,9 +51,13 @@ class Repository
         return DataSourceParsed::where('source_id', $sourceId)->whereNotNull('game_id')->orderBy('game_id', 'asc')->get();
     }
 
+    // The unlinked lists leave out delisted items (#207): they've dropped out of the source, so
+    // there's nothing to link. They're kept, not deleted - if one is re-listed the import clears
+    // the flag and it shows again.
+
     public function getAllBySourceWithNoGameId($sourceId, $excludeLinkIdList = null, $excludeTitleList = null)
     {
-        $dsItemList = DataSourceParsed::where('source_id', $sourceId)->whereNull('game_id');
+        $dsItemList = DataSourceParsed::where('source_id', $sourceId)->whereNull('game_id')->where('is_delisted', 0);
         if ($excludeLinkIdList) {
             $dsItemList = $dsItemList->whereNotIn('link_id', $excludeLinkIdList);
         }
@@ -69,6 +73,7 @@ class Repository
         $dsItemList = DataSourceParsed
             ::where('source_id', $sourceId)
             ->whereNull('game_id')
+            ->where('is_delisted', 0)
             ->whereNotNull('release_date_eu');
         if ($excludeLinkIdList) {
             $dsItemList = $dsItemList->whereNotIn('link_id', $excludeLinkIdList);
@@ -85,6 +90,7 @@ class Repository
         $dsItemList = DataSourceParsed
             ::where('source_id', $sourceId)
             ->whereNull('game_id')
+            ->where('is_delisted', 0)
             ->whereNull('release_date_eu');
         if ($excludeLinkIdList) {
             $dsItemList = $dsItemList->whereNotIn('link_id', $excludeLinkIdList);

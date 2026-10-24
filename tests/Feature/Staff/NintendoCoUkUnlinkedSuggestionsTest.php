@@ -72,6 +72,23 @@ class NintendoCoUkUnlinkedSuggestionsTest extends TestCase
         $response->assertSee('q=Zqx%20Suggestions%20Nothing%20Here&amp;f=147394-91-126551', false);
     }
 
+    public function testDelistedItemsAreLeftOut()
+    {
+        // #207
+        $item = $this->makeItem('Zqx Suggestions Delisted');
+        $item->is_delisted = 1;
+        $item->save();
+
+        $response = $this->actingAs($this->owner())->get(route('staff.data-sources.nintendo-co-uk.unlinked.suggestions'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Zqx Suggestions Delisted');
+
+        $repo = new \App\Domain\DataSourceParsed\Repository();
+        $this->assertFalse($repo->getNintendoCoUkUnlinkedWithEUDate()->contains('id', $item->id));
+        $this->assertFalse($repo->getAllNintendoCoUkWithNoGameId()->contains('id', $item->id));
+    }
+
     public function testLinkDoesWhatEditLinkDoes()
     {
         $this->mock(DownloadPackshotHelper::class, function ($mock) {

@@ -9,11 +9,20 @@
         </td>
         <td>
             {% if GameGroup %}
+                {# Enhanced describes one side of the pair, so label each linked game with the
+                   public page's wording rather than one group badge, which read the wrong way
+                   round from the Switch 2 game (#203) #}
                 {% for member in GameGroupOthers %}
                     <a href="{{ route('staff.games.detail', {'gameId': member.id}) }}">{{ member.title }}</a>
-                    ({{ member.console.name }})<br>
+                    ({{ member.console.name }})
+                    {% if GameGroup.match_type == 'enhanced' %}
+                        <span class="badge bg-info">{{ member.console_id == 2 ? 'Enhanced Switch 2 Edition' : 'Original Switch 1 version' }}</span>
+                    {% endif %}
+                    <br>
                 {% endfor %}
-                <span class="badge {{ GameGroup.match_type == 'enhanced' ? 'bg-info' : 'bg-secondary' }}">{{ GameGroup.match_type }}</span>
+                {% if GameGroup.match_type != 'enhanced' %}
+                    <span class="badge bg-secondary">{{ GameGroup.match_type }}</span>
+                {% endif %}
             {% else %}
                 <em>Not linked.</em>
             {% endif %}

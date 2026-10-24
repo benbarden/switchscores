@@ -112,6 +112,26 @@ class GameGroupLinkTest extends TestCase
         $this->assertSame(GameGroup::MATCH_ENHANCED, $switch2->fresh()->gameGroup->match_type);
     }
 
+    public function testEnhancedLabelNamesEachLinkedGame()
+    {
+        // #203: from the Switch 2 game, the link is to the original; from the Switch 1 game, to the enhanced edition
+        $switch1 = $this->makeGame('Group Link Test Game', Console::ID_SWITCH_1);
+        $switch2 = $this->makeGame('Group Link Test Game (Switch 2)', Console::ID_SWITCH_2);
+        $owner = $this->owner();
+        $this->actingAs($owner)->post(
+            route('staff.games.gameGroup.link', ['gameId' => $switch2->id]),
+            ['other_game_id' => $switch1->id, 'match_type' => GameGroup::MATCH_ENHANCED]
+        );
+
+        $page = $this->actingAs($owner)->get(route('staff.games.detail', ['gameId' => $switch2->id]));
+        $page->assertSee('Original Switch 1 version');
+        $page->assertDontSee('Enhanced Switch 2 Edition');
+
+        $page = $this->actingAs($owner)->get(route('staff.games.detail', ['gameId' => $switch1->id]));
+        $page->assertSee('Enhanced Switch 2 Edition');
+        $page->assertDontSee('Original Switch 1 version');
+    }
+
     public function testGroupsAndSuggestionsPages()
     {
         $switch1 = $this->makeGame('Group Link Test Zq Suggest', Console::ID_SWITCH_1);
