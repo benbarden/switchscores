@@ -9,6 +9,13 @@
             This page lists recently released Nintendo {{ Console.name }} games, ordered by release date.
             New games are added regularly as they launch on the eShop.
         </p>
+        <p>
+            See every {{ Console.name }} game released in
+            {% for BrowseMonth in BrowseMonths -%}
+                <a href="{{ route('console.byMonth', {'console': Console, 'year': BrowseMonth.year, 'month': BrowseMonth.month}) }}">{{ BrowseMonth.label }}</a>{% if not loop.last %} or {% endif %}
+            {%- endfor %},
+            or <a href="{{ route('console.byDate', {'console': Console}) }}">browse all games by date</a>.
+        </p>
 
     </div>
 </div>

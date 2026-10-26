@@ -89,6 +89,19 @@ class ConsoleController extends Controller
         $bindings['NewReleases'] = $this->repoGameLists->recentlyReleasedExceptLowQuality($consoleId, 50);
         $bindings['CalendarThisMonth'] = date('Y-m');
 
+        // Links to Browse by date for this month and last month
+        $browseMonths = [];
+        $dtMonth = new \DateTime('first day of this month');
+        for ($i = 0; $i < 2; $i++) {
+            $browseMonths[] = [
+                'year' => $dtMonth->format('Y'),
+                'month' => $dtMonth->format('m'),
+                'label' => $dtMonth->format('F Y'),
+            ];
+            $dtMonth->modify('-1 month');
+        }
+        $bindings['BrowseMonths'] = $browseMonths;
+
         $bindings['Console'] = $console;
 
         return view('public.lists.list-recent-releases', $bindings);
