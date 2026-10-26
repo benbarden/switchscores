@@ -1,4 +1,4 @@
-{% macro standard(item, headerSize) %}
+{% macro standard(item, headerSize = '') %}
     {% if item.eu_is_released == 1 %}
         <span class="{{ headerSize }}">
             Released: {{ _self.showDate(item) }}
