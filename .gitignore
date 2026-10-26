@@ -7,6 +7,7 @@
 /public/storage
 /public/img/ps-square/*
 /public/img/ps-header/*
+!/public/img/ps-header/.gitkeep
 /public/img/gen/series/*
 !/public/img/gen/series/.gitkeep
 /storage/*.key
