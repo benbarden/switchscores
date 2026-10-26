@@ -144,28 +144,6 @@ class DbQueries
         return $games;
     }
 
-    public function byYearMonth($consoleId, $yearmonth, $limit = null)
-    {
-        $games = DB::table('game_rank_yearmonth')
-            ->join('games', 'game_rank_yearmonth.game_id', '=', 'games.id')
-            ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
-            ->select('games.*',
-                'game_rank_yearmonth.game_rank',
-                'categories.name AS category_name')
-            ->where('game_rank_yearmonth.console_id', $consoleId)
-            ->where('game_rank_yearmonth.release_yearmonth', $yearmonth)
-            ->orderBy('game_rank_yearmonth.game_rank')
-            ->orderBy('games.review_count', 'desc');
-        PackshotJoin::apply($games);
-
-        if ($limit != null) {
-            $games = $games->limit($limit);
-        }
-
-        $games = $games->get();
-        return $games;
-    }
-
     public function byMonthWithRanks($consoleId, $year, $month, $limit = null)
     {
         $games = DB::table('games')

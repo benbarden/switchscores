@@ -9,7 +9,7 @@
  */
 return [
 
-    // Steam reviews - 100 games, oldest-synced first (~2 min)
+    // Steam reviews - 50 games (the command's default), never-synced first, then oldest-synced (~2 min)
     'steam' => [
         'game:sync-steam-reviews',
     ],
