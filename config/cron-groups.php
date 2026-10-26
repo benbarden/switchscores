@@ -19,7 +19,7 @@ return [
     // stored but not used yet: GamePriceDecision is Switch 2 only (~5 min, 9k NSUIDs).
     'nintendo-import' => [
         'DSNintendoCoUkImportParseLink',
-        'DSNintendoCoUkFetchPrices',
+        'DSNintendoCoUkFetchPrices --console=2',
         'DSNintendoCoUkFetchPrices --console=1',
     ],
 
