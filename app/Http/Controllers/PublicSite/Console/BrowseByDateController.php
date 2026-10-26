@@ -9,6 +9,8 @@ use App\Domain\View\PageBuilders\PublicPageBuilder;
 
 use App\Domain\ReviewLink\Stats as ReviewLinkStatsRepository;
 use App\Domain\TopRated\DbQueries as TopRatedDbQueries;
+use App\Domain\TopRated\Repository as TopRatedRepository;
+use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 use App\Domain\GameCalendar\Repository as GameCalendarRepository;
 use App\Domain\GameCalendar\Stats as GameCalendarStats;
 use App\Domain\GameCalendar\AllowedDates as GameCalendarAllowedDates;
@@ -20,6 +22,8 @@ class BrowseByDateController extends Controller
     public function __construct(
         private PublicPageBuilder $pageBuilder,
         private TopRatedDbQueries $dbTopRated,
+        private TopRatedRepository $repoTopRated,
+        private AmazonAffiliate $affiliateAmazon,
         private GameCalendarRepository $repoGameCalendar,
         private GameCalendarStats $statsGameCalendar,
         private GameCalendarAllowedDates $allowedDates,
@@ -203,6 +207,9 @@ class BrowseByDateController extends Controller
 
         // Hidden gems
         $hiddenGemsByMonth = $this->repoGameCalendar->getMonthlyHiddenGems($consoleId, $calendarYear, $calendarMonth);
+        foreach ($hiddenGemsByMonth as $game) {
+            $game['Amazon'] = $this->affiliateAmazon->buildLinksForGame($game);
+        }
         $bindings['HiddenGemsByMonth'] = $hiddenGemsByMonth;
 
         // Top publishers
@@ -233,7 +240,12 @@ class BrowseByDateController extends Controller
 
         // Top Rated by month
         $yearMonth = $calendarYear.$calendarMonth;
-        $bindings['GamesRatingsWithRanks'] = $this->dbTopRated->byYearMonth($consoleId, $yearMonth, 50);
+        // Game models, not raw rows, so the tiles' buy buttons get the Nintendo link and Amazon
+        $topRatedByMonth = $this->repoTopRated->byConsoleAndYearMonth($consoleId, $yearMonth, 50);
+        foreach ($topRatedByMonth as $game) {
+            $game['Amazon'] = $this->affiliateAmazon->buildLinksForGame($game);
+        }
+        $bindings['GamesRatingsWithRanks'] = $topRatedByMonth;
 
         return view('public.console.by-month.landing', $bindings);
     }

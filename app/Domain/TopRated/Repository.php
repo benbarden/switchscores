@@ -32,6 +32,28 @@ class Repository
             ->get();
     }
 
+    public function byConsoleAndYearMonth($consoleId, $yearMonth, $limit = null)
+    {
+        $query = Game::query()
+            ->join('game_rank_yearmonth', 'game_rank_yearmonth.game_id', '=', 'games.id')
+            ->leftJoin('categories', 'games.category_id', '=', 'categories.id')
+            ->select('games.*')
+            ->addSelect([
+                'categories.name as category_name',
+                'game_rank_yearmonth.game_rank',
+            ])
+            ->where('game_rank_yearmonth.console_id', $consoleId)
+            ->where('game_rank_yearmonth.release_yearmonth', $yearMonth)
+            ->orderBy('game_rank_yearmonth.game_rank')
+            ->orderBy('games.review_count', 'desc');
+
+        if (!is_null($limit)) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+
     public function byConsoleAndYear($consoleId, $year, $limit = null)
     {
         $query = Game::query()

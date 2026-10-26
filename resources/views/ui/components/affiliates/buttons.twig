@@ -19,7 +19,8 @@
 {% macro buyButtons(game, amazon, size = 'standard') %}
     {% import _self as affiliate %}
 
-    {% set hasLinks = amazon.urlUk or amazon.urlUs or game.DSNintendoCoUk or game.nintendo_store_url_override %}
+    {% set hasLinks = amazon.urlUk or amazon.urlUs or game.dspNintendoCoUk|length > 0 or game.nintendo_store_url_override %}
+    {% set nintendoStoreDisplayed = 'false' %}
 
     {% if hasLinks and not game.isDelisted() %}
 
@@ -63,7 +64,7 @@
         {% if game.dspNintendoCoUk %}
             {% set ds = game.dspNintendoCoUk[0] %}
             {% if ds %}
-                {% set labelNin = useTiny ? 'Nintendo.co.uk' : 'Buy at Nintendo UK' %}
+                {% set labelNin = useTiny ? 'Nintendo UK store' : 'Buy at Nintendo UK' %}
                 {% if useTiny %}
                     {{ affiliate.amazonTinyButton(
                         eshop_url('eu', ds.url),
@@ -83,7 +84,7 @@
 
         {# Manual override URL #}
         {% if game.nintendo_store_url_override and nintendoStoreDisplayed == 'false' %}
-            {% set labelNinStore = useTiny ? 'Nintendo Store' : 'Buy at Nintendo UK' %}
+            {% set labelNinStore = useTiny ? 'Nintendo UK store' : 'Buy at Nintendo UK' %}
             {% if useTiny %}
                 {{ affiliate.amazonTinyButton(
                     game.nintendo_store_url_override,

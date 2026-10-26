@@ -738,6 +738,11 @@ blockquote {
     white-space: nowrap;
 }
 
+/* jQuery UI's .ui-widget-content a {color: #333} outranks .btn-cta-tiny inside tabs, and loads later */
+.buy-buttons-row--tiny .btn-cta-tiny {
+    color: #fff;
+}
+
 .btn-cta-tiny:hover,
 .btn-cta-tiny:focus {
     color: #ffffff;
