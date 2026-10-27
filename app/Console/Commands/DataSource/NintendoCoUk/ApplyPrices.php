@@ -3,6 +3,7 @@
 namespace App\Console\Commands\DataSource\NintendoCoUk;
 
 use App\Domain\DataSource\NintendoCoUk\GamePriceDecision;
+use App\Domain\DataSource\NintendoCoUk\NsuidExtractor;
 use App\Domain\DataSource\NintendoCoUk\PriceApply;
 use App\Domain\DataSource\NintendoCoUk\PriceDecision;
 use App\Domain\JobRun\CronRunContext;
@@ -50,7 +51,7 @@ class ApplyPrices extends Command
         parent::__construct();
     }
 
-    public function handle(GamePriceDecision $gamePriceDecision, PriceApply $priceApply)
+    public function handle(GamePriceDecision $gamePriceDecision, PriceApply $priceApply, NsuidExtractor $extractor)
     {
         $apply = (bool) $this->option('apply');
         $maxAge = (int) $this->option('max-age');
@@ -78,12 +79,6 @@ class ApplyPrices extends Command
             ->whereNotNull('link_id')
             ->get(['game_id', 'link_id']);
 
-        $rawJsonByLink = DataSourceRaw::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
-            ->where('console_id', $consoleId)
-            ->whereIn('link_id', $parsedList->pluck('link_id'))
-            ->pluck('source_data_json', 'link_id');
-
-        $prices = DataSourcePrice::where('console_id', $consoleId)->get()->keyBy('nsuid');
         $rules = GameImportRuleEshop::whereIn('game_id', $parsedList->pluck('game_id'))->get()->keyBy('game_id');
         $flags = DB::table('game_flags')->get()->groupBy('game_id')->map(fn ($rows) => $rows->pluck('flag')->implode(','));
 
@@ -91,40 +86,52 @@ class ApplyPrices extends Command
         $report = [];
         $seen = [];
 
-        foreach ($parsedList as $parsed) {
-            if (isset($seen[$parsed->game_id])) {
-                continue;
-            }
-            $seen[$parsed->game_id] = true;
+        // Raw JSON and prices are loaded a chunk at a time: for all 8,000 Switch 1 games they
+        // went over the CLI's 128M and the run died with no output (#132).
+        foreach ($parsedList->chunk(500) as $chunk) {
+            $rawJsonByLink = DataSourceRaw::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
+                ->where('console_id', $consoleId)
+                ->whereIn('link_id', $chunk->pluck('link_id'))
+                ->pluck('source_data_json', 'link_id');
 
-            $game = Game::find($parsed->game_id);
-            if (!$game) {
-                continue;
-            }
+            $nsuids = $rawJsonByLink->flatMap(fn ($json) => $extractor->extractFromJson($json))->unique()->values();
+            $prices = DataSourcePrice::where('console_id', $consoleId)->whereIn('nsuid', $nsuids)->get()->keyBy('nsuid');
 
-            $skuPrices = $gamePriceDecision->skuPrices($rawJsonByLink[$parsed->link_id] ?? null, $prices);
+            foreach ($chunk as $parsed) {
+                if (isset($seen[$parsed->game_id])) {
+                    continue;
+                }
+                $seen[$parsed->game_id] = true;
 
-            $decision = $priceApply->decide($game, $skuPrices, $rules[$game->id] ?? null, $now, $maxAge);
-            $counts[$decision->outcome] = ($counts[$decision->outcome] ?? 0) + 1;
+                $game = Game::find($parsed->game_id);
+                if (!$game) {
+                    continue;
+                }
 
-            $reportable = in_array($decision->outcome, [PriceDecision::CHANGED, PriceDecision::AMBIGUOUS, PriceDecision::API_ZERO], true)
-                || ($decision->outcome === PriceDecision::FROZEN && $decision->differs());
+                $skuPrices = $gamePriceDecision->skuPrices($rawJsonByLink[$parsed->link_id] ?? null, $prices);
 
-            if ($reportable) {
-                $report[] = [
-                    $decision->outcome,
-                    $game->id,
-                    mb_strimwidth($game->title, 0, 50, '…'),
-                    $this->pair($decision->oldPrice, $decision->newPrice),
-                    $this->pair($this->sale($decision->oldDiscounted, $decision->oldDiscountPc), $this->sale($decision->newDiscounted, $decision->newDiscountPc)),
-                    $flags[$game->id] ?? '',
-                ];
-            }
+                $decision = $priceApply->decide($game, $skuPrices, $rules[$game->id] ?? null, $now, $maxAge);
+                $counts[$decision->outcome] = ($counts[$decision->outcome] ?? 0) + 1;
 
-            if ($apply && $decision->outcome === PriceDecision::CHANGED) {
-                $priceApply->apply($game, $decision);
-                $game->save();
-                $this->repoGame->clearCacheCoreData($game->id);
+                $reportable = in_array($decision->outcome, [PriceDecision::CHANGED, PriceDecision::AMBIGUOUS, PriceDecision::API_ZERO], true)
+                    || ($decision->outcome === PriceDecision::FROZEN && $decision->differs());
+
+                if ($reportable) {
+                    $report[] = [
+                        $decision->outcome,
+                        $game->id,
+                        mb_strimwidth($game->title, 0, 50, '…'),
+                        $this->pair($decision->oldPrice, $decision->newPrice),
+                        $this->pair($this->sale($decision->oldDiscounted, $decision->oldDiscountPc), $this->sale($decision->newDiscounted, $decision->newDiscountPc)),
+                        $flags[$game->id] ?? '',
+                    ];
+                }
+
+                if ($apply && $decision->outcome === PriceDecision::CHANGED) {
+                    $priceApply->apply($game, $decision);
+                    $game->save();
+                    $this->repoGame->clearCacheCoreData($game->id);
+                }
             }
         }
 

@@ -15,22 +15,24 @@ return [
     ],
 
     // Nintendo.co.uk API: the raw import, then per-SKU prices from the price API (via the
-    // relay). FetchPrices stores before UpdateGames reads them (#162, #183). Switch 1 prices are
-    // stored but not used yet: GamePriceDecision is Switch 2 only (~5 min, 9k NSUIDs).
+    // relay). FetchPrices stores before UpdateGames reads them (#162, #183). Switch 1 is ~5 min
+    // (9k NSUIDs).
     'nintendo-import' => [
         'DSNintendoCoUkImportParseLink',
         'DSNintendoCoUkFetchPrices --console=2',
         'DSNintendoCoUkFetchPrices --console=1',
     ],
 
-    // UpdateGames sets each Switch 2 game's price from its standalone SKU and falls back to the
-    // search payload's price. ApplyPrices is a dry-run report: "changed" should be 0 each night,
-    // and anything else shows as a warning on the staff home.
+    // UpdateGames sets each game's price from its standalone SKU (Switch 2, and Switch 1 since
+    // #132) and falls back to the search payload's price. ApplyPrices is a dry-run report per
+    // console: "changed" should be 0 each night, and anything else shows as a warning on the
+    // staff home.
     'nintendo-process' => [
         'DSNintendoCoUkUpdateAvailability',
         'DSNintendoCoUkUpdateGames',
         'DSNintendoCoUkDownloadPackshots',
-        'DSNintendoCoUkApplyPrices',
+        'DSNintendoCoUkApplyPrices --console=2',
+        'DSNintendoCoUkApplyPrices --console=1',
     ],
 
     // Title match rates come after the feed import so the night's new drafts are in the sample
