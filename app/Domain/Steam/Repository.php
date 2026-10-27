@@ -17,14 +17,22 @@ class Repository
             ->count();
     }
 
+    /**
+     * Never-attempted games first, then the oldest attempt. Ordering on the attempt rather than
+     * the last success means a game that keeps failing drops behind the others (#220).
+     */
     public function getLinkedGames(int $limit = 100)
     {
         return Game::where('steam_status', SteamStatus::LINKED->value)
             ->active()
-            ->leftJoin('steam_review_data', 'games.id', '=', 'steam_review_data.game_id')
-            ->orderByRaw('steam_review_data.last_synced_at IS NOT NULL, steam_review_data.last_synced_at ASC')
+            ->orderByRaw('steam_last_attempted_at IS NOT NULL, steam_last_attempted_at ASC')
             ->limit($limit)
-            ->get(['games.id', 'games.title', 'games.steam_id']);
+            ->get(['id', 'title', 'steam_id']);
+    }
+
+    public function markAttempted(int $gameId): void
+    {
+        Game::where('id', $gameId)->update(['steam_last_attempted_at' => now()]);
     }
 
     public function getReviewDataForGame(int $gameId): ?SteamReviewData

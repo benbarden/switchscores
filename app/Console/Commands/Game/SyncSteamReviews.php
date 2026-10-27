@@ -25,7 +25,7 @@ class SyncSteamReviews extends Command
         parent::__construct();
     }
 
-    public function handle(): void
+    public function handle(): int
     {
         $logger = Log::channel('cron');
 
@@ -38,7 +38,7 @@ class SyncSteamReviews extends Command
         if ($games->isEmpty()) {
             $this->info('No games linked to Steam.');
             $logger->info('No games linked to Steam.');
-            return;
+            return self::SUCCESS;
         }
 
         $this->info('Syncing Steam reviews for ' . $games->count() . ' game(s)...');
@@ -46,6 +46,7 @@ class SyncSteamReviews extends Command
         $success = 0;
         $failed = 0;
         $failedIds = [];
+        $reasons = [];
 
         foreach ($games as $game) {
             $result = $this->steamSync->syncGame($game->id, $game->steam_id);
@@ -56,9 +57,12 @@ class SyncSteamReviews extends Command
                     . ' (' . number_format($result->total_reviews) . ' reviews)');
                 $success++;
             } else {
-                $this->warn('  [' . $game->id . '] ' . $game->title . ' — failed');
+                $reason = $this->steamSync->lastError() ?? 'unknown';
+                $this->warn('  [' . $game->id . '] ' . $game->title . ' — failed: ' . $reason);
+                $logger->warning('Steam sync failed for game ' . $game->id . ' (Steam ID ' . $game->steam_id . '): ' . $reason);
                 $failed++;
                 $failedIds[] = $game->id;
+                $reasons[$reason] = true;
             }
 
             if ($delay > 0) {
@@ -68,9 +72,23 @@ class SyncSteamReviews extends Command
 
         $this->info('Done. Success: ' . $success . ', Failed: ' . $failed . '.');
         $logger->info('Synced ' . $games->count() . ' game(s). Success: ' . $success . ', Failed: ' . $failed . '.');
-        if ($failedIds) {
-            $logger->warning('Steam sync failed for game IDs: ' . implode(', ', $failedIds));
-            CronRunContext::warn('Steam sync failed for ' . $failed . ' of ' . $games->count() . ' game(s): ' . implode(', ', $failedIds));
+
+        if (!$failedIds) {
+            return self::SUCCESS;
         }
+
+        $summary = 'Steam sync failed for ' . $failed . ' of ' . $games->count() . ' game(s): ' . implode(', ', $failedIds)
+            . '. Reasons: ' . implode('; ', array_keys($reasons));
+
+        // Every game failing means the sync itself is broken (as in #219), not a few bad Steam IDs,
+        // so it's a failed run on cron health rather than a warning (#220).
+        if ($success === 0) {
+            $this->error($summary);
+            $logger->error($summary);
+            return self::FAILURE;
+        }
+
+        CronRunContext::warn($summary);
+        return self::SUCCESS;
     }
 }
