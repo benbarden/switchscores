@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Sets Switch 2 game prices from the per-SKU prices DSNintendoCoUkFetchPrices stored (#162).
+ * Sets game prices from the per-SKU prices DSNintendoCoUkFetchPrices stored (#162).
+ * Switch 2 by default; --console=1 for Switch 1 (#132).
  *
  * DRY RUN BY DEFAULT. It reports what it would change and writes nothing unless
  * --apply is passed. Ben's call (2026-10-18): see real examples of the changes before
@@ -38,10 +39,11 @@ use Illuminate\Support\Facades\Log;
 class ApplyPrices extends Command
 {
     protected $signature = 'DSNintendoCoUkApplyPrices
+                            {--console=2 : Console id (2 = Switch 2, 1 = Switch 1)}
                             {--apply : Write the changes. Without it, nothing is written}
                             {--max-age=36 : Ignore SKU prices fetched more than this many hours ago}';
 
-    protected $description = 'Sets Switch 2 game prices from the stored per-SKU price API data. Dry run unless --apply.';
+    protected $description = 'Sets game prices from the stored per-SKU price API data. Dry run unless --apply.';
 
     public function __construct(private GameRepository $repoGame)
     {
@@ -53,7 +55,20 @@ class ApplyPrices extends Command
         $apply = (bool) $this->option('apply');
         $maxAge = (int) $this->option('max-age');
         $now = Carbon::now();
-        $consoleId = Console::ID_SWITCH_2;
+        $consoleId = (int) $this->option('console');
+
+        if (!in_array($consoleId, [Console::ID_SWITCH_1, Console::ID_SWITCH_2], true)) {
+            $this->error('Unsupported console id: '.$consoleId);
+            return self::FAILURE;
+        }
+
+        // A dry run works for any console - it's how Switch 1 is checked before switch-on (#132).
+        // Applying to a console that isn't switched on would be undone by the next UpdateGames,
+        // which still writes the search payload's price for it.
+        if ($apply && !GamePriceDecision::usesApiPrices($consoleId)) {
+            $this->error('Console '.$consoleId.' is not in GamePriceDecision::API_PRICE_CONSOLES, so UpdateGames would overwrite these prices tonight. Dry run only.');
+            return self::FAILURE;
+        }
 
         $parsedList = DataSourceParsed::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
             ->where('console_id', $consoleId)
@@ -137,7 +152,8 @@ class ApplyPrices extends Command
             $changedIds = array_column(array_filter($report, fn ($row) => $row[0] === PriceDecision::CHANGED), 1);
             if ($changedIds) {
                 $logger->warning('Prices differ from the price API after UpdateGames, game IDs: '.implode(', ', $changedIds));
-                CronRunContext::warn(count($changedIds).' Switch 2 price(s) differ from the price API after UpdateGames: '.implode(', ', $changedIds));
+                $consoleName = $consoleId === Console::ID_SWITCH_1 ? 'Switch 1' : 'Switch 2';
+                CronRunContext::warn(count($changedIds).' '.$consoleName.' price(s) differ from the price API after UpdateGames: '.implode(', ', $changedIds));
             }
         }
 

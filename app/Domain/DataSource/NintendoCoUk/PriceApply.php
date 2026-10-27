@@ -2,6 +2,7 @@
 
 namespace App\Domain\DataSource\NintendoCoUk;
 
+use App\Models\Console;
 use App\Models\DataSourcePrice;
 use App\Models\Game;
 use App\Models\GameImportRuleEshop;
@@ -16,7 +17,9 @@ use Carbon\Carbon;
  * the same SKU, so a sale on the deluxe edition or the upgrade pack is never shown
  * as a sale on the game.
  *
- * Switch 2 only. Called from UpdateGame::updatePrice() via UpdateGameFactory (#183),
+ * Used for the consoles in GamePriceDecision::API_PRICE_CONSOLES, with one Switch 1
+ * addition: standalone bundles (see decide(), #132). Called from
+ * UpdateGame::updatePrice() via UpdateGameFactory (#183),
  * so DSNintendoCoUkUpdateGames writes each price once; DSNintendoCoUkApplyPrices runs
  * the same decision afterwards as the nightly report. The scalar-field price from the
  * search payload stays as the fallback for any game this class skips.
@@ -56,6 +59,16 @@ class PriceApply
             && in_array($p->sales_status, self::USABLE_STATUSES, true)
             && !is_null($p->regular_price)
         ));
+
+        // Switch 1 only (#132): a record with no 7001 SKU and one 7007 price is a bundle sold
+        // on its own (Big Game Bundle 10-in-1, the "Edna & Harvey" Bundle), and that is its
+        // real price. On Switch 2 a 7007 is a deluxe edition, so it never becomes the price.
+        if (empty($standalone) && (int) $game->console_id === Console::ID_SWITCH_1) {
+            $bundle = $this->standaloneBundle($skuPrices);
+            if ($bundle) {
+                $standalone = [$bundle];
+            }
+        }
 
         if (empty($standalone)) {
             return new PriceDecision(PriceDecision::NO_API_PRICE, oldPrice: $oldPrice);
@@ -106,6 +119,27 @@ class PriceApply
         $result = $decision(PriceDecision::CHANGED);
 
         return $result->differs() ? $result : $decision(PriceDecision::UNCHANGED);
+    }
+
+    /**
+     * A record with no 7001 SKU and exactly one 7007 price: a bundle sold on its own.
+     *
+     * @param  DataSourcePrice[]  $skuPrices
+     */
+    public function standaloneBundle(array $skuPrices): ?DataSourcePrice
+    {
+        foreach ($skuPrices as $p) {
+            if (str_starts_with($p->nsuid, NsuidPrice::PREFIX_GAME)) return null;
+        }
+
+        $bundles = array_values(array_filter($skuPrices, fn (DataSourcePrice $p) =>
+            str_starts_with($p->nsuid, NsuidPrice::PREFIX_DELUXE)
+            && in_array($p->sales_status, self::USABLE_STATUSES, true)
+            && !is_null($p->regular_price)
+        ));
+
+        $distinct = array_unique(array_map(fn ($p) => $this->money($p->regular_price), $bundles));
+        return count($distinct) === 1 ? $bundles[0] : null;
     }
 
     /**

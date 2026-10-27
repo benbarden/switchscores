@@ -21,11 +21,10 @@ use Illuminate\Console\Command;
  * problem before anything applies API prices to it (#132, Switch 1). READ ONLY: never
  * writes a game, and doesn't log to the cron log - it's run by hand.
  *
- * Uses PriceApply::decide(), the rule Switch 2 runs on (the 7001 SKU is the game), so the
- * numbers are what applying would do. One addition for Switch 1: a record with no 7001 SKU
- * and one 7007 price is a bundle sold on its own (Big Game Bundle 10-in-1, the "Edna &
- * Harvey" Bundle), and its 7007 price is its real price. Those are counted separately, since
- * the Switch 2 rule gives them no API price.
+ * Uses PriceApply::decide() (the 7001 SKU is the game), so the numbers are what applying
+ * would do. A record with no 7001 SKU and one 7007 price is a bundle sold on its own (Big
+ * Game Bundle 10-in-1, the "Edna & Harvey" Bundle); decide() prices those on Switch 1, and
+ * they're counted separately here.
  */
 class ComparePrices extends Command
 {
@@ -86,13 +85,20 @@ class ComparePrices extends Command
             $newPrice = $decision->newPrice;
             $nsuid = $decision->nsuid;
 
-            if ($outcome === PriceDecision::NO_API_PRICE) {
-                $bundle = $this->standaloneBundle($skuPrices);
-                if ($bundle) {
-                    $newPrice = $this->money($bundle->regular_price);
-                    $nsuid = $bundle->nsuid;
-                    $outcome = $newPrice === $decision->oldPrice ? self::BUNDLE_UNCHANGED : self::BUNDLE_DIFFERS;
-                }
+            // decide() prices Switch 1 standalone bundles from their 7007 SKU; on any other
+            // console they come back as no-api-price, so they're picked up here.
+            $bundle = null;
+            if ($decision->nsuid && str_starts_with($decision->nsuid, NsuidPrice::PREFIX_DELUXE)
+                && in_array($outcome, [PriceDecision::CHANGED, PriceDecision::UNCHANGED], true)) {
+                $bundle = $decision->nsuid;
+            } elseif ($outcome === PriceDecision::NO_API_PRICE && ($sku = $priceApply->standaloneBundle($skuPrices))) {
+                $bundle = $sku->nsuid;
+                $newPrice = $this->money($sku->regular_price);
+                $nsuid = $sku->nsuid;
+            }
+
+            if ($bundle) {
+                $outcome = $newPrice === $decision->oldPrice ? self::BUNDLE_UNCHANGED : self::BUNDLE_DIFFERS;
             } elseif ($outcome === PriceDecision::CHANGED) {
                 $outcome = $decision->oldPrice === $decision->newPrice ? self::SALE_ONLY : self::PRICE_DIFFERS;
             }
@@ -144,25 +150,6 @@ class ComparePrices extends Command
         $this->warn('READ ONLY - nothing written.');
 
         return self::SUCCESS;
-    }
-
-    /**
-     * A record with no 7001 SKU and exactly one 7007 price: a bundle sold on its own.
-     */
-    private function standaloneBundle(array $skuPrices): ?DataSourcePrice
-    {
-        foreach ($skuPrices as $p) {
-            if (str_starts_with($p->nsuid, NsuidPrice::PREFIX_GAME)) return null;
-        }
-
-        $bundles = array_values(array_filter($skuPrices, fn (DataSourcePrice $p) =>
-            str_starts_with($p->nsuid, NsuidPrice::PREFIX_DELUXE)
-            && in_array($p->sales_status, PriceApply::USABLE_STATUSES, true)
-            && !is_null($p->regular_price)
-        ));
-
-        $distinct = array_unique(array_map(fn ($p) => $this->money($p->regular_price), $bundles));
-        return count($distinct) === 1 ? $bundles[0] : null;
     }
 
     private function money(string|float|null $value): ?string

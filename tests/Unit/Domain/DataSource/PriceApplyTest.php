@@ -4,6 +4,7 @@ namespace Tests\Unit\Domain\DataSource;
 
 use App\Domain\DataSource\NintendoCoUk\PriceApply;
 use App\Domain\DataSource\NintendoCoUk\PriceDecision;
+use App\Models\Console;
 use App\Models\DataSourcePrice;
 use App\Models\Game;
 use App\Models\GameImportRuleEshop;
@@ -193,6 +194,55 @@ class PriceApplyTest extends TestCase
         $decision = $this->decide($this->game('0.00'), [$this->sku('70010000000001', '0.00')]);
 
         $this->assertSame(PriceDecision::UNCHANGED, $decision->outcome);
+    }
+
+    private function switch1Game(?string $price): Game
+    {
+        $game = $this->game($price);
+        $game->console_id = Console::ID_SWITCH_1;
+        return $game;
+    }
+
+    public function testSwitch1StandaloneBundleIsPricedFromItsBundleSku()
+    {
+        // #132: Big Game Bundle 10-in-1 has one 7007 SKU and no 7001 - that is its price.
+        $decision = $this->decide($this->switch1Game('19.99'), [$this->sku('70070000000001', '24.99')]);
+
+        $this->assertSame(PriceDecision::CHANGED, $decision->outcome);
+        $this->assertSame('24.99', $decision->newPrice);
+        $this->assertSame('70070000000001', $decision->nsuid);
+    }
+
+    public function testSwitch2DeluxeOnlyRecordStillHasNoApiPrice()
+    {
+        $game = $this->game('19.99');
+        $game->console_id = Console::ID_SWITCH_2;
+
+        $decision = $this->decide($game, [$this->sku('70070000000001', '24.99')]);
+
+        $this->assertSame(PriceDecision::NO_API_PRICE, $decision->outcome);
+    }
+
+    public function testSwitch1DeluxeEditionIsNotUsedWhenThereIsAGameSku()
+    {
+        // One Piece: Pirate Warriors 4: £34.99 standard, the site had the £94.99 Legendary Edition.
+        $decision = $this->decide($this->switch1Game('94.99'), [
+            $this->sku('70070000000001', '94.99'),
+            $this->sku('70010000000001', '34.99'),
+        ]);
+
+        $this->assertSame(PriceDecision::CHANGED, $decision->outcome);
+        $this->assertSame('34.99', $decision->newPrice);
+    }
+
+    public function testSwitch1BundlesAtDifferentPricesHaveNoApiPrice()
+    {
+        $decision = $this->decide($this->switch1Game('19.99'), [
+            $this->sku('70070000000001', '24.99'),
+            $this->sku('70070000000002', '39.99'),
+        ]);
+
+        $this->assertSame(PriceDecision::NO_API_PRICE, $decision->outcome);
     }
 
     public function testDiscountPercentIsAWholeNumber()
