@@ -42,7 +42,9 @@ class CronGroupTest extends TestCase
 
     public function testRunsEveryStepAndRecordsEachOne()
     {
-        config(['cron-groups.test-ok' => ['cron-group-test:one', 'cron-group-test:warn', 'cron-group-test:three']]);
+        config(['cron-groups.test-ok' => ['label' => 'Test', 'steps' => [
+            'cron-group-test:one' => 'One', 'cron-group-test:warn' => 'Warn', 'cron-group-test:three' => 'Three',
+        ]]]);
 
         $exitCode = Artisan::call('cron:group', ['name' => 'test-ok']);
 
@@ -58,7 +60,9 @@ class CronGroupTest extends TestCase
     public function testAFailedStepIsRecordedAndTheRestStillRun()
     {
         Exceptions::fake();
-        config(['cron-groups.test-fail' => ['cron-group-test:one', 'cron-group-test:throw', 'cron-group-test:three']]);
+        config(['cron-groups.test-fail' => ['label' => 'Test', 'steps' => [
+            'cron-group-test:one' => 'One', 'cron-group-test:throw' => 'Throw', 'cron-group-test:three' => 'Three',
+        ]]]);
 
         $exitCode = Artisan::call('cron:group', ['name' => 'test-fail']);
 
@@ -72,11 +76,14 @@ class CronGroupTest extends TestCase
     public function testEveryConfiguredStepIsARealCommand()
     {
         // A typo or a rename (GameUpdateQualityScores, #185) should fail here, not at 5:30am
+        // The Tools Hub's ad-hoc commands (#214) too, and every group has a label and descriptions
         $commands = array_keys(Artisan::all());
-        foreach (config('cron-groups') as $group => $steps) {
-            foreach ($steps as $step) {
+        foreach (array_merge(config('cron-groups'), config('tools')) as $group => $config) {
+            $this->assertNotEmpty($config['label'] ?? null, "Group $group: no label");
+            foreach ($config['steps'] as $step => $desc) {
                 $name = strtok($step, ' ');
                 $this->assertContains($name, $commands, "Group $group: no command $name");
+                $this->assertNotEmpty($desc, "Group $group: no description for $step");
             }
         }
     }

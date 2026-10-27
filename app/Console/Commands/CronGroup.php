@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
  * Runs a group of nightly jobs in order (#185):
  *   php artisan cron:group games
  *
- * The groups are in config/cron-groups.php - adding a job to a group is one line there. Each
+ * The groups are in config/cron-groups.php - adding a job to a group's steps is one line there. Each
  * step is recorded on its own in job_runs (JobRecorder, as cron:record does), so cron health
  * shows every step, not just the group. The group itself isn't recorded.
  *
@@ -32,8 +32,8 @@ class CronGroup extends Command
         @set_time_limit(0);
 
         $name = $this->argument('name');
-        $steps = config('cron-groups.'.$name);
-        if (!is_array($steps) || !$steps) {
+        $steps = array_keys(config('cron-groups.'.$name.'.steps') ?? []);
+        if (!$steps) {
             $this->error('Unknown cron group: '.$name);
             return self::FAILURE;
         }

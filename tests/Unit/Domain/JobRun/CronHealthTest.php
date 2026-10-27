@@ -65,7 +65,9 @@ class CronHealthTest extends TestCase
     public function testAGroupLineBecomesOneJobPerStep()
     {
         // #185: cron:group runs each step on its own row, so each step is an expected job
-        config(['cron-groups.test-games' => ['UpdateGameReviewStats', 'UpdateGameRanks']]);
+        config(['cron-groups.test-games' => ['label' => 'Test', 'steps' => [
+            'UpdateGameReviewStats' => 'Review stats', 'UpdateGameRanks' => 'Ranks',
+        ]]]);
 
         $jobs = (new CronSchedule('/nonexistent'))->parseLineJobs(
             '30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group test-games >/dev/null 2>&1'
@@ -100,7 +102,19 @@ class CronHealthTest extends TestCase
             $expected += count($jobs);
         }
         $this->assertCount($expected, $schedule->jobs());
-        $this->assertCount(array_sum(array_map('count', config('cron-groups'))), $schedule->jobs());
+        $this->assertCount(array_sum(array_map(fn ($g) => count($g['steps']), config('cron-groups'))), $schedule->jobs());
+    }
+
+    public function testGroupOrderFollowsTheCronFileThenUnscheduledGroups()
+    {
+        // #214: the Tools Hub's tabs, in the order the groups run
+        config(['cron-groups.test-unscheduled' => ['label' => 'Test', 'steps' => ['UpdateGameRanks' => 'Ranks']]]);
+
+        $order = (new CronSchedule(base_path('scripts/switchscores-cron')))->groupOrder();
+
+        $this->assertSame('steam', $order[0]);
+        $this->assertSame('crawl', $order[count($order) - 2]);
+        $this->assertSame('test-unscheduled', end($order));
     }
 
     public function testARunSinceItWasDueKeepsItsStatus()

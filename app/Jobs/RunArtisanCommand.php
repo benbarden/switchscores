@@ -7,12 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 
-use App\Models\JobRun;
+use App\Domain\JobRun\JobRecorder;
 use App\Domain\JobRun\Repository as JobRunRepository;
 
+/**
+ * Runs one Tools Hub command on the queue (#214). The job_runs row was created as queued on
+ * the click; JobRecorder runs it and records the result, warnings included, and reports any
+ * exception to Sentry.
+ *
+ * handle() doesn't throw for a failed command - JobRecorder has already recorded and reported
+ * it - so "Run group" (a job chain) carries on to the next step, like cron:group.
+ */
 class RunArtisanCommand implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -23,53 +29,29 @@ class RunArtisanCommand implements ShouldQueue
 
     }
 
-    public function handle(JobRunRepository $repoJobRun): void
+    public function handle(JobRunRepository $repoJobRun, JobRecorder $jobRecorder): void
     {
-        // store so failed can use it too
-        $this->repoJobRun = $repoJobRun;
-
         @set_time_limit(0);
-        $jobRun = $this->repoJobRun->find($this->jobRunId);
+
+        $jobRun = $repoJobRun->find($this->jobRunId);
         if (!$jobRun) {
-            // Optional: mark as failed in queue for visibility
             $this->fail(new \RuntimeException("JobRun {$this->jobRunId} not found"));
             return;
         }
 
-        $this->repoJobRun->markAsRunning($jobRun);
-
-        $started = hrtime(true);
-
-        try {
-            $exitCode = Artisan::call($jobRun->command);
-            $output   = Artisan::output(); // stdout only
-        } catch (\Throwable $e) {
-            // ensure a consistent failed write if Artisan::call bombs
-            $this->repoJobRun->markAsFailed($jobRun, $e->getMessage());
-            throw $e; // triggers failed() as well (keeps queue state accurate)
-        } finally {
-            $ended = hrtime(true);
-        }
-
-        $isSuccessful = ($exitCode === 0);
-        $this->repoJobRun->markAsComplete($jobRun, $isSuccessful, $started, $ended, $exitCode, $output);
-
-        if (!$isSuccessful) {
-            // Optional: also fail the queue job so it shows up in failed-jobs tooling
-            $this->fail(new \RuntimeException("{$jobRun->command} exited {$exitCode}"));
-        }
+        $jobRecorder->runExisting($jobRun);
     }
 
+    /**
+     * The worker died or timed out mid-run: JobRecorder never got to record the result.
+     */
     public function failed(\Throwable $e): void
     {
-        // fallback
-        if (!isset($this->repoJobRun)) {
-            $this->repoJobRun = app(JobRunRepository::class);
-        }
+        $repoJobRun = app(JobRunRepository::class);
 
-        $jobRun = $this->repoJobRun->find($this->jobRunId);
-        if ($jobRun) {
-            $this->repoJobRun->markAsFailed($jobRun, $e->getMessage());
+        $jobRun = $repoJobRun->find($this->jobRunId);
+        if ($jobRun && in_array($jobRun->status, ['queued', 'running'], true)) {
+            $repoJobRun->markAsFailed($jobRun, $e->getMessage());
         }
     }
 }

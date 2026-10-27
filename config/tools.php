@@ -1,57 +1,17 @@
 <?php
+
+/**
+ * Tools Hub commands that never run nightly (#214). The nightly jobs come from
+ * config/cron-groups.php, one tab per group; these are the hub's last tab.
+ */
 return [
 
-    'groups' => [
-
-        'nintendo_eu' => [
-            'label' => 'Nintendo EU ingest',
-            'jobs'  => [
-                ['cmd' => 'DSNintendoCoUkImportParseLink',    'desc' => 'Import and link data from N.co.uk'],
-                ['cmd' => 'DSNintendoCoUkUpdateAvailability', 'desc' => 'Update availability from EU eShop data'],
-                ['cmd' => 'DSNintendoCoUkUpdateGames',        'desc' => 'Refresh linked game data'],
-                ['cmd' => 'DSNintendoCoUkDownloadPackshots',  'desc' => 'Download packshots'],
-                ['cmd' => 'game:crawl-batch --limit=10',      'desc' => 'Crawl Nintendo URLs for game data (10 games)'],
-            ],
+    'ad_hoc' => [
+        'label' => 'Ad-hoc',
+        'steps' => [
+            'PartnerImportFeed' => 'Import content from a single partner feed',
+            'game:crawl-batch --limit=10' => 'Crawl Nintendo URLs for 404s (10 games)',
         ],
-
-        'reviews' => [
-            'label' => 'Review pipeline',
-            'jobs'  => [
-                ['cmd' => 'PartnerImportActiveFeeds',     'desc' => 'Fetch partner feeds'],
-                ['cmd' => 'ReviewImportByScraper',        'desc' => 'Custom review scraping'],
-                ['cmd' => 'PartnerParseReviewDrafts',     'desc' => 'Match drafts to games, parse scores'],
-                ['cmd' => 'ReviewConvertDraftsToReviews', 'desc' => 'Generate reviews from drafts'],
-                ['cmd' => 'UpdateGameCalendarStats',      'desc' => 'Refresh release calendar stats'],
-                ['cmd' => 'ReviewSiteUpdateStats',        'desc' => 'Update partner site review counts/dates'],
-                ['cmd' => 'UpdateGameReviewStats',        'desc' => 'Refresh review totals & averages per game'],
-                ['cmd' => 'UpdateGameRanks',              'desc' => 'Refresh game rankings'],
-            ],
-        ],
-
-        'content' => [
-            'label' => 'Content',
-            'jobs'  => [
-                ['cmd' => 'SitemapGenerate',              'desc' => 'Regenerate sitemaps'],
-                ['cmd' => 'IGSeriesImage',                'desc' => 'Generate images for series'],
-                ['cmd' => 'ReviewCampaignUpdateProgress', 'desc' => 'Update campaign completion progress'],
-                ['cmd' => 'RefreshNewsDbUpdateStats',     'desc' => 'Refresh news update stats'],
-            ],
-        ],
-
-        'quality_integrity' => [
-            'label' => 'Quality & integrity',
-            'jobs'  => [
-                ['cmd' => 'UpdateGameQualityScores',      'desc' => 'Update quality score fields'],
-                ['cmd' => 'IntegrityCheckChecker',        'desc' => 'Run integrity checks'],
-            ],
-        ],
-
-        'ad_hoc' => [
-            'label' => 'Ad-hoc',
-            'jobs'  => [
-                ['cmd' => 'PartnerImportFeed',            'desc' => 'Import content from a single partner feed'],
-            ],
-        ],
-
     ],
+
 ];
