@@ -264,17 +264,17 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find game!'], 400);
         }
 
-        $dsItem = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
-        if (!$dsItem) {
-            return response()->json(['error' => 'Cannot find NintendoCoUk source data for this game'], 400);
-        }
+        // A data source item or a store URL override: either gives the helper a store page (#158).
+        // Forced, so it re-downloads even when the game already has packshots.
+        $result = $this->downloadPackshotHelper->downloadForGame($game, true);
 
-        $this->downloadPackshotHelper->downloadForGame($game);
-
-        $data = array(
-            'status' => 'OK'
-        );
-        return response()->json($data, 200);
+        // #157: say what went wrong rather than reporting OK for a download that didn't happen
+        return match ($result) {
+            DownloadPackshotHelper::RESULT_DOWNLOADED => response()->json(['status' => 'OK'], 200),
+            DownloadPackshotHelper::RESULT_NO_SOURCE => response()->json(['error' => 'No Nintendo.co.uk data or store URL override for this game'], 400),
+            DownloadPackshotHelper::RESULT_NOT_FOUND => response()->json(['error' => 'No image URLs found on the store page'], 422),
+            default => response()->json(['error' => $this->downloadPackshotHelper->lastError() ?? 'Download failed'], 500),
+        };
     }
 
     public function updateStatus($gameId)

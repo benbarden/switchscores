@@ -11,9 +11,24 @@ use App\Models\GameImage;
 
 class DownloadPackshotHelper
 {
+    // What downloadForGame() did (#157). The batch callers ignore it; the staff "Update images"
+    // button reports it, so a failure no longer looks like the button doing nothing.
+    const RESULT_DOWNLOADED = 'downloaded';
+    const RESULT_NOT_NEEDED = 'not-needed';    // both packshots already resolve
+    const RESULT_NO_SOURCE  = 'no-source';     // no data source item and no store URL override
+    const RESULT_NOT_FOUND  = 'not-found';     // the store page gave no image URLs
+    const RESULT_FAILED     = 'failed';        // see lastError()
+
     private $gameList;
 
     private $logger;
+
+    private ?string $lastError = null;
+
+    public function lastError(): ?string
+    {
+        return $this->lastError;
+    }
 
     public function __construct(
         private RepoGameLists $repoGameLists
@@ -56,18 +71,27 @@ class DownloadPackshotHelper
         }
     }
 
-    public function downloadForGame(Game $game)
+    /**
+     * $force skips the "already has its packshots" check - the staff "Update images" button
+     * (#158), which is asked for because the images are wrong or missing.
+     */
+    public function downloadForGame(Game $game, bool $force = false): string
     {
         $itemTitle = $game->title;
         $gameId = $game->id;
+        $this->lastError = null;
 
-        if ($this->isEligibleForDownload($game)) {
+        if ($force) {
+            if (!$this->hasValidDataSourceItem($game) && !$game->nintendo_store_url_override) {
+                return self::RESULT_NO_SOURCE;
+            }
+        } elseif ($this->isEligibleForDownload($game)) {
             if ($this->logger) {
                 $this->logger->info('');
                 $this->logger->info('Game is eligible for image download: '.$itemTitle.' ['.$gameId.']');
             }
         } else {
-            return;
+            return self::RESULT_NOT_NEEDED;
         }
 
         $packshotBuilder = new PackshotUrlBuilder();
@@ -133,13 +157,19 @@ class DownloadPackshotHelper
                     $downloadByOverrideUrl = app(DownloadByOverrideUrl::class); // will inject dependencies
                     $downloadByOverrideUrl->setGame($game);
                     $downloadByOverrideUrl->download($squareUrl, $headerUrl);
+                    return self::RESULT_DOWNLOADED;
                 }
+                return self::RESULT_NOT_FOUND;
             } catch (\Exception $e) {
+                $this->lastError = $e->getMessage();
                 if ($this->logger) {
                     $this->logger->error($e->getMessage());
                 }
+                return self::RESULT_FAILED;
             }
         }
+
+        return self::RESULT_NO_SOURCE;
     }
 
     public function isEligibleForDownload(Game $game)
