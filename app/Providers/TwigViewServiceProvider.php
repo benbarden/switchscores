@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Twig\Environment;
 use Twig\TwigFunction;
 
+use App\Enums\GameStatus;
 use App\Models\Console;
 use App\Domain\Game\ImageResolver;
 use App\Support\Links;
@@ -20,6 +21,17 @@ class TwigViewServiceProvider extends ServiceProvider
 
         $twig->addFunction(new TwigFunction('packshot_url', function ($game, string $type) use ($imageResolver) {
             return $imageResolver->url($game, $type);
+        }));
+
+        // #140: game_status, not the old format_digital = 'De-listed' check, which misses
+        // games de-listed since #22. Models cast game_status to the enum; raw DB rows hold
+        // the string.
+        $twig->addFunction(new TwigFunction('game_is_delisted', function ($game) {
+            $status = $game->game_status ?? null;
+            if ($status instanceof GameStatus) {
+                return $status === GameStatus::DELISTED;
+            }
+            return $status === GameStatus::DELISTED->value;
         }));
 
         $twig->addFunction(new TwigFunction('game_url', function ($game) {

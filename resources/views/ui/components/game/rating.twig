@@ -1,25 +1,20 @@
 {% macro standard(item) %}
-    {% if item.rating_avg %}
-        {% if item.game_rank %}
-            {{ _self.ratingStandard(item.rating_avg, 'h5') }}
-        {% elseif item.format_digital == 'De-listed' %}
-            {{ _self.delisted('h6') }}
-        {% else %}
-            {{ _self.reviewCount(item.review_count, 'h5') }}
-        {% endif %}
+    {# De-listed first: a de-listed game has no rank, so it used to fall through to "10/3" (#140) #}
+    {% if game_is_delisted(item) %}
+        {{ _self.delisted('h6') }}
+    {% elseif item.rating_avg and item.game_rank %}
+        {{ _self.ratingStandard(item.rating_avg, 'h5') }}
     {% else %}
         {{ _self.reviewCount(item.review_count, 'h5') }}
     {% endif %}
 {% endmacro %}
 
 {% macro circular(item) %}
-    {% if item.format_digital == 'De-listed' %}
+    {% if game_is_delisted(item) %}
         <!-- Do nothing -->
     {% elseif item.rating_avg %}
         {% if item.game_rank %}
             {{ _self.ratingCircle(item.rating_avg, 'h6') }}
-        {% elseif item.format_digital == 'De-listed' %}
-            <!-- Do nothing -->
         {% elseif item.eu_is_released == 1 %}
             <!-- Do nothing -->
         {% endif %}
