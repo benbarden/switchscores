@@ -112,6 +112,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')->namespace($this->namespace)
             ->group(base_path('routes/staff/owner.php'));
 
+        // Must stay last: it catches every /staff URL the files above don't match
+        Route::middleware('web')->namespace($this->namespace)
+            ->group(base_path('routes/staff/not-found.php'));
+
     }
 
     /**

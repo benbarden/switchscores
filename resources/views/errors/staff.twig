@@ -1,0 +1,23 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{# A 403, 404 or 410 for a staff user under /staff - see App\Exceptions\Handler #}
+
+{% block page_inner %}
+
+    <div class="container py-3">
+
+        <p>{{ ErrorMessage }}</p>
+
+        <p class="text-muted">
+            <small>Address: <code>{{ RequestedUrl }}</code></small>
+        </p>
+
+        <ul>
+            <li><a href="{{ route('staff.index') }}">Staff home</a></li>
+            <li><a href="{{ route('staff.games.search') }}">Search games</a></li>
+            <li><a href="javascript:history.back()">Go back</a></li>
+        </ul>
+
+    </div>
+
+{% endblock page_inner %}
