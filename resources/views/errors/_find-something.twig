@@ -1,0 +1,37 @@
+{# Where to go from a public error page: a game search box and the main sections. Static, so
+   it's safe in the edge cache. #}
+
+<form role="search" method="get" action="{{ route('games.search') }}" style="margin-bottom: 2rem;">
+    <label for="error_search_keywords">Looking for a game?</label>
+    <div class="input-group" style="max-width: 480px;">
+        <input id="error_search_keywords" name="search_keywords" type="text" class="form-control" placeholder="Game title">
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </span>
+    </div>
+</form>
+
+<h2>Popular places</h2>
+
+<table class="table" style="max-width: 480px;">
+    <tbody>
+    {% for section in [
+        {'route': 'console.topRated.landing', 'label': 'Top rated'},
+        {'route': 'console.newReleases', 'label': 'New releases'},
+        {'route': 'console.upcomingReleases', 'label': 'Upcoming'},
+    ] %}
+        <tr>
+            <td><a href="{{ route(section.route, {'console': 'switch-1'}) }}">Switch 1 {{ section.label }}</a></td>
+            <td><a href="{{ route(section.route, {'console': 'switch-2'}) }}">Switch 2 {{ section.label }}</a></td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <td><a href="{{ route('browse.byCategory.landing') }}">Browse by category</a></td>
+            <td><a href="{{ route('browse.bySeries.landing') }}">Browse by series</a></td>
+        </tr>
+        <tr>
+            <td><a href="/">Go to the homepage</a></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
