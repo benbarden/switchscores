@@ -205,7 +205,7 @@ class PriceApplyTest extends TestCase
 
     public function testSwitch1StandaloneBundleIsPricedFromItsBundleSku()
     {
-        // #132: Big Game Bundle 10-in-1 has one 7007 SKU and no 7001 - that is its price.
+        // Big Game Bundle 10-in-1 has one 7007 SKU and no 7001 - that is its price.
         $decision = $this->decide($this->switch1Game('19.99'), [$this->sku('70070000000001', '24.99')]);
 
         $this->assertSame(PriceDecision::CHANGED, $decision->outcome);

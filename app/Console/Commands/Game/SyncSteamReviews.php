@@ -80,8 +80,8 @@ class SyncSteamReviews extends Command
         $summary = 'Steam sync failed for ' . $failed . ' of ' . $games->count() . ' game(s): ' . implode(', ', $failedIds)
             . '. Reasons: ' . implode('; ', array_keys($reasons));
 
-        // Every game failing means the sync itself is broken (as in #219), not a few bad Steam IDs,
-        // so it's a failed run on cron health rather than a warning (#220).
+        // Every game failing means the sync itself is broken, not a few bad Steam IDs, so it's
+        // a failed run on cron health rather than a warning.
         if ($success === 0) {
             $this->error($summary);
             $logger->error($summary);

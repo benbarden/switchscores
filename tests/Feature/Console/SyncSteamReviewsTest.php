@@ -12,7 +12,7 @@ use Mockery\MockInterface;
 use Tests\TestCase;
 
 /**
- * game:sync-steam-reviews (#220): a few failed games are a warning with their reasons, but every
+ * game:sync-steam-reviews: a few failed games are a warning with their reasons, but every
  * game failing is a failed run, because that means the sync itself is broken (as in #219).
  * Steam and the queue are mocked, so nothing is called or written.
  */

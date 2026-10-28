@@ -76,7 +76,7 @@ class CronGroupTest extends TestCase
     public function testEveryConfiguredStepIsARealCommand()
     {
         // A typo or a rename (GameUpdateQualityScores, #185) should fail here, not at 5:30am
-        // The Tools Hub's ad-hoc commands (#214) too, and every group has a label and descriptions
+        // The Tools Hub's ad-hoc commands too, and every group has a label and descriptions
         $commands = array_keys(Artisan::all());
         foreach (array_merge(config('cron-groups'), config('tools')) as $group => $config) {
             $this->assertNotEmpty($config['label'] ?? null, "Group $group: no label");

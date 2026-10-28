@@ -15,7 +15,7 @@ use App\Domain\JobRun\JobRecorder;
 use App\Domain\JobRun\Repository as JobRunRepository;
 
 /**
- * The Tools Hub (#214): one tab per nightly cron group, in the order they run, from
+ * The Tools Hub: one tab per nightly cron group, in the order they run, from
  * config/cron-groups.php - so the hub and the schedule can't drift apart - then the Ad-hoc
  * commands from config/tools.php.
  *

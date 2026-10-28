@@ -18,7 +18,7 @@ use Illuminate\Console\Command;
 
 /**
  * Compares live game prices with the stored price API data, for sizing a console's price
- * problem before anything applies API prices to it (#132, Switch 1). READ ONLY: never
+ * problem before anything applies API prices to it (as was done for Switch 1). READ ONLY: never
  * writes a game, and doesn't log to the cron log - it's run by hand.
  *
  * Uses PriceApply::decide() (the 7001 SKU is the game), so the numbers are what applying

@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 /**
- * The Steam reviews sync queue (#220): never-attempted games first, then the oldest attempt,
+ * The Steam reviews sync queue: never-attempted games first, then the oldest attempt,
  * so a game that has just failed goes to the back instead of coming up first again.
  */
 class RepositoryTest extends TestCase

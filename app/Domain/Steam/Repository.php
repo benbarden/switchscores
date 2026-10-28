@@ -19,7 +19,7 @@ class Repository
 
     /**
      * Never-attempted games first, then the oldest attempt. Ordering on the attempt rather than
-     * the last success means a game that keeps failing drops behind the others (#220).
+     * the last success means a game that keeps failing drops behind the others.
      */
     public function getLinkedGames(int $limit = 100)
     {

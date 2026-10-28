@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 /**
- * DSNintendoCoUkComparePrices (#132): read only, and sorts each Switch 1 game into the
+ * DSNintendoCoUkComparePrices: read only, and sorts each Switch 1 game into the
  * right outcome, including bundles sold on their own (a 7007 SKU and no 7001).
  */
 class ComparePricesTest extends TestCase

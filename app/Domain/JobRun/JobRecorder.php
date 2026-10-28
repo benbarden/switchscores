@@ -14,7 +14,7 @@ use App\Models\JobRun;
  * the staff home can say whether last night's jobs ran. Nobody reads the cron log (Ben,
  * 2026-10-18), so this is how a failed or missed job gets seen.
  *
- * The Tools Hub's runs come through here too (#214), under group_key 'tools', so a manual
+ * The Tools Hub's runs come through here too, under group_key 'tools', so a manual
  * run gets the same warnings and Sentry reporting without counting as a nightly run.
  *
  * Exceptions are recorded, then reported, so Sentry emails exactly as it did before the

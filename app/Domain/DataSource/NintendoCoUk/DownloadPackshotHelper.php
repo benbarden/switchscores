@@ -11,7 +11,7 @@ use App\Models\GameImage;
 
 class DownloadPackshotHelper
 {
-    // What downloadForGame() did (#157). The batch callers ignore it; the staff "Update images"
+    // What downloadForGame() did. The batch callers ignore it; the staff "Update images"
     // button reports it, so a failure no longer looks like the button doing nothing.
     const RESULT_DOWNLOADED = 'downloaded';
     const RESULT_NOT_NEEDED = 'not-needed';    // both packshots already resolve
@@ -72,8 +72,8 @@ class DownloadPackshotHelper
     }
 
     /**
-     * $force skips the "already has its packshots" check - the staff "Update images" button
-     * (#158), which is asked for because the images are wrong or missing.
+     * $force skips the "already has its packshots" check - the staff "Update images" button,
+     * which is asked for because the images are wrong or missing.
      */
     public function downloadForGame(Game $game, bool $force = false): string
     {

@@ -5,7 +5,7 @@
  * records every step on its own in job_runs. scripts/switchscores-cron schedules the groups,
  * each in its own 30-minute slot; cron health reads the steps from here.
  *
- * The Tools Hub shows one tab per group, with the label and each step's description (#214),
+ * The Tools Hub shows one tab per group, with the label and each step's description,
  * so this is the one list of jobs for both. Commands that never run nightly are in
  * config/tools.php.
  *
@@ -34,10 +34,9 @@ return [
         ],
     ],
 
-    // UpdateGames sets each game's price from its standalone SKU (Switch 2, and Switch 1 since
-    // #132) and falls back to the search payload's price. ApplyPrices is a dry-run report per
-    // console: "changed" should be 0 each night, and anything else shows as a warning on the
-    // staff home.
+    // UpdateGames sets each game's price from its standalone SKU (both consoles) and falls
+    // back to the search payload's price. ApplyPrices is a dry-run report per console:
+    // "changed" should be 0 each night, and anything else shows as a warning on the staff home.
     'nintendo-process' => [
         'label' => 'Nintendo process',
         'steps' => [

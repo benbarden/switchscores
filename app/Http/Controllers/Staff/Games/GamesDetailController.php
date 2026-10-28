@@ -264,11 +264,11 @@ class GamesDetailController extends Controller
             return response()->json(['error' => 'Cannot find game!'], 400);
         }
 
-        // A data source item or a store URL override: either gives the helper a store page (#158).
+        // A data source item or a store URL override: either gives the helper a store page.
         // Forced, so it re-downloads even when the game already has packshots.
         $result = $this->downloadPackshotHelper->downloadForGame($game, true);
 
-        // #157: say what went wrong rather than reporting OK for a download that didn't happen
+        // Say what went wrong rather than reporting OK for a download that didn't happen
         return match ($result) {
             DownloadPackshotHelper::RESULT_DOWNLOADED => response()->json(['status' => 'OK'], 200),
             DownloadPackshotHelper::RESULT_NO_SOURCE => response()->json(['error' => 'No Nintendo.co.uk data or store URL override for this game'], 400),

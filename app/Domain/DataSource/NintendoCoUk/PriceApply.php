@@ -18,7 +18,7 @@ use Carbon\Carbon;
  * as a sale on the game.
  *
  * Used for the consoles in GamePriceDecision::API_PRICE_CONSOLES, with one Switch 1
- * addition: standalone bundles (see decide(), #132). Called from
+ * addition: standalone bundles (see decide()). Called from
  * UpdateGame::updatePrice() via UpdateGameFactory (#183),
  * so DSNintendoCoUkUpdateGames writes each price once; DSNintendoCoUkApplyPrices runs
  * the same decision afterwards as the nightly report. The scalar-field price from the
@@ -60,7 +60,7 @@ class PriceApply
             && !is_null($p->regular_price)
         ));
 
-        // Switch 1 only (#132): a record with no 7001 SKU and one 7007 price is a bundle sold
+        // Switch 1 only: a record with no 7001 SKU and one 7007 price is a bundle sold
         // on its own (Big Game Bundle 10-in-1, the "Edna & Harvey" Bundle), and that is its
         // real price. On Switch 2 a 7007 is a deluxe edition, so it never becomes the price.
         if (empty($standalone) && (int) $game->console_id === Console::ID_SWITCH_1) {

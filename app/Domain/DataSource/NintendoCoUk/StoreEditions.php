@@ -9,7 +9,7 @@ use App\Models\DataSourceRaw;
 use App\Models\Game;
 
 /**
- * A game's purchase options on the Nintendo store, from the price API data (#161).
+ * A game's purchase options on the Nintendo store, from the price API data.
  *
  * The NSUIDs in the game's raw API record are its SKUs, and data_source_prices holds each
  * one's price. The NSUID prefix gives the type: 7001 the standard game, 7005 an upgrade pack
@@ -17,7 +17,7 @@ use App\Models\Game;
  * and bundle editions all share 7007, so the type says "an edition" but not which one.
  *
  * Read only, both consoles. Prices are as fresh as the last DSNintendoCoUkFetchPrices run for
- * the console - nightly for Switch 2; Switch 1 once #132 adds it to the nightly run.
+ * the console, which is nightly for both.
  */
 class StoreEditions
 {

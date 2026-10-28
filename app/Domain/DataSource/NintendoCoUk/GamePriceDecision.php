@@ -28,7 +28,7 @@ class GamePriceDecision
     /**
      * Consoles whose prices come from the price API. forGame() returns null for any other
      * console, so UpdateGames keeps the search payload's price for it. Switch 1 was added
-     * on 2026-10-27 (#132) after a prod dry run and store checks: the search payload's
+     * on 2026-10-27 after a prod dry run and store checks: the search payload's
      * price and sale were often another edition's.
      */
     const API_PRICE_CONSOLES = [Console::ID_SWITCH_2, Console::ID_SWITCH_1];

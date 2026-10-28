@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Exceptions;
 use Tests\TestCase;
 
 /**
- * The Tools Hub (#214): tabs from the cron groups in run order plus Ad-hoc, runs recorded under
+ * The Tools Hub: tabs from the cron groups in run order plus Ad-hoc, runs recorded under
  * 'tools' through JobRecorder, and a failed step doesn't stop the group. Rows are rolled back.
  */
 class ToolsHubTest extends TestCase

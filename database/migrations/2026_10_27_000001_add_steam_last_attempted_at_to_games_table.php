@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * #220: the Steam reviews sync queue runs on the last attempt, not the last success, so a game
+ * The Steam reviews sync queue runs on the last attempt, not the last success, so a game
  * that keeps failing drops behind the others instead of coming up first every night. It lives on
  * games rather than steam_review_data because a game that has never synced has no row there.
  * Backfilled from last_synced_at so the queue keeps its current order.

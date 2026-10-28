@@ -10,7 +10,7 @@ use Mockery\MockInterface;
 use Tests\TestCase;
 
 /**
- * The staff "Update images" button (#157, #158): it reports what the download did instead of
+ * The staff "Update images" button: it reports what the download did instead of
  * always saying OK. The helper is mocked, so nothing is scraped or downloaded.
  */
 class RedownloadPackshotsTest extends TestCase
@@ -53,7 +53,7 @@ class RedownloadPackshotsTest extends TestCase
 
     public function testAFailedDownloadReportsItsError()
     {
-        // #157: the #156 throw used to come back as OK
+        // A helper exception (no square URL found from the header URL) used to come back as OK
         $this->helperReturns(DownloadPackshotHelper::RESULT_FAILED, 'Cannot find square URL match from header URL: x');
 
         $this->redownload($this->makeGame('https://www.nintendo.com/en-gb/x.html'))
@@ -63,7 +63,7 @@ class RedownloadPackshotsTest extends TestCase
 
     public function testAGameWithOnlyAStoreUrlOverrideIsDownloaded()
     {
-        // #158: used to be refused with "Cannot find NintendoCoUk source data"
+        // Used to be refused with "Cannot find NintendoCoUk source data"
         $this->helperReturns(DownloadPackshotHelper::RESULT_DOWNLOADED);
 
         $this->redownload($this->makeGame('https://www.nintendo.com/en-gb/x.html'))

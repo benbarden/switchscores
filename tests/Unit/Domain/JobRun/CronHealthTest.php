@@ -107,7 +107,7 @@ class CronHealthTest extends TestCase
 
     public function testGroupOrderFollowsTheCronFileThenUnscheduledGroups()
     {
-        // #214: the Tools Hub's tabs, in the order the groups run
+        // The Tools Hub's tabs, in the order the groups run
         config(['cron-groups.test-unscheduled' => ['label' => 'Test', 'steps' => ['UpdateGameRanks' => 'Ranks']]]);
 
         $order = (new CronSchedule(base_path('scripts/switchscores-cron')))->groupOrder();

@@ -23,8 +23,8 @@ class TwigViewServiceProvider extends ServiceProvider
             return $imageResolver->url($game, $type);
         }));
 
-        // #140: game_status, not the old format_digital = 'De-listed' check, which misses
-        // games de-listed since #22. Models cast game_status to the enum; raw DB rows hold
+        // game_status, not the old format_digital = 'De-listed' check, which misses games
+        // de-listed since the game status field was added. Models cast game_status to the enum; raw DB rows hold
         // the string.
         $twig->addFunction(new TwigFunction('game_is_delisted', function ($game) {
             $status = $game->game_status ?? null;

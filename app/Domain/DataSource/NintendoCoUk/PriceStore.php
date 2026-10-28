@@ -18,7 +18,7 @@ class PriceStore
 {
     /**
      * @param  ?int  $consoleId  recorded on new rows so Switch 1 and Switch 2 prices
-     *                           stay separable once Switch 1 is added (#132).
+     *                           stay separable.
      */
     public function store(PriceLookupResult $result, ?int $consoleId = null): PriceStoreResult
     {

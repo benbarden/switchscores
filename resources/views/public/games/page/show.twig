@@ -31,7 +31,7 @@
                             <meta itemprop="worstRating" content="0" />
                         </div>
                     {% elseif GameData.isDelisted() and GameData.rating_avg and GameData.review_count >= 3 %}
-                        {# #140: a de-listed game keeps its score but loses its rank. No AggregateRating
+                        {# A de-listed game keeps its score but loses its rank. No AggregateRating
                            markup: the game is no longer sold. #}
                         {{ rating.score(GameData.rating_avg, 'h4', 'b3') }}
                         <br>

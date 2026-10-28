@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Log;
  * WHERE IT RUNS: after the raw import, before ImportParseLink parse. The parser
  * reads what this command stored; it never makes HTTP calls itself.
  *
- * SCOPE: Switch 2 only for now. Switch 1 has the same problem in mirror image
- * (#132) and can be added once this is proven - pass --console=1.
+ * SCOPE: Switch 2 by default; --console=1 for Switch 1, which has the same problem in
+ * mirror image. Both run nightly (config/cron-groups.php).
  *
  * The endpoint is unofficial and undocumented, with no SLA. A failure here is never
  * fatal: the parser falls back to the scalar price fields, and the failure counts
@@ -72,7 +72,7 @@ class FetchPrices extends Command
             $query->where('is_delisted', 0);
         }
 
-        // A slice of the catalogue (#132): Switch 1 has about 9,000 records, so it's tested
+        // A slice of the catalogue: Switch 1 has about 9,000 records, so it's tested
         // narrow first and fetched in slices. Id order keeps consecutive slices from overlapping.
         $total = $query->count();
         $limit = $this->option('limit');

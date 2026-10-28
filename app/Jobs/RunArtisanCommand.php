@@ -12,7 +12,7 @@ use App\Domain\JobRun\JobRecorder;
 use App\Domain\JobRun\Repository as JobRunRepository;
 
 /**
- * Runs one Tools Hub command on the queue (#214). The job_runs row was created as queued on
+ * Runs one Tools Hub command on the queue. The job_runs row was created as queued on
  * the click; JobRecorder runs it and records the result, warnings included, and reports any
  * exception to Sentry.
  *

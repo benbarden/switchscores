@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 /**
- * DSNintendoCoUkFetchPrices --limit / --offset (#132): a slice of the catalogue, in id order.
+ * DSNintendoCoUkFetchPrices --limit / --offset: a slice of the catalogue, in id order.
  * New records have the highest ids, so an offset of the existing count starts at them.
  */
 class FetchPricesSliceTest extends TestCase

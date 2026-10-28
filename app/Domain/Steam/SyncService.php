@@ -20,7 +20,7 @@ class SyncService
     }
 
     /**
-     * Why the last syncGame() call failed, or null if it succeeded (#220).
+     * Why the last syncGame() call failed, or null if it succeeded.
      */
     public function lastError(): ?string
     {

@@ -37,7 +37,7 @@ class CronSchedule
 
     /**
      * The groups in config/cron-groups.php in the order the cron file runs them (the file is in
-     * time order), then any group the file doesn't schedule. The Tools Hub's tab order (#214).
+     * time order), then any group the file doesn't schedule. The Tools Hub's tab order.
      *
      * @return string[]
      */

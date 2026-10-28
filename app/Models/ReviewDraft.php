@@ -21,7 +21,7 @@ class ReviewDraft extends Model
     const PROCESS_FAILURE_HISTORIC = 'Historic review';
     const PROCESS_FAILURE_MULTIPLE = 'Multiple reviews';
     const PROCESS_FAILURE_NO_SCORE = 'No score';
-    // #62: replaces "Not a game review" and "Non-review content"
+    // Replaces "Not a game review" and "Non-review content"
     const PROCESS_FAILURE_NOT_SWITCH_GAME_REVIEW = 'Not a Switch game review';
     const PROCESS_FAILURE_NOT_IN_DB = 'Not in database';
     const PROCESS_FAILURE_PAGE_NOT_FOUND = 'Page not found';

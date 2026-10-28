@@ -1,5 +1,5 @@
 {% macro standard(item) %}
-    {# De-listed first: a de-listed game has no rank, so it used to fall through to "10/3" (#140) #}
+    {# De-listed first: a de-listed game has no rank, so it used to fall through to "10/3" #}
     {% if game_is_delisted(item) %}
         {{ _self.delisted('h6') }}
     {% elseif item.rating_avg and item.game_rank %}

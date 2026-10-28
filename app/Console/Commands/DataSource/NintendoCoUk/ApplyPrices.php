@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Sets game prices from the per-SKU prices DSNintendoCoUkFetchPrices stored (#162).
- * Switch 2 by default; --console=1 for Switch 1 (#132).
+ * Switch 2 by default; --console=1 for Switch 1.
  *
  * DRY RUN BY DEFAULT. It reports what it would change and writes nothing unless
  * --apply is passed. Ben's call (2026-10-18): see real examples of the changes before
@@ -63,7 +63,7 @@ class ApplyPrices extends Command
             return self::FAILURE;
         }
 
-        // A dry run works for any console - it's how Switch 1 is checked before switch-on (#132).
+        // A dry run works for any console - it's how Switch 1 was checked before switch-on.
         // Applying to a console that isn't switched on would be undone by the next UpdateGames,
         // which still writes the search payload's price for it.
         if ($apply && !GamePriceDecision::usesApiPrices($consoleId)) {
@@ -87,7 +87,7 @@ class ApplyPrices extends Command
         $seen = [];
 
         // Raw JSON and prices are loaded a chunk at a time: for all 8,000 Switch 1 games they
-        // went over the CLI's 128M and the run died with no output (#132).
+        // went over the CLI's 128M and the run died with no output.
         foreach ($parsedList->chunk(500) as $chunk) {
             $rawJsonByLink = DataSourceRaw::where('source_id', DataSource::DSID_NINTENDO_CO_UK)
                 ->where('console_id', $consoleId)
