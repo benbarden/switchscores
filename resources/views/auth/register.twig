@@ -67,13 +67,16 @@
                 </div>
             </div>
 
-            <!-- Campaigns -->
-            <div class="form-group">
-                <input id="signup_alpha" name="signup_alpha" type="hidden">
-            </div>
-            <div class="form-group">
-                <input id="signup_beta" name="signup_beta" type="hidden">
-            </div>
+            <input type="hidden" name="form_token" value="{{ FormToken }}">
+
+            {% if TurnstileSiteKey %}
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <div class="cf-turnstile" data-sitekey="{{ TurnstileSiteKey }}"></div>
+                    </div>
+                </div>
+            {% endif %}
 
             <!-- Honeypot -->
             <div class="form-group" style="position: absolute; left: -9999px;" aria-hidden="true">
@@ -96,6 +99,10 @@
     </div>
 
 </div>
+
+{% if TurnstileSiteKey %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
 
 {% endblock page_body %}
 

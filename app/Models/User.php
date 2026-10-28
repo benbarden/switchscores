@@ -19,7 +19,7 @@ class User extends Authenticatable
         'is_admin', 'is_owner', 'is_staff', 'is_developer', 'user_roles',
         'display_name', 'email', 'password', 'partner_id',
         'twitter_user_id', 'twitter_name', 'points_balance',
-        'signup_alpha', 'signup_beta', 'last_access_date', 'invite_code_id', 'games_company_id'
+        'last_access_date', 'invite_code_id', 'games_company_id', 'signup_meta'
     ];
 
     /**
@@ -40,6 +40,7 @@ class User extends Authenticatable
         'user_roles' => 'array',
         'email_verified_at' => 'datetime',
         'verification_email_sent_at' => 'datetime',
+        'signup_meta' => 'array',
     ];
 
     /**

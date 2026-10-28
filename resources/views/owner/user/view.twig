@@ -120,6 +120,20 @@
             </tbody>
         </table>
 
+        {% if UserData.signup_meta %}
+            {{ heading.renderStaff('Signup details') }}
+            <table class="table">
+                <tbody>
+                {% for key, value in UserData.signup_meta %}
+                    <tr>
+                        <td style="font-weight: bold; width: 180px;">{{ key|replace({'_': ' '})|capitalize }}</td>
+                        <td style="word-break: break-all;">{{ value is null ? '-' : value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
 
     <div class="col-md-4">

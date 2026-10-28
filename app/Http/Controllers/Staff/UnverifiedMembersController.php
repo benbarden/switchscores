@@ -7,12 +7,14 @@ use Illuminate\Routing\Controller as Controller;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\User\Repository as UserRepository;
+use App\Domain\User\SignupSuspicion;
 
 class UnverifiedMembersController extends Controller
 {
     public function __construct(
         private StaffPageBuilder $pageBuilder,
-        private UserRepository $repoUser
+        private UserRepository $repoUser,
+        private SignupSuspicion $signupSuspicion
     )
     {
     }
@@ -22,7 +24,9 @@ class UnverifiedMembersController extends Controller
         $pageTitle = 'Unverified members';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::unverifiedMembersDashboard())->bindings;
 
-        $bindings['UnverifiedMembers'] = $this->repoUser->getUnverified();
+        $unverifiedMembers = $this->repoUser->getUnverified();
+        $bindings['UnverifiedMembers'] = $unverifiedMembers;
+        $bindings['SuspiciousSignups'] = $this->signupSuspicion->forUsers($unverifiedMembers);
 
         return view('staff.unverified-members.index', $bindings);
     }

@@ -34,6 +34,9 @@
                         {% if not item.isEmailVerified() %}
                             <span class="badge bg-warning text-dark">Unverified</span>
                         {% endif %}
+                        {% if SuspiciousSignups[item.id] is defined %}
+                            <span class="badge bg-danger" title="{{ SuspiciousSignups[item.id]|join(', ') }}">Suspicious</span>
+                        {% endif %}
                         <br>
                         <small>{{ item.email }}</small>
                     </td>

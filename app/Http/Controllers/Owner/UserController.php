@@ -13,6 +13,7 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
+use App\Domain\User\SignupSuspicion;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\QuickReview\Stats as QuickReviewStats;
 use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
@@ -40,7 +41,8 @@ class UserController extends Controller
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private QuickReviewStats $statsQuickReview,
         private UserGamesCollectionStats $statsUserGamesCollection,
-        private ReviewLinkStats $statsReviewLink
+        private ReviewLinkStats $statsReviewLink,
+        private SignupSuspicion $signupSuspicion
     )
     {
     }
@@ -50,7 +52,9 @@ class UserController extends Controller
         $pageTitle = 'Users';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::usersList())->bindings;
 
-        $bindings['UserList'] = $this->repoUser->getAll();
+        $userList = $this->repoUser->getAll();
+        $bindings['UserList'] = $userList;
+        $bindings['SuspiciousSignups'] = $this->signupSuspicion->forUsers($userList);
 
         return view('owner.user.list', $bindings);
     }

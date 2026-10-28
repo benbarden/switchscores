@@ -39,6 +39,9 @@
                     </td>
                     <td class="text-left">
                         {{ user.display_name }}
+                        {% if SuspiciousSignups[user.id] is defined %}
+                            <span class="badge bg-danger" title="{{ SuspiciousSignups[user.id]|join(', ') }}">Suspicious</span>
+                        {% endif %}
                     </td>
                     <td class="text-center">
                         {{ user.points_balance|default(0) }}

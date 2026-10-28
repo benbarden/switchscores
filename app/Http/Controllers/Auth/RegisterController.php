@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Contact\TurnstileVerifier;
 use App\Domain\InviteCodeRequest\SpamScore;
 use App\Domain\User\RequestInviteCode;
+use App\Domain\User\SignupMeta;
 use App\Domain\InviteCode\CodeRedemption as InviteCodeRedemption;
 use App\Domain\InviteCode\Repository as InviteCodeRepository;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
@@ -72,12 +74,22 @@ class RegisterController extends Controller
         private PartnerOutreachRepository $repoPartnerOutreach,
         private InviteCodeRequestRepository $repoInviteCodeRequest,
         private InviteCodeDenyListRepository $repoInviteCodeDenyList,
+        private TurnstileVerifier $turnstileVerifier,
+        private SignupMeta $signupMeta,
     )
     {
         $this->middleware('guest');
         $this->middleware('throttle:register')->only(['register', 'requestInviteCode']);
         View::share('PageTitle', 'Register');
         View::share('TopTitle', 'Register');
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('auth.register', [
+            'FormToken' => SignupMeta::formToken(),
+            'TurnstileSiteKey' => config('services.turnstile.site_key'),
+        ]);
     }
 
     /**
@@ -93,7 +105,7 @@ class RegisterController extends Controller
             abort(422);
         }
 
-        return Validator::make($data, [
+        $validator = Validator::make($data, [
             'signup_name' => [
                 'required', 'string', 'max:50',
                 function($attribute, $value, $fail) {
@@ -124,6 +136,15 @@ class RegisterController extends Controller
                 }
             ]
         ]);
+
+        // Cloudflare Turnstile, as on the contact form. Passes everything when no secret is set.
+        $validator->after(function ($validator) use ($data) {
+            if (!$this->turnstileVerifier->verify($data['cf-turnstile-response'] ?? null, request()->ip())) {
+                $validator->errors()->add('turnstile', 'Spam check failed. Please try again.');
+            }
+        });
+
+        return $validator;
     }
 
     /**
@@ -145,12 +166,9 @@ class RegisterController extends Controller
             $signupPass = $data['signup_pass'];
             $values['password'] = Hash::make($signupPass);
         }
-        if (array_key_exists('signup_alpha', $data)) {
-            $values['signup_alpha'] = $data['signup_alpha'];
-        }
-        if (array_key_exists('signup_beta', $data)) {
-            $values['signup_beta'] = $data['signup_beta'];
-        }
+        $values['signup_meta'] = $this->signupMeta->fromRequest(
+            request(), !empty(config('services.turnstile.secret'))
+        );
         if (!empty($data['invite_code'])) {
             $inviteCode = $this->repoInviteCode->getByCode($data['invite_code']);
             if ($inviteCode) {
