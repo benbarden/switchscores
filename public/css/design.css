@@ -465,6 +465,17 @@ blockquote {
     text-overflow: ellipsis;
 }
 
+/* Why a related game is listed, e.g. its series name */
+.game-card-label {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 6px 0 0;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 /* RATING */
 .game-card-rating {
@@ -546,6 +557,7 @@ blockquote {
     text-decoration: none;
     transition: background .2s ease, transform .15s ease;
     border: 1px solid #e3e6e8;
+    margin: 0 8px 8px 0;
 }
 
 .view-all-link:hover {

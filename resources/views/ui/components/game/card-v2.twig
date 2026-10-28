@@ -1,4 +1,5 @@
-{% macro render(game) %}
+{# label: optional small line above the title, e.g. why a related game is listed #}
+{% macro render(game, label = null) %}
     {% import 'ui/components/game/packshots.twig' as packshots %}
     {% import 'ui/components/game/rating.twig' as gamerating %}
     <div class="game-card">
@@ -6,6 +7,10 @@
             <div class="game-card-image">
                 {{ packshots.squareImageOnly(game) }}
             </div>
+
+            {% if label %}
+                <div class="game-card-label">{{ label }}</div>
+            {% endif %}
 
             <div class="game-card-title">
                 {{ game.title }}

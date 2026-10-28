@@ -14,7 +14,7 @@ use App\Domain\Game\AutoDescription;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GameGroup\Repository as GameGroupRepository;
-use App\Domain\GameLists\Repository as GameListsRepository;
+use App\Domain\GameLists\RelatedGames;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\GameTag\Repository as GameTagRepository;
@@ -35,7 +35,7 @@ class GameShowController extends Controller
         private AutoDescription $autoDescription,
         private GameRepository $repoGame,
         private GameDeveloperRepository $repoGameDeveloper,
-        private GameListsRepository $repoGameLists,
+        private RelatedGames $relatedGames,
         private GamePublisherRepository $repoGamePublisher,
         private GameStatsRepository $repoGameStats,
         private GameTagRepository $repoGameTag,
@@ -242,22 +242,8 @@ class GameShowController extends Controller
         // News
         $bindings['GameNews'] = $this->repoNews->getByGameId($gameId, 10);
 
-        // Related games
-        if ($gameData->category_id) {
-            $bindings['CategoryName'] = $gameData->category->name;
-            $bindings['RelatedByCategory'] = $this->repoGameLists->relatedByCategory(
-                $gameData->console_id, $gameData->category_id, $gameId, 4);
-        }
-        if ($gameData->series_id) {
-            $bindings['SeriesName'] = $gameData->series->series;
-            $bindings['RelatedBySeries'] = $this->repoGameLists->relatedBySeries(
-                $gameData->console_id, $gameData->series_id, $gameId, 4);
-        }
-        if ($gameData->collection_id) {
-            $bindings['CollectionName'] = $gameData->gameCollection->name;
-            $bindings['RelatedByCollection'] = $this->repoGameLists->relatedByCollection(
-                $gameData->console_id, $gameData->collection_id, $gameId, 4);
-        }
+        // Related games: one list from the series, collection and category
+        $bindings['RelatedGames'] = $this->relatedGames->forGame($gameData);
 
         // Total rank count
         $rankMaximum = $this->repoGameStats->totalRankedByConsole($gameData->console_id);

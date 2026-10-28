@@ -137,56 +137,21 @@
 
         </div>
 
-        {% if RelatedByCategory %}
+        {% if RelatedGames.games %}
             <section class="more-games">
-                <h2>More games in {{ GameData.category.name }}</h2>
+                <h2>{{ RelatedGames.heading }}</h2>
                 <div class="game-card-grid">
-                    {% for game in RelatedByCategory %}
-                        {{ gamecard.render(game) }}
+                    {% for item in RelatedGames.games %}
+                        {{ gamecard.render(item.game, RelatedGames.mixed ? item.label : null) }}
                     {% endfor %}
                 </div>
 
                 <div class="view-all-container">
-                    <a href="{{ route('browse.byCategory.list', {'category': GameData.category.link_title}) }}"
-                       class="view-all-link">
-                        View all in {{ GameData.category.name }} →
-                    </a>
-                </div>
-            </section>
-        {% endif %}
-
-        {% if RelatedByCollection %}
-            <section class="more-games">
-                <h2>More games in {{ CollectionName }}</h2>
-                <div class="game-card-grid">
-                    {% for game in RelatedByCollection %}
-                        {{ gamecard.render(game) }}
+                    {% for source in RelatedGames.sources %}
+                        <a href="{{ route(source.route, source.params) }}" class="view-all-link">
+                            View all in {{ source.name }} →
+                        </a>
                     {% endfor %}
-                </div>
-
-                <div class="view-all-container">
-                    <a href="{{ route('browse.byCollection.page', {'collection': GameData.gameCollection.link_title}) }}"
-                       class="view-all-link">
-                        View all in {{ CollectionName }} →
-                    </a>
-                </div>
-            </section>
-        {% endif %}
-
-        {% if RelatedBySeries %}
-            <section class="more-games">
-                <h2>More games in {{ SeriesName }}</h2>
-                <div class="game-card-grid">
-                    {% for game in RelatedBySeries %}
-                        {{ gamecard.render(game) }}
-                    {% endfor %}
-                </div>
-
-                <div class="view-all-container">
-                    <a href="{{ route('browse.bySeries.page', {'series': GameData.series.link_title}) }}"
-                       class="view-all-link">
-                        View all in {{ SeriesName }} →
-                    </a>
                 </div>
             </section>
         {% endif %}
