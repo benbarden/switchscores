@@ -54,6 +54,20 @@
                     <span style="color: #f00;">{{ GameData.price_eshop_discount_pc }}% off</span>
                 {% endif %}
             {% endif %}
+            {% if OtherEditionsFrom %}
+                {% if DSNintendoCoUk is not null %}
+                    {% set editionsUrl = eshop_url('eu', DSNintendoCoUk.url) %}
+                {% else %}
+                    {% set editionsUrl = GameData.nintendo_store_url_override %}
+                {% endif %}
+                <div class="small">
+                    {% if editionsUrl %}
+                        <a href="{{ editionsUrl }}" target="_blank">Other editions available from &pound;{{ OtherEditionsFrom|number_format(2) }}</a>
+                    {% else %}
+                        Other editions available from &pound;{{ OtherEditionsFrom|number_format(2) }}
+                    {% endif %}
+                </div>
+            {% endif %}
         </td>
     </tr>
 

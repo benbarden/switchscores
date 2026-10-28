@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Staff;
 
+use App\Domain\DataSource\NintendoCoUk\NsuidPrice;
 use App\Domain\DataSource\NintendoCoUk\StoreEditions;
 use App\Models\Console;
 use App\Models\DataSource;
@@ -107,6 +108,47 @@ class StoreEditionsTest extends TestCase
 
         $this->assertContains($withDeluxe->id, $ids);
         $this->assertNotContains($standardOnly->id, $ids);
+    }
+
+    public function testOtherEditionsFromIsTheLowestCurrentEditionPrice()
+    {
+        $game = $this->makeGame([
+            '70010000970031' => '49.99',
+            '70070000970032' => '79.99',
+            '70070000970033' => '69.99',
+            '70050000970034' => '9.99',
+        ]);
+        $this->assertSame(69.99, app(StoreEditions::class)->otherEditionsFrom($game));
+
+        DataSourcePrice::where('nsuid', '70070000970032')->update([
+            'discount_price' => '59.99',
+            'discount_end_at' => now()->addDays(3),
+        ]);
+        $this->assertSame(59.99, app(StoreEditions::class)->otherEditionsFrom($game));
+    }
+
+    public function testOtherEditionsFromSkipsWhatIsNotAnotherEdition()
+    {
+        $editions = app(StoreEditions::class);
+
+        $upgradeOnly = $this->makeGame(['70010000970041' => '49.99', '70050000970042' => '9.99']);
+        $this->assertNull($editions->otherEditionsFrom($upgradeOnly));
+
+        $bundleOnly = $this->makeGame(['70070000970043' => '29.99'], Console::ID_SWITCH_1);
+        $this->assertNull($editions->otherEditionsFrom($bundleOnly));
+
+        $notSold = $this->makeGame(['70010000970044' => '49.99', '70070000970045' => '69.99']);
+        DataSourcePrice::where('nsuid', '70070000970045')->update(['sales_status' => NsuidPrice::STATUS_SALES_TERMINATION]);
+        $this->assertNull($editions->otherEditionsFrom($notSold));
+    }
+
+    public function testThePublicGamePageShowsOtherEditions()
+    {
+        $game = $this->makeGame(['70010000970051' => '49.99', '70070000970052' => '69.99']);
+
+        $this->get(route('game.show.switch2', ['id' => $game->id, 'linkTitle' => $game->link_title]))
+            ->assertStatus(200)
+            ->assertSee('Other editions available from &pound;69.99', false);
     }
 
     public function testPagesShowTheEditions()

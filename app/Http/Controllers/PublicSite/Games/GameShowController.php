@@ -8,6 +8,7 @@ use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
 use App\Domain\View\PageBuilders\PublicPageBuilder;
 
 use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
+use App\Domain\DataSource\NintendoCoUk\StoreEditions;
 use App\Domain\DataSourceParsed\Repository as DataSourceParsedRepository;
 use App\Domain\Game\AutoDescription;
 use App\Domain\Game\Repository as GameRepository;
@@ -44,6 +45,7 @@ class GameShowController extends Controller
         private SteamRepository $repoSteam,
         private UserGamesCollectionRepository $repoUserGamesCollection,
         private GameGroupRepository $repoGameGroup,
+        private StoreEditions $storeEditions,
     )
     {
     }
@@ -233,6 +235,9 @@ class GameShowController extends Controller
 
         // Data sources
         $bindings['DSNintendoCoUk'] = $this->repoDataSourceParsed->getSourceNintendoCoUkForGame($gameId);
+        if (!$gameData->isDelisted()) {
+            $bindings['OtherEditionsFrom'] = $this->storeEditions->otherEditionsFrom($gameData);
+        }
 
         // News
         $bindings['GameNews'] = $this->repoNews->getByGameId($gameId, 10);

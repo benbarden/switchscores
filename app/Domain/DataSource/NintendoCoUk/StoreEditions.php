@@ -76,6 +76,37 @@ class StoreEditions
     }
 
     /**
+     * The lowest current price among the game's other editions, for the public game page; null
+     * if there are none to show. A live sale counts, as it does for the main price.
+     *
+     * Only deluxe editions and bundles count: an upgrade pack isn't another edition of the
+     * game. A game with no standard SKU is a standalone bundle, so its 7007 SKU is the game
+     * itself, not another edition of it.
+     */
+    public function otherEditionsFrom(Game $game): ?float
+    {
+        $hasStandard = false;
+        $prices = [];
+        foreach ($this->forGame($game) as $row) {
+            if ($row['type'] === self::TYPE_STANDARD) {
+                $hasStandard = true;
+                continue;
+            }
+            $price = $row['price'];
+            if ($row['type'] !== self::TYPE_EDITION || !$price) continue;
+            if (!in_array($price->sales_status, PriceApply::USABLE_STATUSES, true)) continue;
+
+            $prices[] = (float) ($price->hasLiveDiscount() ? $price->discount_price : $price->regular_price);
+        }
+
+        if (!$hasStandard || !$prices) {
+            return null;
+        }
+
+        return min($prices);
+    }
+
+    /**
      * Linked games on a console that have more than the standard SKU: a deluxe edition,
      * bundle or upgrade pack. For the staff list.
      *
