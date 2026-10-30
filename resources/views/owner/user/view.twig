@@ -33,14 +33,10 @@
             <tr>
                 <td style="font-weight: bold;">Flags</td>
                 <td>
-                    {% if not UserData.isEmailVerified() %}
-                        <span class="badge bg-warning text-dark">Unverified</span>
-                    {% endif %}
                     {% if SuspiciousReasons %}
                         <span class="badge bg-danger">Suspicious</span>
                         <small>{{ SuspiciousReasons|join(', ') }}</small>
-                    {% endif %}
-                    {% if UserData.isEmailVerified() and not SuspiciousReasons %}
+                    {% else %}
                         None
                     {% endif %}
                 </td>
@@ -64,6 +60,9 @@
                 </td>
                 <td>
                     {{ UserData.email }}
+                    {% if not UserData.isEmailVerified() %}
+                        <span class="badge bg-warning text-dark">Unverified</span>
+                    {% endif %}
                 </td>
             </tr>
             <tr>

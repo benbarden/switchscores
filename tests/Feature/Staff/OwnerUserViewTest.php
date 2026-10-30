@@ -56,11 +56,11 @@ class OwnerUserViewTest extends TestCase
         $response->assertDontSee('>Suspicious<', false);
     }
 
-    public function testShowsUnverified()
+    public function testUnverifiedShowsAfterTheEmailAndNotAsAFlag()
     {
-        $response = $this->viewUser([], false);
+        $response = $this->viewUser(['email' => 'xx.owner.user.view.unverified.member@switchscores.com'], false);
 
-        $response->assertSee('>Unverified<', false);
+        $response->assertSeeInOrder(['Flags', 'None', 'xx.owner.user.view.unverified.member@switchscores.com', '>Unverified<'], false);
         $response->assertDontSee('>Suspicious<', false);
     }
 
