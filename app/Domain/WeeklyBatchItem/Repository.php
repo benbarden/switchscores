@@ -172,6 +172,29 @@ class Repository
         $item->price_gbp        = $price;
         $item->price_flag       = false;
         $item->price_flag_reason = null;
+        $item->price_note       = null;
+        $item->save();
+    }
+
+    /**
+     * Settle a price from the price API, keeping a note of what it did: the change is easy to
+     * miss otherwise, as the item leaves the flagged list.
+     */
+    public function updatePriceFromApi(WeeklyBatchItem $item, float $price): void
+    {
+        $old = $item->price_gbp === null ? null : (float) $item->price_gbp;
+        $new = '£'.number_format($price, 2);
+
+        if ($old === null) {
+            $note = $new.' (price API)';
+        } elseif ($old === $price) {
+            $note = $new.' confirmed (price API)';
+        } else {
+            $note = '£'.number_format($old, 2).' → '.$new.' (price API)';
+        }
+
+        $this->updatePrice($item, $price);
+        $item->price_note = $note;
         $item->save();
     }
 
@@ -313,6 +336,16 @@ class Repository
         // has the normaliser's current title, so the edit is re-applied on top of it.
         if ($snapshot->hasManualTitle()) {
             $item->setManualTitle($snapshot->title);
+            $item->save();
+        }
+
+        // The fresh item is flagged from the paste again. A fetched item won't reach the price
+        // lookup a second time, so a price settled by hand or from the API is carried over.
+        if ($item->price_flag && !$snapshot->price_flag) {
+            $item->price_gbp         = $snapshot->price_gbp;
+            $item->price_flag        = false;
+            $item->price_flag_reason = null;
+            $item->price_note        = $snapshot->price_note;
             $item->save();
         }
 

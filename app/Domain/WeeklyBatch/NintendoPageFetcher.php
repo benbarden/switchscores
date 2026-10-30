@@ -111,6 +111,7 @@ class NintendoPageFetcher
             'genres'               => $scraper->getGenres(),
             'release_date'         => $scraper->getReleaseDate(),
             'nsuid'                => $scraper->getNsuid(),
+            'standalone_nsuids'    => $scraper->getStandaloneNsuids(),
             'header_image_url'     => $scraper->getHeaderImageUrl(),
         ];
     }

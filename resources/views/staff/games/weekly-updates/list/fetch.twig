@@ -131,6 +131,8 @@
                     <td class="error-cell text-muted small align-middle">
                         {% if item.fetch_status == 'failed' and item.fetch_error %}
                             {{ item.fetch_error }}
+                        {% else %}
+                            {{ item.price_note }}
                         {% endif %}
                     </td>
                     <td>
@@ -321,6 +323,7 @@
 
             if (data.publisher)  row.querySelector('.publisher-cell').textContent = data.publisher;
             if (data.players)    row.querySelector('.players-cell').textContent   = data.players;
+            row.querySelector('.error-cell').textContent = data.price_note || '';
 
             if (data.lq_confirmed) {
                 setRowStatus(row, 'lq');

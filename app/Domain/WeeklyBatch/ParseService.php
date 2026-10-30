@@ -48,7 +48,8 @@ class ParseService
         private WeeklyBatchExclusionRepository $repoExclusion,
         private WeeklyBatchItemRepository $repoItem,
         private WeeklyBatchRawPageRepository $repoRawPage,
-        private ExistingGameMatcher $existingGameMatcher
+        private ExistingGameMatcher $existingGameMatcher,
+        private FlaggedPriceResolver $flaggedPriceResolver
     ) {
     }
 
@@ -134,10 +135,25 @@ class ParseService
             // Date range filter
             if (!$this->isInRange($releaseDate, $dateFrom, $dateTo)) {
                 $outOfRangeGame = $this->matchGame($nsuid, $title, $titleRaw, $consoleId);
-                $this->repoItem->create($baseData + [
+                $item = $this->repoItem->create($baseData + [
                     'item_status' => 'out_of_range',
                     'game_id'     => $outOfRangeGame ? $outOfRangeGame->id : null,
                 ]);
+
+                // Added to the batch before this re-parse: keep it there, unless the game has
+                // reached the DB since.
+                $previous = $snapshot->get($titleRaw);
+                $wasAdded = $previous && !in_array($previous->item_status, [
+                    WeeklyBatchItem::STATUS_OUT_OF_RANGE,
+                    WeeklyBatchItem::STATUS_ALREADY_IN_DB,
+                ]);
+                if ($wasAdded && !$outOfRangeGame) {
+                    $this->activateOutOfRangeItem($item);
+                    $this->repoItem->restoreSnapshot($item, $previous);
+                    $summary['in_range']++;
+                    continue;
+                }
+
                 $summary['out_of_range']++;
                 if (!$outOfRangeGame) {
                     $summary['out_of_range_not_in_db']++;
@@ -172,9 +188,28 @@ class ParseService
             $summary['in_range']++;
         }
 
+        $summary['prices_resolved'] = $this->flaggedPriceResolver->resolvePasted(
+            $this->repoItem->getForListPage($batchId, $console, $listType, $pageNumber)
+        );
+
         $this->repoRawPage->markParsed($rawPage);
 
         return $summary;
+    }
+
+    /**
+     * Out-of-range items are created before the parser classifies active items, so run that
+     * classification now. Without it the item lands at `pending` even when the paste already
+     * supplied a store URL, and the fetch step then reports it as having no URL; it would also
+     * miss collection matching and LQ flagging.
+     */
+    public function activateOutOfRangeItem(WeeklyBatchItem $item): void
+    {
+        $this->repoItem->activateItem($item, $this->classifyActiveItem(
+            $item->title,
+            $item->price_gbp === null ? null : (float) $item->price_gbp,
+            $item->nintendo_url
+        ));
     }
 
     /**

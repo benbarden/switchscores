@@ -81,7 +81,7 @@
                 <td class="text-center align-middle text-muted">
                     {{ item.price_gbp is not null ? '£' ~ item.price_gbp|number_format(2) : '—' }}
                 </td>
-                <td></td>
+                <td class="small text-muted align-middle">{{ item.price_note }}</td>
                 <td>
                     <input type="number"
                            name="prices[{{ item.id }}]"

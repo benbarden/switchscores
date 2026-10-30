@@ -326,6 +326,19 @@ class NintendoCoUkGameData
     }
 
     /**
+     * The standalone game SKUs on the page (NSUID prefix 7001). The page's config block only
+     * holds one NSUID, which may be an upgrade pack or a bundle, but the page lists every SKU.
+     *
+     * @return string[]
+     */
+    public function getStandaloneNsuids(): array
+    {
+        preg_match_all('/\b7001\d{10}\b/', $this->html, $matches);
+
+        return array_values(array_unique($matches[0]));
+    }
+
+    /**
      * Get players local value.
      */
     public function getPlayersLocal(): ?string

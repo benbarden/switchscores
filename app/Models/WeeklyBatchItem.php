@@ -61,7 +61,7 @@ class WeeklyBatchItem extends Model
         'suggested_category', 'suggestion_accepted', 'category', 'collection',
         'item_status',
         'lq_flag', 'lq_flag_reason', 'lq_publisher_name',
-        'price_flag', 'price_flag_reason',
+        'price_flag', 'price_flag_reason', 'price_note',
         'fetch_status', 'fetch_error',
         'game_id', 'notes',
     ];

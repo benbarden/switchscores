@@ -12,6 +12,7 @@ use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatch\CategorySuggester;
 use App\Domain\WeeklyBatch\ExistingGameMatcher;
+use App\Domain\WeeklyBatch\FlaggedPriceResolver;
 use App\Domain\WeeklyBatch\LqPublisherRecorder;
 use App\Domain\WeeklyBatch\ParseService;
 use App\Domain\GameImport\GameImporter;
@@ -41,7 +42,8 @@ class WeeklyBatchListController extends Controller
         private GameImporter $gameImporter,
         private WeeklyBatchExclusionRepository $repoExclusion,
         private LqPublisherRecorder $lqPublisherRecorder,
-        private ExistingGameMatcher $existingGameMatcher
+        private ExistingGameMatcher $existingGameMatcher,
+        private FlaggedPriceResolver $flaggedPriceResolver
     ) {
     }
 
@@ -177,6 +179,9 @@ class WeeklyBatchListController extends Controller
 
         $source  = ($summary['source'] ?? 'text') === 'html' ? 'rich HTML' : 'plain text';
         $message = "Page {$pageNumber} saved and parsed from {$source}: {$summary['in_range']} in range, {$summary['already_in_db']} already in DB, {$summary['out_of_range']} out of range.";
+        if ($summary['prices_resolved'] > 0) {
+            $message .= " {$summary['prices_resolved']} flagged price(s) filled from the price API.";
+        }
         if ($summary['out_of_range_not_in_db'] > 0) {
             $message .= " ⚠ {$summary['out_of_range_not_in_db']} out-of-range game(s) not found in DB — check below.";
         }
@@ -531,6 +536,7 @@ class WeeklyBatchListController extends Controller
             ];
 
             $this->repoItem->markFetchComplete($item, $data, $result['lq_confirmed']);
+            $this->flaggedPriceResolver->resolveFromStorePage($item, $result['standalone_nsuids']);
 
             if ($result['lq_confirmed']) {
                 $this->repoExclusion->add($item->autoTitle(), $item->console);
@@ -544,6 +550,7 @@ class WeeklyBatchListController extends Controller
                 'lq_confirmed' => $result['lq_confirmed'],
                 'lq_uncertain' => $result['lq_uncertain'],
                 'lq_reason'    => $flagReason,
+                'price_note'   => $item->price_note,
             ]);
 
         } catch (\LogicException $e) {
@@ -606,26 +613,11 @@ class WeeklyBatchListController extends Controller
         $toAdd = $items->reject(fn($item) => $priorExclusions->has($item->title));
 
         foreach ($toAdd as $item) {
-            $this->activateItem($item);
+            $this->parseService->activateOutOfRangeItem($item);
         }
 
         return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'))
             ->with('success', $toAdd->count().' game(s) added to this batch.');
-    }
-
-    /**
-     * Out-of-range items are created before the parser classifies active items, so run that
-     * classification now. Without it the item lands at `pending` even when the paste already
-     * supplied a store URL, and the fetch step then reports it as having no URL; it would also
-     * miss collection matching and LQ flagging.
-     */
-    private function activateItem(WeeklyBatchItem $item): void
-    {
-        $this->repoItem->activateItem($item, $this->parseService->classifyActiveItem(
-            $item->title,
-            $item->price_gbp === null ? null : (float) $item->price_gbp,
-            $item->nintendo_url
-        ));
     }
 
     public function activateOutOfRange($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
@@ -636,7 +628,7 @@ class WeeklyBatchListController extends Controller
         if ($item->item_status !== WeeklyBatchItem::STATUS_OUT_OF_RANGE) abort(422);
         if ($item->game_id) abort(422); // already in DB — shouldn't be activated
 
-        $this->activateItem($item);
+        $this->parseService->activateOutOfRangeItem($item);
 
         if ($request->ajax()) {
             $item->refresh();
