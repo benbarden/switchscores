@@ -44,11 +44,20 @@ class StaffDashboardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Needs attention');
-        foreach (['review-drafts', 'quick-reviews', 'featured-games', 'games-to-release', 'contact', 'feeds', 'jobs',
-                     'integrity', 'signups'] as $key) {
+        foreach (['review-drafts', 'quick-reviews', 'featured-games', 'games-to-release', 'paste-differences', 'contact',
+                     'feeds', 'jobs', 'integrity', 'signups'] as $key) {
             $response->assertSee('data-tile="'.$key.'"', false);
         }
         $response->assertSee('Site health');
+    }
+
+    public function testDataSourceManagerSeesTheDateDifferencesTile()
+    {
+        $response = $this->actingAs($this->staffUser([UserRole::ROLE_DATA_SOURCE_MANAGER]))->get('/staff');
+
+        $response->assertStatus(200);
+        $response->assertSee('data-tile="paste-differences"', false);
+        $response->assertSee(route('staff.data-sources.differences.weekly-paste.release-date'), false);
     }
 
     /**
@@ -71,7 +80,7 @@ class StaffDashboardTest extends TestCase
         $response->assertSee('data-tile="review-drafts"', false);
         $response->assertSee('data-tile="quick-reviews"', false);
         $response->assertSee('data-tile="feeds"', false);
-        foreach (['featured-games', 'games-to-release', 'contact', 'jobs', 'integrity', 'signups'] as $key) {
+        foreach (['featured-games', 'games-to-release', 'paste-differences', 'contact', 'jobs', 'integrity', 'signups'] as $key) {
             $response->assertDontSee('data-tile="'.$key.'"', false);
         }
     }
@@ -85,6 +94,7 @@ class StaffDashboardTest extends TestCase
         $response->assertSee('data-tile="games-to-release"', false);
         $response->assertDontSee('data-tile="review-drafts"', false);
         $response->assertDontSee('data-tile="jobs"', false);
+        $response->assertDontSee('data-tile="paste-differences"', false);
     }
 
     /**

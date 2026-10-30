@@ -16,7 +16,7 @@
         {% if queueTiles|length > 0 %}
             <div>
                 <h2 class="ss-dash__h">Needs attention</h2>
-                <div class="ss-tiles ss-tiles--2">
+                <div class="ss-tiles ss-tiles--3">
                     {% for tile in queueTiles %}
                         {{ dashtile.render(tile) }}
                     {% endfor %}

@@ -26,6 +26,10 @@ class Thresholds
     const GAMES_TO_RELEASE_AMBER_DAYS = 3;
     const GAMES_TO_RELEASE_RED_DAYS = 7;
 
+    // Date differences from the weekly paste: days since the batch was pasted.
+    const PASTE_DIFFERENCES_AMBER_DAYS = 3;
+    const PASTE_DIFFERENCES_RED_DAYS = null;
+
     // A Live feed not imported for this long has missed a nightly run.
     const FEED_STALE_HOURS = 26;
     // A Live feed matching fewer titles than this (percent) needs a look at its match rule.

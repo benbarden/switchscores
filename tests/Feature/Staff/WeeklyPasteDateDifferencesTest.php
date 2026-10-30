@@ -2,13 +2,17 @@
 
 namespace Tests\Feature\Staff;
 
+use App\Domain\StaffDashboard\AttentionTiles;
+use App\Domain\StaffDashboard\TileState;
 use App\Domain\WeeklyBatch\DateDifferences;
 use App\Models\Console;
 use App\Models\Game;
 use App\Models\User;
+use App\Models\UserRole;
 use App\Models\WeeklyBatch;
 use App\Models\WeeklyBatchItem;
 use App\Models\WeeklyPasteDateIgnore;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -68,6 +72,46 @@ class WeeklyPasteDateDifferencesTest extends TestCase
     private function differenceFor(Game $game): ?object
     {
         return (new DateDifferences())->get($game->id)[0] ?? null;
+    }
+
+    public function testTileCountsDifferencesAndAgesFromTheBatch()
+    {
+        $counts = ['reviewDrafts' => 0, 'quickReviews' => 0, 'featuredGames' => 0, 'contact' => 0, 'signups' => 0];
+        $this->makeItem($this->makeBatch('2099-01-01'), $this->makeGame('2099-03-01'), '2099-03-15');
+
+        $tiles = app(AttentionTiles::class)->build($this->owner(), $counts, Carbon::parse('2099-01-10'));
+        $tile = collect($tiles)->firstWhere('key', 'paste-differences');
+
+        $this->assertSame((new DateDifferences())->count(), $tile['count']);
+        $this->assertGreaterThan(0, $tile['count']);
+        $this->assertSame(TileState::AMBER, $tile['state']);
+    }
+
+    public function testWeeklyUpdatesPageLinksToBothPasteChecks()
+    {
+        $this->makeItem($this->makeBatch('2099-01-01'), $this->makeGame('2099-03-01'), '2099-03-15');
+
+        $response = $this->actingAs($this->owner())->get(route('staff.games.weekly-updates.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee(route('staff.data-sources.differences.weekly-paste.release-date'), false);
+        $response->assertSee(route('staff.data-sources.differences.weekly-paste.missing'), false);
+        $response->assertSee('<span class="badge bg-warning text-dark">'.(new DateDifferences())->count().'</span>', false);
+    }
+
+    public function testWeeklyUpdatesPageHidesThePasteChecksWithoutTheRole()
+    {
+        $user = new User([
+            'display_name' => 'Weekly Paste Dates Test',
+            'email' => 'xx.weekly.paste.dates.test.'.uniqid().'@switchscores.com',
+            'is_staff' => 1,
+        ]);
+        $user->addRole(UserRole::ROLE_GAMES_MANAGER);
+
+        $response = $this->actingAs($user)->get(route('staff.games.weekly-updates.index'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee(route('staff.data-sources.differences.weekly-paste.release-date'), false);
     }
 
     public function testFindsAMovedUpcomingDate()

@@ -5,6 +5,7 @@ namespace App\Domain\StaffDashboard;
 use Carbon\Carbon;
 
 use App\Domain\JobRun\CronHealth;
+use App\Domain\WeeklyBatch\DateDifferences;
 use App\Models\User;
 use App\Models\UserRole;
 
@@ -25,6 +26,7 @@ class AttentionTiles
     public function __construct(
         private DbQueries $dbQueries,
         private CronHealth $cronHealth,
+        private DateDifferences $dateDifferences,
     )
     {
     }
@@ -61,6 +63,10 @@ class AttentionTiles
                 route('staff.games.games-to-release'), $now);
         }
 
+        if ($this->canSee($user, [UserRole::ROLE_DATA_SOURCE_MANAGER])) {
+            $tiles[] = $this->pasteDifferencesTile($now);
+        }
+
         if ($user->isOwner()) {
             $tiles[] = $this->queueTile('contact', 'Contact submissions', $counts['contact'],
                 $this->dbQueries->oldestNewContactSubmission(),
@@ -95,6 +101,21 @@ class AttentionTiles
             }
         }
         return false;
+    }
+
+    /**
+     * Release dates that differ from the weekly paste. A difference has no date of its own, so
+     * it's aged from the batch it was pasted in.
+     */
+    private function pasteDifferencesTile(Carbon $now): array
+    {
+        $differences = $this->dateDifferences->get();
+        $batchDates = array_column($differences, 'batch_date');
+
+        return $this->queueTile('paste-differences', 'Date differences', count($differences),
+            $batchDates ? Carbon::parse(min($batchDates)) : null,
+            Thresholds::PASTE_DIFFERENCES_AMBER_DAYS, Thresholds::PASTE_DIFFERENCES_RED_DAYS,
+            route('staff.data-sources.differences.weekly-paste.release-date'), $now);
     }
 
     private function queueTile($key, $label, $count, ?Carbon $oldest, ?int $amberDays, ?int $redDays, $url, Carbon $now): array

@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
+use App\Domain\WeeklyBatch\DateDifferences;
+use App\Domain\WeeklyBatch\MissingFromPaste;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
 use App\Domain\WeeklyBatchRawPage\Repository as WeeklyBatchRawPageRepository;
@@ -17,7 +19,9 @@ class WeeklyBatchController extends Controller
         private StaffPageBuilder $pageBuilder,
         private WeeklyBatchRepository $repoBatch,
         private WeeklyBatchItemRepository $repoItem,
-        private WeeklyBatchRawPageRepository $repoRawPage
+        private WeeklyBatchRawPageRepository $repoRawPage,
+        private DateDifferences $dateDifferences,
+        private MissingFromPaste $missingFromPaste
     ) {
     }
 
@@ -33,6 +37,8 @@ class WeeklyBatchController extends Controller
 
         $bindings['Batches'] = $batches;
         $bindings['AllCounts'] = $allCounts;
+        $bindings['DateDifferenceCount'] = $this->dateDifferences->count();
+        $bindings['MissingFromPasteCount'] = $this->missingFromPaste->countNotChecked();
 
         return view('staff.games.weekly-updates.index', $bindings);
     }

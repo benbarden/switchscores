@@ -235,6 +235,10 @@ nav ol.breadcrumb {
     gap: 12px;
 }
 .ss-tiles--1 { grid-template-columns: 1fr; }
+.ss-tiles--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1199px) {
+    .ss-tiles--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 420px) {
     .ss-tiles { grid-template-columns: 1fr; }
 }
