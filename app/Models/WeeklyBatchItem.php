@@ -50,6 +50,10 @@ class WeeklyBatchItem extends Model
         self::STATUS_IMPORTED,
     ];
 
+    // At or below this, a paid game is flagged as a possible low quality game
+    const LOW_PRICE_LIMIT = 0.99;
+    const LOW_PRICE_REASON = 'Very low price';
+
     protected $table = 'weekly_batch_items';
 
     protected $fillable = [

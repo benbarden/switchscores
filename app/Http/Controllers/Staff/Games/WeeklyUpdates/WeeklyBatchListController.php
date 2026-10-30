@@ -513,6 +513,9 @@ class WeeklyBatchListController extends Controller
         try {
             $result = $this->fetcher->fetch($item->nintendo_url);
 
+            // Before the LQ decision below: settling a price can clear a low price flag
+            $this->flaggedPriceResolver->resolveFromStorePage($item, $result['standalone_nsuids']);
+
             $fetchReason    = $result['lq_flag_reason'];
             $existingReason = ($item->lq_flag && $item->lq_flag_reason) ? $item->lq_flag_reason : null;
 
@@ -536,7 +539,6 @@ class WeeklyBatchListController extends Controller
             ];
 
             $this->repoItem->markFetchComplete($item, $data, $result['lq_confirmed']);
-            $this->flaggedPriceResolver->resolveFromStorePage($item, $result['standalone_nsuids']);
 
             if ($result['lq_confirmed']) {
                 $this->repoExclusion->add($item->autoTitle(), $item->console);

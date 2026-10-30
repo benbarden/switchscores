@@ -173,7 +173,28 @@ class Repository
         $item->price_flag       = false;
         $item->price_flag_reason = null;
         $item->price_note       = null;
+        $this->clearLowPriceReason($item);
         $item->save();
+    }
+
+    /**
+     * The low price LQ signal comes from the pasted price, which can be a sale or an upgrade
+     * pack, so it goes once the real price is known. Any other LQ reason stays.
+     */
+    private function clearLowPriceReason(WeeklyBatchItem $item): void
+    {
+        $price = (float) $item->price_gbp;
+        if (!$item->lq_flag_reason || ($price > 0 && $price <= WeeklyBatchItem::LOW_PRICE_LIMIT)) {
+            return;
+        }
+
+        $reasons = array_filter(
+            array_map('trim', explode(';', $item->lq_flag_reason)),
+            fn(string $reason) => !str_starts_with($reason, WeeklyBatchItem::LOW_PRICE_REASON)
+        );
+
+        $item->lq_flag_reason = implode('; ', $reasons) ?: null;
+        $item->lq_flag = $item->lq_flag_reason !== null;
     }
 
     /**
@@ -346,6 +367,7 @@ class Repository
             $item->price_flag        = false;
             $item->price_flag_reason = null;
             $item->price_note        = $snapshot->price_note;
+            $this->clearLowPriceReason($item);
             $item->save();
         }
 

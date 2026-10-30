@@ -364,8 +364,8 @@ class ParseService
                 return $reason;
             }
         }
-        if ($price !== null && $price > 0 && $price <= 0.99) {
-            return 'Very low price: £'.number_format($price, 2);
+        if ($price !== null && $price > 0 && $price <= WeeklyBatchItem::LOW_PRICE_LIMIT) {
+            return WeeklyBatchItem::LOW_PRICE_REASON.': £'.number_format($price, 2);
         }
         return null;
     }

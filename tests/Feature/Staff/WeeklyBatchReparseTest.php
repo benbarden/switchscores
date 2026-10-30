@@ -158,6 +158,25 @@ class WeeklyBatchReparseTest extends TestCase
         $this->assertFalse($item->price_flag);
     }
 
+    public function testASettledPriceDoesNotBringBackTheLowPriceFlag()
+    {
+        $this->pasteInRange('Starting from: £0.89');
+        $item = $this->item();
+        $this->assertTrue($item->price_flag);
+        $this->assertTrue($item->lq_flag);
+        $item->fill([
+            'price_gbp' => 18.89,
+            'price_flag' => false,
+            'price_flag_reason' => null,
+            'lq_flag' => false,
+            'lq_flag_reason' => null,
+        ])->save();
+
+        $this->pasteInRange('Starting from: £0.89');
+
+        $this->assertFalse($this->item()->lq_flag);
+    }
+
     public function testAStillFlaggedPriceStaysFlagged()
     {
         $this->pasteInRange('£0.00');

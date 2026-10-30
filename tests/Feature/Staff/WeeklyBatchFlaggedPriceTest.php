@@ -271,6 +271,92 @@ class WeeklyBatchFlaggedPriceTest extends TestCase
         }
     }
 
+    public function testAPriceAboveTheLimitClearsTheLowPriceFlag()
+    {
+        $this->fakePrices([self::GAME => '18.89']);
+        $item = $this->makeItem(['price_gbp' => 0.89, 'lq_flag' => true, 'lq_flag_reason' => 'Very low price: £0.89']);
+
+        $this->resolver()->resolvePasted([$item]);
+
+        $item->refresh();
+        $this->assertFalse($item->lq_flag);
+        $this->assertNull($item->lq_flag_reason);
+    }
+
+    public function testOtherLqReasonsStay()
+    {
+        $this->fakePrices([self::GAME => '3.43']);
+        $item = $this->makeItem([
+            'price_gbp' => 0.86,
+            'lq_flag' => true,
+            'lq_flag_reason' => 'Very low price: £0.86; Publisher confirmed LQ: Zqx',
+        ]);
+
+        $this->resolver()->resolvePasted([$item]);
+
+        $item->refresh();
+        $this->assertTrue($item->lq_flag);
+        $this->assertSame('Publisher confirmed LQ: Zqx', $item->lq_flag_reason);
+    }
+
+    public function testAPriceStillBelowTheLimitKeepsTheLowPriceFlag()
+    {
+        $this->fakePrices([self::GAME => '0.79']);
+        $item = $this->makeItem(['price_gbp' => 0.89, 'lq_flag' => true, 'lq_flag_reason' => 'Very low price: £0.89']);
+
+        $this->resolver()->resolvePasted([$item]);
+
+        $item->refresh();
+        $this->assertTrue($item->lq_flag);
+        $this->assertSame('Very low price: £0.89', $item->lq_flag_reason);
+    }
+
+    public function testAPriceEnteredByHandClearsTheLowPriceFlag()
+    {
+        $item = $this->makeItem(['price_gbp' => 0.89, 'lq_flag' => true, 'lq_flag_reason' => 'Very low price: £0.89']);
+
+        app(WeeklyBatchItemRepository::class)->updatePrice($item, 12.99);
+
+        $this->assertFalse($item->fresh()->lq_flag);
+    }
+
+    public function testFetchStepSkipsNeedsReviewOnceTheLowPriceIsGone()
+    {
+        $this->fakePrices([self::GAME => '18.89']);
+        $item = $this->makeItem([
+            'nsuid' => self::UPGRADE,
+            'price_gbp' => 0.89,
+            'lq_flag' => true,
+            'lq_flag_reason' => 'Very low price: £0.89',
+            'nintendo_url' => 'https://www.nintendo.com/en-gb/zqx.html',
+        ]);
+        $this->mock(NintendoPageFetcher::class)->shouldReceive('fetch')->andReturn([
+            'publisher_raw' => 'Zqx Publisher',
+            'publisher_normalised' => 'Zqx Publisher',
+            'players' => '1',
+            'description' => 'Zqx description',
+            'lq_confirmed' => false,
+            'lq_uncertain' => false,
+            'lq_flag_reason' => null,
+            'lq_publisher_name' => null,
+            'standalone_nsuids' => [self::GAME],
+        ]);
+        $owner = new User([
+            'display_name' => 'Flagged Price Test',
+            'email' => 'xx.flagged.price.test.'.uniqid().'@switchscores.com',
+            'is_staff' => 1,
+            'is_owner' => 1,
+        ]);
+
+        $this->actingAs($owner)->post(route('staff.games.weekly-updates.list.fetch.item', [
+            'batchId' => $this->batch->id, 'console' => 'switch-2', 'listType' => 'new', 'itemId' => $item->id,
+        ]))->assertJson(['status' => 'done']);
+
+        $item->refresh();
+        $this->assertFalse($item->lq_flag);
+        $this->assertNotSame(WeeklyBatchItem::STATUS_LQ_REVIEW, $item->item_status);
+    }
+
     public function testScraperFindsTheStandaloneSkusOnly()
     {
         $html = '<html><head><title>x</title></head><body>'
