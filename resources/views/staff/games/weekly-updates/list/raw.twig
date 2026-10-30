@@ -207,6 +207,12 @@
                 {{ priorExcludedCount }} of these {{ priorExcludedCount == 1 ? 'was' : 'were' }} skipped in an earlier batch (greyed out below).
             {% endif %}
             <span class="oor-added-note d-none"> <strong class="oor-added-count">0</strong> added to this batch.</span>
+            {% if outOfRangeNotInDb|length > priorExcludedCount %}
+                <form method="post" id="oor-activate-all" action="{{ route('staff.games.weekly-updates.list.raw.activate-all-out-of-range', {'batchId': Batch.id, 'console': Console, 'listType': ListType}) }}" class="mt-2">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-sm btn-primary">Add all to batch</button>
+                </form>
+            {% endif %}
         </div>
         <table class="table table-sm table-bordered table-warning" style="max-width: 900px;">
             <thead class="table-dark">
@@ -453,6 +459,17 @@
             // Brief highlight so the row is findable in a long table.
             newRow.classList.add('table-success');
             setTimeout(function () { newRow.classList.remove('table-success'); }, 2000);
+        }
+
+        // Counts the rows left at the time of the click, as some may have been added one at a time.
+        const activateAll = document.getElementById('oor-activate-all');
+        if (activateAll) {
+            activateAll.addEventListener('submit', function (event) {
+                const remaining = section.querySelectorAll('tbody tr:not(.table-secondary)').length;
+                if (!confirm('Add ' + remaining + ' game(s) to this batch? Greyed-out rows are left out.')) {
+                    event.preventDefault();
+                }
+            });
         }
 
         section.querySelectorAll('.oor-activate').forEach(function (button) {

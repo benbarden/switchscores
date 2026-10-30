@@ -591,6 +591,43 @@ class WeeklyBatchListController extends Controller
             ->with('success', 'LQ decisions saved.');
     }
 
+    /**
+     * Add every out-of-range game that isn't in the DB, leaving out the greyed-out rows: titles
+     * skipped on purpose in an earlier batch stay a one-at-a-time decision.
+     */
+    public function activateAllOutOfRange($batchId, $console, $listType)
+    {
+        $this->getBatch((int) $batchId);
+
+        $items = $this->repoItem
+            ->getByStatus((int) $batchId, $console, $listType, WeeklyBatchItem::STATUS_OUT_OF_RANGE)
+            ->whereNull('game_id');
+        $priorExclusions = $this->repoItem->getPriorExclusions($items->pluck('title')->unique()->values()->all(), $console);
+        $toAdd = $items->reject(fn($item) => $priorExclusions->has($item->title));
+
+        foreach ($toAdd as $item) {
+            $this->activateItem($item);
+        }
+
+        return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'))
+            ->with('success', $toAdd->count().' game(s) added to this batch.');
+    }
+
+    /**
+     * Out-of-range items are created before the parser classifies active items, so run that
+     * classification now. Without it the item lands at `pending` even when the paste already
+     * supplied a store URL, and the fetch step then reports it as having no URL; it would also
+     * miss collection matching and LQ flagging.
+     */
+    private function activateItem(WeeklyBatchItem $item): void
+    {
+        $this->repoItem->activateItem($item, $this->parseService->classifyActiveItem(
+            $item->title,
+            $item->price_gbp === null ? null : (float) $item->price_gbp,
+            $item->nintendo_url
+        ));
+    }
+
     public function activateOutOfRange($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
     {
         $item = $this->repoItem->find((int) $itemId);
@@ -599,15 +636,7 @@ class WeeklyBatchListController extends Controller
         if ($item->item_status !== WeeklyBatchItem::STATUS_OUT_OF_RANGE) abort(422);
         if ($item->game_id) abort(422); // already in DB — shouldn't be activated
 
-        // Out-of-range items are created before the parser classifies active items, so
-        // run that classification now. Without it the item lands at `pending` even when
-        // the paste already supplied a store URL, and the fetch step then reports it as
-        // having no URL; it would also miss collection matching and LQ flagging.
-        $this->repoItem->activateItem($item, $this->parseService->classifyActiveItem(
-            $item->title,
-            $item->price_gbp === null ? null : (float) $item->price_gbp,
-            $item->nintendo_url
-        ));
+        $this->activateItem($item);
 
         if ($request->ajax()) {
             $item->refresh();
