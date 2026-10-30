@@ -60,16 +60,18 @@
                     {% if item.item_status != constant('App\\Models\\QuickReview::STATUS_ACTIVE') %}
                         <form method="post" action="{{ route('staff.reviews.quick-reviews.approve', {'reviewId': item.id}) }}" class="d-inline">
                             {{ csrf_field() }}
+                            <input type="hidden" name="filterStatus" value="{{ FilterStatus }}">
                             <button type="submit" class="btn btn-success btn-sm">Approve</button>
                         </form>
                     {% endif %}
                     {% if item.item_status != constant('App\\Models\\QuickReview::STATUS_REJECTED') %}
                         <form method="post" action="{{ route('staff.reviews.quick-reviews.reject', {'reviewId': item.id}) }}" class="d-inline">
                             {{ csrf_field() }}
+                            <input type="hidden" name="filterStatus" value="{{ FilterStatus }}">
                             <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                         </form>
                     {% endif %}
-                    <a href="{{ route('staff.reviews.quick-reviews.delete', {'reviewId': item.id}) }}" class="btn btn-outline-secondary btn-sm">Delete</a>
+                    <a href="{{ route('staff.reviews.quick-reviews.delete', {'reviewId': item.id, 'filterStatus': FilterStatus}) }}" class="btn btn-outline-secondary btn-sm">Delete</a>
                 </td>
             </tr>
         {% endfor %}

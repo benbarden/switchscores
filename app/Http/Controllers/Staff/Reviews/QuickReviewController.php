@@ -67,7 +67,7 @@ class QuickReviewController extends Controller
         UserFactory::addPointsForQuickReview($user);
         UserPointTransactionDirectorFactory::addForQuickReview($userId, $gameId);
 
-        return redirect(route('staff.reviews.quick-reviews.list'));
+        return $this->redirectToList();
     }
 
     public function reject($reviewId)
@@ -82,7 +82,7 @@ class QuickReviewController extends Controller
 
         $this->reviewLinkStats->updateStats($game);
 
-        return redirect(route('staff.reviews.quick-reviews.list'));
+        return $this->redirectToList();
     }
 
     public function delete($reviewId)
@@ -111,7 +111,7 @@ class QuickReviewController extends Controller
 
             // Done
 
-            return redirect(route('staff.reviews.quick-reviews.list'));
+            return $this->redirectToList();
 
         } else {
 
@@ -121,7 +121,20 @@ class QuickReviewController extends Controller
 
         $bindings['QuickReview'] = $reviewData;
         $bindings['ReviewId'] = $reviewId;
+        $bindings['FilterStatus'] = $request->filterStatus;
 
         return view('staff.reviews.quick-reviews.delete', $bindings);
+    }
+
+    /**
+     * Back to the list with the status filter the action was taken from. Pending is status 0, so
+     * this checks for a value rather than truthiness.
+     */
+    private function redirectToList()
+    {
+        $filterStatus = request()->filterStatus;
+        $params = isset($filterStatus) ? ['filterStatus' => $filterStatus] : [];
+
+        return redirect(route('staff.reviews.quick-reviews.list', $params));
     }
 }
