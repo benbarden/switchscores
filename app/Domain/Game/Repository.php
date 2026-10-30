@@ -20,12 +20,16 @@ class Repository extends AbstractRepository
         $this->clearCache($cacheKey);
     }
 
-    public function findByTitleAndConsole(string $title, int $consoleId): ?Game
+    /**
+     * Just what a title comparison needs: Switch 1 has too many games to load in full.
+     */
+    public function getCategorisedTitles(int $consoleId)
     {
         return Game::where('console_id', $consoleId)
-            ->whereRaw('LOWER(title) = LOWER(?)', [$title])
+            ->whereNotNull('category_id')
             ->with('category')
-            ->first();
+            ->orderBy('id')
+            ->get(['id', 'title', 'category_id']);
     }
 
     public function markAsReleased(Game $game)

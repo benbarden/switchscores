@@ -178,6 +178,8 @@ class CategorySuggester
     // Series list cached at construction: only entries with category_hints set
     private array $seriesList = [];
 
+    private array $categorisedGames = [];
+
     public function __construct(
         private WeeklyBatchItemRepository $repoItem,
         private CategoryRepository $repoCategory,
@@ -385,15 +387,28 @@ class CategorySuggester
     {
         $otherConsoleId = $consoleSlug === 'switch-2' ? Console::ID_SWITCH_1 : Console::ID_SWITCH_2;
 
-        $titlesToTry = array_unique([$title, $this->titleMatchKey->stripConsoleSuffix($title)]);
+        $game = $this->categorisedGamesByKey($otherConsoleId)[$this->titleMatchKey->forTitle($title)] ?? null;
 
-        foreach ($titlesToTry as $title) {
-            $game = $this->repoGame->findByTitleAndConsole($title, $otherConsoleId);
-            if ($game && $game->category) {
-                $this->addScore($scores, $signals, $game->category->name, self::SCORE_DEFINITIVE, "Other console: {$game->title}");
-                return;
+        if ($game && $game->category) {
+            $this->addScore($scores, $signals, $game->category->name, self::SCORE_DEFINITIVE, "Other console: {$game->title}");
+        }
+    }
+
+    /**
+     * A console's categorised games by title key, so a console suffix on either side still
+     * matches. Built once, as this runs for every item on the page. Where two games share a key,
+     * the first wins.
+     */
+    private function categorisedGamesByKey(int $consoleId): array
+    {
+        if (!isset($this->categorisedGames[$consoleId])) {
+            $this->categorisedGames[$consoleId] = [];
+            foreach ($this->repoGame->getCategorisedTitles($consoleId) as $game) {
+                $this->categorisedGames[$consoleId][$this->titleMatchKey->forTitle($game->title)] ??= $game;
             }
         }
+
+        return $this->categorisedGames[$consoleId];
     }
 
     private function addScore(array &$scores, array &$signals, string $category, int $score, string $label): void
