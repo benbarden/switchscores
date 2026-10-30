@@ -65,9 +65,15 @@ class SignupSuspicionTest extends TestCase
         $this->assertSame([], $this->reasons($old));
     }
 
-    public function testUsersFromBeforeSignupMetaAreNotFlaggedForTiming()
+    public function testUsersWithoutSignupMetaAreOnlyCheckedOnDisplayName()
     {
-        $this->assertSame([], $this->reasons($this->user(['signup_meta' => null])));
+        // e.g. a Twitter login: a generated address ending in digits, never verified
+        $old = $this->user(['email' => 'nickname1234@switchscores.com', 'signup_meta' => null]);
+        $old->created_at = now()->subYears(3);
+        $this->assertSame([], $this->reasons($old));
+
+        $old->display_name = 'Zqx Placeholder';
+        $this->assertSame(['Display name'], $this->reasons($old));
     }
 
     public function testChecksAreOffUntilConfigured()

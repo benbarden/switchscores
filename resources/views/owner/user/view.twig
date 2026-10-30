@@ -31,14 +31,29 @@
                 </td>
             </tr>
             <tr>
+                <td style="font-weight: bold;">Flags</td>
+                <td>
+                    {% if not UserData.isEmailVerified() %}
+                        <span class="badge bg-warning text-dark">Unverified</span>
+                    {% endif %}
+                    {% if SuspiciousReasons %}
+                        <span class="badge bg-danger">Suspicious</span>
+                        <small>{{ SuspiciousReasons|join(', ') }}</small>
+                    {% endif %}
+                    {% if UserData.isEmailVerified() and not SuspiciousReasons %}
+                        None
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <td style="font-weight: bold;">Display name</td>
                 <td>
                     {{ UserData.display_name }}
                     {% if UserData.isOwner() %}
                         <span class="badge bg-primary">Staff</span>
-                    {% elseif UserData.partner.isReviewSite() %}
+                    {% elseif UserData.isReviewer() %}
                         <span class="badge bg-success">Reviewer</span>
-                    {% elseif UserData.partner.isGamesCompany() %}
+                    {% elseif UserData.isGamesCompany() %}
                         <span class="badge bg-info">Games company</span>
                     {% endif %}
                 </td>

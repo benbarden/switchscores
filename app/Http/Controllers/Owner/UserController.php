@@ -71,6 +71,7 @@ class UserController extends Controller
 
         $bindings['UserData'] = $userData;
         $bindings['UserId'] = $userId;
+        $bindings['SuspiciousReasons'] = $this->signupSuspicion->reasons($userData);
 
         $bindings['StatsQuickReviews'] = $this->statsQuickReview->totalByUser($userId);
         $bindings['StatsCollection'] = $this->statsUserGamesCollection->totalByUser($userId);

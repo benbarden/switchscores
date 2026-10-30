@@ -23,6 +23,14 @@ class SignupSuspicion
             $reasons[] = 'Display name';
         }
 
+        // The other checks only apply to signups through the form since signup_meta existed. Older
+        // accounts trip them without being bogus: Twitter login generates an address ending in
+        // digits, with no inbox to verify, and most never requested a verification email.
+        $meta = $user->signup_meta;
+        if (!is_array($meta)) {
+            return $reasons;
+        }
+
         $digits = $config['email_trailing_digits'];
         if ($digits > 0) {
             $localPart = strstr((string) $user->email, '@', true) ?: (string) $user->email;
@@ -31,15 +39,11 @@ class SignupSuspicion
             }
         }
 
-        // Only users who signed up once signup_meta existed have the form timing.
-        $meta = $user->signup_meta;
-        if (is_array($meta)) {
-            $seconds = $meta['seconds_to_submit'] ?? null;
-            if ($seconds === null) {
-                $reasons[] = 'Form token missing or invalid';
-            } elseif ($config['min_seconds_to_submit'] > 0 && $seconds < $config['min_seconds_to_submit']) {
-                $reasons[] = 'Form submitted in '.$seconds.'s';
-            }
+        $seconds = $meta['seconds_to_submit'] ?? null;
+        if ($seconds === null) {
+            $reasons[] = 'Form token missing or invalid';
+        } elseif ($config['min_seconds_to_submit'] > 0 && $seconds < $config['min_seconds_to_submit']) {
+            $reasons[] = 'Form submitted in '.$seconds.'s';
         }
 
         $hours = $config['verification_request_hours'];
