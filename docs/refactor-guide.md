@@ -143,11 +143,11 @@ Some Repository classes are very long and could be split. Also, `DbQueries.php` 
 
 Services should live under a clearly structured domain layer. Move each service class from `app/Services/*` to `app/Domain/{Area}/*` and update namespace and references.
 
-**Status:** 13 files remaining:
+**Status:** 12 files remaining:
 
 - `DataSources/NintendoCoUk/` - UpdateGame, Importer, Parser, Images (4 files)
 - `DataSources/Queries/Differences` (1 file)
-- `Game/` - QualityScore, TitleMatch, Images (3 files)
+- `Game/` - TitleMatch, Images (2 files)
 - `DataQuality/QualityStats` (1 file)
 - `Feed/` - TitleParser, Parser (2 files)
 - `Eshop/US/Loader` (1 file)

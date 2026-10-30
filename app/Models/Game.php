@@ -138,11 +138,6 @@ class Game extends Model implements Auditable
         return $this->hasMany('App\Models\GameCrawlLifecycle', 'game_id', 'id');
     }
 
-    public function gameQualityScore()
-    {
-        return $this->hasOne('App\Models\GameQualityScore', 'game_id', 'id');
-    }
-
     public function gameRankYear()
     {
         return $this->hasOne('App\Models\GameRankYear', 'game_id', 'id');

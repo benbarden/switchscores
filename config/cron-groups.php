@@ -75,7 +75,6 @@ return [
             'UpdateGameReviewStats' => 'Refresh review totals and averages per game',
             'UpdateGameRanks' => 'Refresh game rankings',
             'UpdateGameCalendarStats' => 'Refresh release calendar stats',
-            'UpdateGameQualityScores' => 'Update quality score fields',
         ],
     ],
 
