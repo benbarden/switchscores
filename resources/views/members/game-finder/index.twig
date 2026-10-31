@@ -1,5 +1,6 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
+{% import 'ui/components/rating/badge.twig' as rating %}
 
 {% block page_inner %}
 
@@ -167,7 +168,7 @@
                                     </p>
                                     {% if game.rating_avg %}
                                         <p class="card-text mb-1">
-                                            <span class="badge bg-success">{{ game.rating_avg|number_format(1) }}</span>
+                                            {{ rating.score(game.rating_avg|number_format(1), 'h6') }}
                                         </p>
                                     {% endif %}
                                     <p class="card-text small mb-2">

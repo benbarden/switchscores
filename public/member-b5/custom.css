@@ -211,6 +211,47 @@ nav ol.breadcrumb {
     padding: 5px;
 }
 
+/* Game cards. These are shared with the public theme, which uses Bootstrap 3 and also
+   loads design.css, so the classes they rely on are defined here for Bootstrap 5. */
+.col-xs-3 {flex: 0 0 auto; width: 25%;}
+.col-xs-9 {flex: 0 0 auto; width: 75%;}
+
+/* Every score badge in the member area looks the same: the rating.score() badge. The cards'
+   label and circle classes are restyled to match it, using Bootstrap 5's colours. */
+.label,
+.switch-rating-circle {
+    border-radius: .25rem;
+    color: #ffffff;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    padding: .35em .65em;
+    text-align: center;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+.label-default {background-color: #6c757d;}
+.label-success {background-color: #198754;}
+.label-info {background-color: #0dcaf0;}
+.label-warning {background-color: #ffc107;}
+.label-danger {background-color: #dc3545;}
+
+.switch-rating-badge,
+.switch-rating-circle {
+    border-radius: 8px;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 400;
+}
+
+/* White text is hard to read on these two backgrounds */
+.label-info,
+.label-warning,
+.switch-rating-badge.bg-info,
+.switch-rating-badge.bg-warning {
+    color: #212529;
+}
+
 /* NOT YET MIGRATED */
 
 /* Ratings - new */

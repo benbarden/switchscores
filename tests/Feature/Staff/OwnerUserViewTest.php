@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Staff;
 
+use App\Models\Game;
 use App\Models\User;
+use App\Models\UserWishlist;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -80,5 +82,33 @@ class OwnerUserViewTest extends TestCase
     public function testShowsGamesCompanyAfterTheDisplayName()
     {
         $this->viewUser(['games_company_id' => 1])->assertSee('>Games company<', false);
+    }
+
+    public function testShowsTheWishlistCount()
+    {
+        $user = new User([
+            'display_name' => 'Wishlist Member',
+            'email' => 'xx.owner.user.view.wishlist.'.uniqid().'@switchscores.com',
+        ]);
+        $user->save();
+
+        foreach (Game::query()->limit(2)->pluck('id') as $gameId) {
+            UserWishlist::create(['user_id' => $user->id, 'game_id' => $gameId]);
+        }
+
+        $owner = new User([
+            'display_name' => 'Owner User View Test',
+            'email' => 'xx.owner.user.view.owner.'.uniqid().'@switchscores.com',
+            'is_staff' => 1,
+            'is_owner' => 1,
+        ]);
+
+        $this->actingAs($owner)
+            ->get(route('owner.user.view', ['userId' => $user->id]))
+            ->assertSeeInOrder(['Wishlist', '<span class="h4">2</span>'], false);
+
+        $this->actingAs($owner)
+            ->get(route('owner.user.list'))
+            ->assertSeeInOrder(['>Games<', '>Wishlist<', '>Joined<'], false);
     }
 }

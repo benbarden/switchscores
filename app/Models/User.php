@@ -117,6 +117,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\UserGamesCollection', 'user_id', 'id');
     }
 
+    public function wishlist()
+    {
+        return $this->hasMany('App\Models\UserWishlist', 'user_id', 'id');
+    }
+
     /**
      * Check if the user's email is verified.
      */

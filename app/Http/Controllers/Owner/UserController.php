@@ -15,6 +15,7 @@ use App\Domain\ReviewSite\Repository as ReviewSiteRepository;
 use App\Domain\User\Repository as UserRepository;
 use App\Domain\User\SignupSuspicion;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 use App\Domain\QuickReview\Stats as QuickReviewStats;
 use App\Domain\UserGamesCollection\Stats as UserGamesCollectionStats;
 use App\Domain\ReviewLink\Stats as ReviewLinkStats;
@@ -39,6 +40,7 @@ class UserController extends Controller
         private GamesCompanyRepository $repoGamesCompany,
         private ReviewSiteRepository $repoReviewSite,
         private UserGamesCollectionRepository $repoUserGamesCollection,
+        private UserWishlistRepository $repoWishlist,
         private QuickReviewStats $statsQuickReview,
         private UserGamesCollectionStats $statsUserGamesCollection,
         private ReviewLinkStats $statsReviewLink,
@@ -75,6 +77,7 @@ class UserController extends Controller
 
         $bindings['StatsQuickReviews'] = $this->statsQuickReview->totalByUser($userId);
         $bindings['StatsCollection'] = $this->statsUserGamesCollection->totalByUser($userId);
+        $bindings['StatsWishlist'] = $this->repoWishlist->countByUser($userId);
 
         return view('owner.user.view', $bindings);
     }
