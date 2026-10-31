@@ -13,6 +13,7 @@ use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameStats\Repository as GameStatsRepository;
 use App\Domain\ReviewDraft\Repository as ReviewDraftRepository;
 use App\Domain\User\Repository as UserRepository;
+use App\Domain\User\SignupSuspicion;
 use App\Domain\GamePublisher\DbQueries as GamePublisherDbQueries;
 use App\Domain\GamesCompanySignup\Repository as GamesCompanyRepository;
 use App\Domain\Contact\Repository as ContactRepository;
@@ -38,6 +39,7 @@ class IndexController extends Controller
         private DataSourceIgnoreRepository $repoDataSourceIgnore,
         private DataSourceParsedRepository $repoDataSourceParsed,
         private AttentionTiles $attentionTiles,
+        private SignupSuspicion $signupSuspicion,
     )
     {
     }
@@ -84,6 +86,11 @@ class IndexController extends Controller
         // Owner links
         $bindings['RegisteredUserCount'] = $this->repoUser->getCount();
         $bindings['UnverifiedMemberCount'] = $this->repoUser->getUnverifiedCount();
+
+        // Owners only, as it shows an email address
+        $newestSignup = auth()->user()->isOwner() ? $this->repoUser->getNewest() : null;
+        $bindings['NewestSignup'] = $newestSignup;
+        $bindings['NewestSignupSuspicions'] = $newestSignup ? $this->signupSuspicion->reasons($newestSignup) : [];
 
         return view('staff.index', $bindings);
     }

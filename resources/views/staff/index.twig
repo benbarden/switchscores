@@ -170,6 +170,30 @@
             </tbody>
         </table>
 
+        {% if NewestSignup %}
+            <h2 class="ss-h2">Newest signup</h2>
+            <table class="table ss-table">
+                <tbody>
+                <tr>
+                    <td>
+                        {{ NewestSignup.id }} -
+                        <a href="{{ route('owner.user.view', {'userId': NewestSignup.id}) }}">{{ NewestSignup.display_name }}</a>
+                        {% if not NewestSignup.isEmailVerified() %}
+                            <span class="badge bg-warning text-dark">Unverified</span>
+                        {% endif %}
+                        {% if NewestSignupSuspicions %}
+                            <span class="badge bg-danger" title="{{ NewestSignupSuspicions|join(', ') }}">Suspicious</span>
+                        {% endif %}
+                        <br>
+                        <small>{{ NewestSignup.email }}</small>
+                        <br>
+                        <small>Joined {{ NewestSignup.created_at|date('Y-m-d') }}</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
 
 </div>
