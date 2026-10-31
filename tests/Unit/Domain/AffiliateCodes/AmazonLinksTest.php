@@ -74,6 +74,14 @@ class AmazonLinksTest extends TestCase
         $this->assertSame('search', $links->ukType);
     }
 
+    public function testSearchKeepsAccentedLettersAsPlainOnes()
+    {
+        $links = (new Amazon())->buildLinksForGame($this->game(['title' => 'Pokémon Pokopia']));
+
+        $this->assertStringContainsString('Pokemon+Pokopia', $links->urlUk);
+        $this->assertStringContainsString('Pokemon+Pokopia', $links->urlUs);
+    }
+
     public function testSearchLinksUseTheWishlistIds()
     {
         $links = (new Amazon())->forWishlist()->buildLinksForGame($this->game([]));

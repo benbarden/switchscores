@@ -5,6 +5,7 @@ namespace App\Domain\AffiliateCodes;
 use App\Enums\AmazonAffiliateStatus;
 use App\Models\Console;
 use App\Models\Game;
+use Illuminate\Support\Str;
 
 class Amazon
 {
@@ -181,8 +182,10 @@ class Amazon
      */
     protected function buildSearchLink(string $title, string $domain, string $affiliateId): string
     {
+        // Plain letters first, so Pokémon becomes Pokemon rather than losing the é
+        $cleanTitle = trim(Str::ascii($title));
+
         // Remove bad punctuation that breaks Amazon search
-        $cleanTitle = trim($title);
         $cleanTitle = preg_replace('/[^A-Za-z0-9 ]/', '', $cleanTitle);
 
         $query = urlencode("nintendo switch games " . $cleanTitle);
