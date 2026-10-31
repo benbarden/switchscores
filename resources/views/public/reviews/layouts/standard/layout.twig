@@ -18,7 +18,8 @@
         <div class="row">
             {% for batchItem in item %}
                 <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-                    {% include 'public/reviews/layouts/standard/item.twig' with {'item': batchItem} %}
+                    {# loadFirstRow is for pages where this list is at the top #}
+                    {% include 'public/reviews/layouts/standard/item.twig' with {'item': batchItem, 'lazyImage': not (loadFirstRow|default(false) and loop.parent.loop.first)} %}
                 </div>
             {% endfor %}
         </div>

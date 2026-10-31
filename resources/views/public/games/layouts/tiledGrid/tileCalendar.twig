@@ -10,7 +10,7 @@
 
 <a href="{{ game_url(item) }}">
     {% if boxartUrl %}
-        <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;{{ imageOpacity }}" alt="{{ item.title }}">
+        <img src="{{ boxartUrl }}" width="1920" height="1080" loading="lazy" class="img-responsive" style="border: 0;{{ imageOpacity }}" alt="{{ item.title }}">
     {% else %}
         <img src="/img/placeholder/no-image-found-wide.png" class="img-responsive" alt="{{ item.title }}">
     {% endif %}

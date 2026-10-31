@@ -21,7 +21,8 @@
         <div class="row">
             {% for batchItem in item %}
                 <div class="col-sm-12 col-md-{{ colBreak }} col-lg-{{ colBreak }}">
-                    {% include 'public/games/layouts/tiledGrid/tileTopRatedMonth.twig' with {'item': batchItem, 'ShowScoreOverride': ShowScoreOverride} %}
+                    {# The first row is at the top of the page, so it loads straight away #}
+                    {% include 'public/games/layouts/tiledGrid/tileTopRatedMonth.twig' with {'item': batchItem, 'ShowScoreOverride': ShowScoreOverride, 'lazyImage': not loop.parent.loop.first} %}
                 </div>
             {% endfor %}
         </div>

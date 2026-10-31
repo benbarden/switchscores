@@ -1,4 +1,4 @@
-{% macro render(item, mode='default', hero=false, withConsole=false) %}
+{% macro render(item, mode='default', hero=false, withConsole=false, firstRow=false) %}
     {% import "ui/components/game/packshots.twig" as gamepackshots %}
     {% import "ui/components/game/release-date.twig" as gamereleasedate %}
     {% import 'ui/components/game/price.twig' as gameprice %}
@@ -13,17 +13,18 @@
         {% set subSize = 'h6' %}
     {% endif %}
 
+    {# The hero and first row are at the top of the page, so they load straight away #}
     {% if withConsole == 1 %}
         {{ gameconsolebanner.show(item) }}
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12">
-                {{ gamepackshots.header(item) }}
+                {{ gamepackshots.header(item, not (hero or firstRow)) }}
             </div>
         </div>
     {% else %}
         <div class="row" style="margin-top: 16px;">
             <div class="col-sm-12 col-md-12 col-lg-12">
-                {{ gamepackshots.header(item) }}
+                {{ gamepackshots.header(item, not (hero or firstRow)) }}
             </div>
         </div>
     {% endif %}

@@ -20,7 +20,7 @@
                     <td class="text-right">
                         <a href="{{ game_url(item) }}">
                             {% if boxartUrl %}
-                                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0; height: 75px; width: 75px;" alt="{{ item.title }}">
+                                <img src="{{ boxartUrl }}" loading="lazy" class="img-responsive" style="border: 0; height: 75px; width: 75px;" alt="{{ item.title }}">
                             {% else %}
                                 <img src="/img/placeholder/no-image-found-wide.png" class="img-responsive" alt="{{ item.title }}">
                             {% endif %}

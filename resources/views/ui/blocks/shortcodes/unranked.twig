@@ -14,7 +14,7 @@
                     <td class="text-center">
                         <a href="{{ game_url(item) }}">
                             {% if boxartUrl %}
-                                <img src="{{ boxartUrl }}" style="border: 0; height: 70px; width: 160px; margin-bottom: 0;" alt="{{ item.title }}">
+                                <img src="{{ boxartUrl }}" loading="lazy" style="border: 0; height: 70px; width: 160px; margin-bottom: 0;" alt="{{ item.title }}">
                             {% else %}
                             {% endif %}
                         </a>

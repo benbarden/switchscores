@@ -21,7 +21,7 @@
                 {% for game in batch %}
                     {% if game %}
                         <div class="{{ colClass }}">
-                            {{ _self.renderCard(cardType, game, mode, false, withConsole) }}
+                            {{ _self.renderCard(cardType, game, mode, false, withConsole, not hero and loop.parent.loop.first) }}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -32,13 +32,13 @@
     {% endif %}
 {% endmacro %}
 
-{% macro renderCard(cardType, game, mode, heroFlag, withConsole) %}
+{% macro renderCard(cardType, game, mode, heroFlag, withConsole, firstRow=false) %}
     {% import 'ui/components/game/game-card-standard.twig' as cardStandard %}
     {% import 'ui/components/game/game-card-modern.twig' as cardModern %}
 
     {% if cardType == 'modern' %}
         {{ cardModern.render(game, mode, heroFlag, withConsole) }}
     {% else %}
-        {{ cardStandard.render(game, mode, heroFlag, withConsole) }}
+        {{ cardStandard.render(game, mode, heroFlag, withConsole, firstRow) }}
     {% endif %}
 {% endmacro %}

@@ -6,7 +6,7 @@
     <div class="col-sm-12 col-md-4 col-lg-4">
         <a href="{{ game_url(item.game) }}">
             {% if boxartUrl %}
-                <img src="{{ boxartUrl }}" class="img-responsive" style="border: 0;" alt="{{ item.game.title }}">
+                <img src="{{ boxartUrl }}" width="1920" height="1080"{% if lazyImage %} loading="lazy"{% endif %} class="img-responsive" style="border: 0;" alt="{{ item.game.title }}">
             {% else %}
                 <img src="/img/placeholder/no-image-found-wide.png" class="img-responsive" alt="{{ item.game.title }}">
             {% endif %}
