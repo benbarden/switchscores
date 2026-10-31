@@ -64,6 +64,16 @@ final class StaffBreadcrumbs
         ]);
     }
 
+    public static function gamesAffiliatesSubpage(string $title): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Staff', route('staff.index')),
+            new BreadcrumbItem('Games', route('staff.games.dashboard')),
+            new BreadcrumbItem('Affiliates', route('staff.games.affiliates')),
+            new BreadcrumbItem($title),
+        ]);
+    }
+
     public static function gamesDetailSubpage(string $title, Game $game): BreadcrumbNav
     {
         return new BreadcrumbNav([

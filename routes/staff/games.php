@@ -115,6 +115,8 @@ Route::group([
     Route::controller(AffiliatesController::class)->group(function () {
         Route::match(['get', 'post'], 'edit-affiliates/{gameId}', 'edit')
             ->name('editAffiliates');
+        Route::get('affiliates/top-rated-gaps/{region}/{console:slug}/{scope}', 'topRatedGaps')->name('affiliates.topRatedGaps');
+        Route::post('affiliates/quick-save/{gameId}', 'quickSave')->name('affiliates.quickSave');
     });
 
     // ---- Bulk edit ----

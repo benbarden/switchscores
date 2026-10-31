@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff\Games;
 
 use Illuminate\Routing\Controller as Controller;
 
+use App\Domain\AffiliateCodes\TopRatedGaps;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
@@ -12,6 +13,7 @@ use App\Domain\GameStats\Repository as GameStatsRepositoryLegacy;
 use App\Domain\Game\Repository\GameStatsRepository;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
+use App\Models\Console;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -23,6 +25,7 @@ class DashboardController extends Controller
         private GameListsRepository $repoGameLists,
         private GameAffiliateRepository $repoGameAffiliate,
         private GameRepository $repoGame,
+        private TopRatedGaps $topRatedGaps,
     )
     {
     }
@@ -121,6 +124,12 @@ class DashboardController extends Controller
         $bindings['AmazonUKLinkedCount'] = $this->repoGameAffiliate->countLinked('uk');
         $bindings['AmazonUKNoProductCount'] = $this->repoGameAffiliate->countNoProduct('uk');
         $bindings['AmazonUKIgnoredCount'] = $this->repoGameAffiliate->countIgnored('uk');
+
+        $bindings['GapConsoles'] = Console::orderBy('id')->get();
+        $bindings['GapOverviewUs'] = $this->topRatedGaps->overview('us');
+        $bindings['GapOverviewUk'] = $this->topRatedGaps->overview('uk');
+        $bindings['GapProgressUs'] = $this->topRatedGaps->progress('us');
+        $bindings['GapProgressUk'] = $this->topRatedGaps->progress('uk');
 
         return view('staff.games.affiliates', $bindings);
     }

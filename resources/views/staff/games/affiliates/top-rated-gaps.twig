@@ -1,0 +1,129 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% block page_inner %}
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Page</th>
+                    <td><a href="{{ PagePath }}" target="_blank" rel="noopener">{{ PagePath }}</a></td>
+                </tr>
+                <tr>
+                    <th>Search clicks</th>
+                    <td>
+                        {% if PageStats.clicks is null %}
+                            No data in the latest snapshot
+                        {% else %}
+                            {{ PageStats.clicks }} in {{ PageStats.windowDays }} days to {{ PageStats.snapshotDate }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gaps</th>
+                    <td><span id="gap-count">{{ GapRows|length }}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p>Ranked games with no direct {{ RegionName }} link and an Unchecked status. A game leaves the list once it's saved or marked Not found.</p>
+
+{% if GapRows|length %}
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th class="text-end">Rank</th>
+                <th>Game</th>
+                <th>Physical</th>
+                <th style="min-width: 300px;">{{ RegionName }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in GapRows %}
+                <tr class="js-gap-row" data-save-url="{{ route('staff.games.affiliates.quickSave', {'gameId': row.game.id}) }}">
+                    <td class="text-end">{{ row.game.page_rank }}</td>
+                    <td>{{ gamelink.title(row.game, 'staff') }}</td>
+                    <td>{{ row.game.format_physical }}</td>
+                    <td>
+                        <div class="input-group input-group-sm">
+                            <a class="btn btn-outline-secondary" href="{{ row.searchUrl }}" target="_blank" rel="noopener">Search</a>
+                            <input type="text" class="form-control js-asin"
+                                   placeholder="Paste URL" aria-label="{{ RegionName }} URL or ASIN for {{ row.game.title }}">
+                        </div>
+                        <div class="small text-danger js-message"></div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <button type="button" class="btn btn-primary btn-sm js-save">Save</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm js-not-found">Not found</button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No gaps found!</p>
+{% endif %}
+
+<script>
+    $(function () {
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        var region = '{{ Region }}';
+
+        function save($row, data) {
+            var $controls = $row.find('input, button');
+            var $message = $row.find('.js-message');
+
+            if ($row.data('saving')) {
+                return;
+            }
+            $row.data('saving', true);
+            $controls.prop('disabled', true);
+            $message.text('');
+
+            $.ajax({
+                url: $row.data('save-url'),
+                method: 'POST',
+                data: $.extend({region: region}, data),
+                headers: {'X-CSRF-TOKEN': csrfToken}
+            }).done(function () {
+                $row.remove();
+                $('#gap-count').text($('.js-gap-row').length);
+            }).fail(function (xhr) {
+                var response = xhr.responseJSON;
+                $message.text(response && response.error ? response.error : 'Could not save. Please try again.');
+                $controls.prop('disabled', false);
+            }).always(function () {
+                $row.data('saving', false);
+            });
+        }
+
+        function saveAsin($row) {
+            save($row, {asin: $row.find('.js-asin').val().trim()});
+        }
+
+        $(document).on('click', '.js-save', function () {
+            saveAsin($(this).closest('.js-gap-row'));
+        });
+
+        $(document).on('keydown', '.js-asin', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                saveAsin($(this).closest('.js-gap-row'));
+            }
+        });
+
+        $(document).on('click', '.js-not-found', function () {
+            save($(this).closest('.js-gap-row'), {no_product: 1});
+        });
+    });
+</script>
+
+{% endblock page_inner %}

@@ -3,9 +3,76 @@
 {% import "ui/components/headings/heading.twig" as heading %}
 {% import 'ui/components/table/row-link-stat.twig' as rowstat %}
 
+{% macro gapProgress(progress, consoles) %}
+    {% for console in consoles %}
+        {% if progress[console.id] is defined %}
+            {% set item = progress[console.id] %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ console.name }}</strong>
+                    <span class="small">{{ item.done }} / {{ item.total }} ({{ item.percentage }}%)</span>
+                </div>
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ item.percentage }}%"
+                         aria-label="{{ console.name }} games checked"
+                         aria-valuenow="{{ item.percentage }}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro gapTable(region, overview, consoles) %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Top rated</th>
+                {% for console in consoles %}
+                    <th class="text-end">{{ console.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in overview %}
+                <tr>
+                    <td>{{ row.label }}</td>
+                    {% for console in consoles %}
+                        {% set gaps = row.counts[console.id] ?? 0 %}
+                        <td class="text-end">
+                            {% if gaps > 0 %}
+                                <a href="{{ route('staff.games.affiliates.topRatedGaps', {'region': region, 'console': console.slug, 'scope': row.scope}) }}">{{ gaps }}</a>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
 {% block page_inner %}
 
 <div class="row">
+
+    <div class="col-md-4">
+
+        {{ heading.renderStaff('Top rated gaps - Amazon US') }}
+        {{ _self.gapProgress(GapProgressUs, GapConsoles) }}
+        {{ _self.gapTable('us', GapOverviewUs, GapConsoles) }}
+
+    </div>
+
+    <div class="col-md-4">
+
+        {{ heading.renderStaff('Top rated gaps - Amazon UK') }}
+        {{ _self.gapProgress(GapProgressUk, GapConsoles) }}
+        {{ _self.gapTable('uk', GapOverviewUk, GapConsoles) }}
+
+    </div>
 
     <div class="col-md-4">
 
@@ -27,10 +94,6 @@
             ) }}
             </tbody>
         </table>
-
-    </div>
-
-    <div class="col-md-4">
 
         {{ heading.renderStaff('Amazon UK') }}
 

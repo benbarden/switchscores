@@ -2,6 +2,7 @@
 
 namespace App\Domain\AffiliateCodes;
 
+use App\Models\Console;
 use App\Models\Game;
 
 class Amazon
@@ -42,6 +43,17 @@ class Amazon
             urlUs: $usLink,
             usType: $usType
         );
+    }
+
+    /**
+     * Amazon search for staff finding a product. Untagged, as these aren't visitor clicks.
+     */
+    public function staffSearchUrl(Game $game, string $region): string
+    {
+        $domain = $region === 'uk' ? 'www.amazon.co.uk' : 'www.amazon.com';
+        $console = $game->console_id == Console::ID_SWITCH_2 ? 'nintendo switch 2 games' : 'nintendo switch games';
+
+        return 'https://'.$domain.'/s?'.http_build_query(['k' => $game->title.' '.$console]);
     }
 
     protected function buildUkLinkFromAsin(string $asin): string

@@ -141,6 +141,10 @@
                     </td>
                     <td class="text-center">
                         <a href="{{ route('staff.games.edit', {'gameId': item.id}) }}">Edit</a>
+                        {% if ListMode starts with 'amazon-' %}
+                            <br>
+                            <a href="{{ route('staff.games.editAffiliates', {'gameId': item.id}) }}">Edit affiliates</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

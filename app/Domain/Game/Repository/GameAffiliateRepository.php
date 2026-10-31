@@ -27,6 +27,39 @@ class GameAffiliateRepository
         $game->save();
     }
 
+    /**
+     * Saves one region only, so a save for US can't change UK.
+     */
+    public function saveRegionAsin(Game $game, string $region, string $asin): void
+    {
+        $game->{$this->asinFieldForRegion($region)} = $asin;
+        $game->{$this->statusFieldForRegion($region)} = AmazonAffiliateStatus::LINKED->value;
+
+        $game->save();
+    }
+
+    public function markRegionNoProduct(Game $game, string $region): void
+    {
+        $game->{$this->statusFieldForRegion($region)} = AmazonAffiliateStatus::NO_PRODUCT->value;
+
+        $game->save();
+    }
+
+    public function hasDirectLink(Game $game, string $region): bool
+    {
+        return (bool) ($region === 'uk'
+            ? ($game->amazon_uk_asin ?: $game->amazon_uk_link)
+            : ($game->amazon_us_asin ?: $game->amazon_us_link));
+    }
+
+    private function asinFieldForRegion(string $region): string
+    {
+        return match ($region) {
+            'uk' => 'amazon_uk_asin',
+            default => 'amazon_us_asin',
+        };
+    }
+
     private function statusFieldForRegion(string $region): string
     {
         return match ($region) {
