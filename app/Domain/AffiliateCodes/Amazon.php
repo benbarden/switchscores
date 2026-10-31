@@ -2,6 +2,7 @@
 
 namespace App\Domain\AffiliateCodes;
 
+use App\Enums\AmazonAffiliateStatus;
 use App\Models\Console;
 use App\Models\Game;
 
@@ -11,6 +12,11 @@ class Amazon
 
     const AMAZON_US_ID = 'switchscores-20';
 
+    // Separate IDs, so Amazon's reports split out what the wishlist earns
+    const AMAZON_UK_WISHLIST_ID = 'sswishlist-21';
+
+    const AMAZON_US_WISHLIST_ID = 'sswishlist00-20';
+
     protected string $ukId;
     protected string $usId;
 
@@ -18,6 +24,18 @@ class Amazon
     {
         $this->ukId = self::AMAZON_UK_ID;
         $this->usId = self::AMAZON_US_ID;
+    }
+
+    /**
+     * The same link builder, tagged with the wishlist's tracking IDs.
+     */
+    public function forWishlist(): static
+    {
+        $wishlist = clone $this;
+        $wishlist->ukId = self::AMAZON_UK_WISHLIST_ID;
+        $wishlist->usId = self::AMAZON_US_WISHLIST_ID;
+
+        return $wishlist;
     }
 
     public function getUKId()
@@ -35,13 +53,14 @@ class Amazon
      */
     public function buildLinksForGame(Game $game): AmazonLinkResult
     {
-        $ukLink = $this->buildUkLink($game);
+        [$ukLink, $ukType] = $this->buildUkLink($game);
         [$usLink, $usType] = $this->buildUsLink($game);
 
         return new AmazonLinkResult(
             urlUk: $ukLink,
             urlUs: $usLink,
-            usType: $usType
+            usType: $usType,
+            ukType: $ukType
         );
     }
 
@@ -75,19 +94,32 @@ class Amazon
     }
 
     /**
-     * UK product link builder.
+     * UK product link builder with fallback search.
      */
-    protected function buildUkLink(Game $game): ?string
+    protected function buildUkLink(Game $game): array
     {
         if ($game->amazon_uk_asin) {
-            return $this->buildUkLinkFromAsin($game->amazon_uk_asin);
+            return [
+                $this->buildUkLinkFromAsin($game->amazon_uk_asin),
+                'product',
+            ];
         }
 
         if ($game->amazon_uk_link) {
-            return $this->appendAffiliateTag($game->amazon_uk_link, $this->ukId);
+            return [
+                $this->appendAffiliateTag($game->amazon_uk_link, $this->ukId),
+                'product',
+            ];
         }
 
-        return null;
+        if (!$this->canSearch($game->amazon_uk_status)) {
+            return [null, null];
+        }
+
+        return [
+            $this->buildSearchLink($game->title, 'www.amazon.co.uk', $this->ukId),
+            'search',
+        ];
     }
 
     /**
@@ -109,10 +141,26 @@ class Amazon
             ];
         }
 
+        if (!$this->canSearch($game->amazon_us_status)) {
+            return [null, null];
+        }
+
         return [
-            $this->buildSearchLink($game->title),
+            $this->buildSearchLink($game->title, 'www.amazon.com', $this->usId),
             'search',
         ];
+    }
+
+    /**
+     * A search would mislead for a game checked and found not to be on sale there, and ignored
+     * games are low quality or de-listed, so neither gets a button.
+     */
+    protected function canSearch(?string $status): bool
+    {
+        return !in_array($status, [
+            AmazonAffiliateStatus::NO_PRODUCT->value,
+            AmazonAffiliateStatus::IGNORED->value,
+        ], true);
     }
 
     /**
@@ -128,10 +176,10 @@ class Amazon
     }
 
     /**
-     * Create a fallback Amazon US search link.
+     * Create a fallback Amazon search link.
      * Automatically URL-encodes the search term.
      */
-    protected function buildSearchLink(string $title): string
+    protected function buildSearchLink(string $title, string $domain, string $affiliateId): string
     {
         // Remove bad punctuation that breaks Amazon search
         $cleanTitle = trim($title);
@@ -139,6 +187,6 @@ class Amazon
 
         $query = urlencode("nintendo switch games " . $cleanTitle);
 
-        return "https://www.amazon.com/s?k={$query}&tag={$this->usId}";
+        return "https://{$domain}/s?k={$query}&tag={$affiliateId}";
     }
 }

@@ -37,7 +37,12 @@
 
         {# Amazon UK #}
         {% if amazon.urlUk %}
-            {% set labelUk = useTiny ? 'Amazon UK' : 'Buy at Amazon UK' %}
+            {% if amazon.ukType == 'product' %}
+                {% set labelUk = useTiny ? 'Amazon UK' : 'Buy at Amazon UK' %}
+            {% else %}
+                {% set labelUk = useTiny ? 'Amazon UK (search)' : 'Find at Amazon UK' %}
+            {% endif %}
+
             {% if useTiny %}
                 {{ affiliate.amazonTinyButton(amazon.urlUk, labelUk) }}
             {% else %}

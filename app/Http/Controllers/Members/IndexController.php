@@ -41,7 +41,7 @@ class IndexController extends Controller
         $userId = $currentUser->id;
 
         // Recent quick reviews (all members)
-        $bindings['QuickReviews'] = $this->repoQuickReview->getLatestActive(5);
+        $bindings['QuickReviews'] = $this->repoQuickReview->getRandomRecentActive();
 
         $bindings['SiteRole'] = $siteRole;
         $bindings['UserData'] = $currentUser;

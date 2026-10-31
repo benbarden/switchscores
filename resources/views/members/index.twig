@@ -173,7 +173,7 @@
                         <a href="{{ route('members.search-modular.find-game', {'searchMode': 'add-quick-review'}) }}">Add a quick review</a>.
                     </p>
                     {% for item in QuickReviews %}
-                        {{ quickReview.render(item, true) }}
+                        {{ quickReview.renderMemberPanel(item) }}
                     {% endfor %}
                 </div>
             </div>

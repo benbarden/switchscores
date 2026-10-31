@@ -86,6 +86,37 @@ class Repository
         return QuickReview::where('item_status', QuickReview::STATUS_ACTIVE)->orderBy('created_at', 'desc')->limit($limit)->get();
     }
 
+    /**
+     * A random selection of recent reviews, capped per member so one busy reviewer
+     * can't fill the list.
+     */
+    public function getRandomRecentActive($limit = 5, $maxPerMember = 2, $months = 6)
+    {
+        $reviews = QuickReview::where('item_status', QuickReview::STATUS_ACTIVE)
+            ->where('created_at', '>=', now()->subMonths($months))
+            ->inRandomOrder()
+            ->get();
+
+        $picked = collect();
+        $countByMember = [];
+
+        foreach ($reviews as $review) {
+            $memberCount = $countByMember[$review->user_id] ?? 0;
+            if ($memberCount >= $maxPerMember) {
+                continue;
+            }
+
+            $countByMember[$review->user_id] = $memberCount + 1;
+            $picked->push($review);
+
+            if ($picked->count() >= $limit) {
+                break;
+            }
+        }
+
+        return $picked;
+    }
+
     public function getAll($limit = null)
     {
         $reviewList = QuickReview::orderBy('id', 'desc');

@@ -1,6 +1,7 @@
 {% extends 'theme/member-b5/layout-default.twig' %}
 {% import 'ui/components/game/packshots.twig' as packshots %}
 {% import 'ui/components/rating/badge.twig' as rating %}
+{% import 'ui/components/affiliates/buttons.twig' as affiliate %}
 
 {% block page_inner %}
 
@@ -33,11 +34,24 @@
                                 {% if game.rating_avg %}
                                     <p class="card-text mb-1">
                                         {{ rating.score(game.rating_avg|number_format(1), 'h6') }}
+                                        {% if game.game_rank %}
+                                            <span class="small text-muted ms-1">Rank #{{ game.game_rank }}</span>
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+                                {% if game.price_eshop_discounted and game.price_eshop_discount_pc and not game.isDelisted() %}
+                                    <p class="card-text small mb-1">
+                                        <s>&pound;{{ game.price_eshop }}</s>
+                                        <strong>&pound;{{ game.price_eshop_discounted }}</strong>
+                                        <span class="text-danger">{{ game.price_eshop_discount_pc|round }}% off</span>
                                     </p>
                                 {% endif %}
                                 <p class="card-text small text-muted mb-2">
                                     Added {{ item.created_at|date('j M Y') }}
                                 </p>
+                                <div class="mb-2">
+                                    {{ affiliate.buyButtons(game, AmazonLinks[game.id], 'tiny') }}
+                                </div>
                                 {% if not auth_user().isEmailVerified() %}
                                     <span class="text-muted small">Verify email to manage</span>
                                 {% else %}

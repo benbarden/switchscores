@@ -31,7 +31,7 @@ class Repository
 
     public function byUser($userId, $limit = null)
     {
-        $query = UserWishlist::with('game', 'game.category')
+        $query = UserWishlist::with('game', 'game.category', 'game.dspNintendoCoUk')
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc');
 

@@ -252,6 +252,80 @@ nav ol.breadcrumb {
     color: #212529;
 }
 
+/* Tiny buy buttons, from design.css, which isn't loaded here */
+.buy-buttons-row--tiny {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.buy-buttons-row--tiny .buy-prefix {
+    color: #555;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 2px;
+    white-space: nowrap;
+}
+
+.btn-cta-tiny {
+    background-color: #2C75C9;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 1.2;
+    padding: 3px 6px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-cta-tiny:hover,
+.btn-cta-tiny:focus {
+    color: #fff;
+    opacity: 0.9;
+}
+
+/* Members dashboard: Recent member reviews */
+.member-review {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.member-review-packshot {
+    flex: 0 0 90px;
+}
+.member-review-content {
+    flex: 1;
+    min-width: 0;
+}
+.member-review-band {
+    align-items: center;
+    background-color: #f6f6f6;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+}
+.member-review-title {
+    color: #000;
+    font-size: 1.1em;
+}
+.member-review-score {
+    flex: 0 0 auto;
+}
+.member-review-body {
+    font-size: 13px;
+    padding: 0 8px;
+}
+.member-review-by {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 6px;
+    padding: 0 8px;
+}
+
 /* NOT YET MIGRATED */
 
 /* Ratings - new */

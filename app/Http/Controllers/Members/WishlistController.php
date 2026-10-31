@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
 use App\Domain\View\PageBuilders\MembersPageBuilder;
 
+use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
@@ -22,7 +23,8 @@ class WishlistController extends Controller
         private MembersPageBuilder $pageBuilder,
         private GameRepository $repoGame,
         private UserWishlistRepository $repoWishlist,
-        private UserGamesCollectionRepository $repoUserGamesCollection
+        private UserGamesCollectionRepository $repoUserGamesCollection,
+        private AmazonAffiliate $affiliateAmazon
     )
     {
     }
@@ -35,7 +37,16 @@ class WishlistController extends Controller
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
 
-        $bindings['WishlistItems'] = $this->repoWishlist->byUser($userId);
+        $wishlistItems = $this->repoWishlist->byUser($userId);
+
+        $amazonWishlist = $this->affiliateAmazon->forWishlist();
+        $amazonLinks = [];
+        foreach ($wishlistItems as $item) {
+            $amazonLinks[$item->game_id] = $amazonWishlist->buildLinksForGame($item->game);
+        }
+
+        $bindings['WishlistItems'] = $wishlistItems;
+        $bindings['AmazonLinks'] = $amazonLinks;
         $bindings['CollectionGameIds'] = $this->repoUserGamesCollection->byUserGameIds($userId);
 
         return view('members.wishlist.index', $bindings);

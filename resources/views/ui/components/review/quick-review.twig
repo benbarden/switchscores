@@ -29,3 +29,25 @@
         </div>
     </div>
 {% endmacro %}
+
+{# Members dashboard: leads with the game, and has no date as the reviews are in random order #}
+{% macro renderMemberPanel(review) %}
+    {% import 'ui/components/game/packshots.twig' as packshots %}
+    {% import 'ui/components/rating/badge.twig' as rating %}
+
+    <div class="member-review">
+        <div class="member-review-packshot">
+            {{ packshots.square(review.game) }}
+        </div>
+        <div class="member-review-content">
+            <div class="member-review-band">
+                <a class="member-review-title" href="{{ game_url(review.game) }}">{{ review.game.title }}</a>
+                <span class="member-review-score">{{ rating.score(review.review_score, 'h6') }}</span>
+            </div>
+            <div class="member-review-body">
+                {{ review.review_body|raw }}
+            </div>
+            <div class="member-review-by">Reviewed by: {{ review.user.display_name }}</div>
+        </div>
+    </div>
+{% endmacro %}
