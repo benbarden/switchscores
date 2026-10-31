@@ -1,10 +1,12 @@
-{# width and height reserve the space while lazy images load; the CSS sets the displayed size #}
+{# width and height reserve the space while lazy images load. height: auto is needed alongside them:
+   these macros also run on the Bootstrap 5 themes, which have no img-responsive class, and the
+   height attribute would otherwise apply as it stands and stretch the image. #}
 {% macro header(item, lazy = true) %}
     {% import 'ui/components/image/resolve.twig' as image %}
     {% set boxartUrl = image.header(item)|trim %}
     <a href="{{ game_url(item) }}">
         {% if boxartUrl %}
-            <img src="{{ boxartUrl }}" width="1920" height="1080"{% if lazy %} loading="lazy"{% endif %} class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+            <img src="{{ boxartUrl }}" width="1920" height="1080"{% if lazy %} loading="lazy"{% endif %} class="img-responsive" style="border: 0; width: 100%; height: auto;" alt="{{ item.title }}">
         {% else %}
             <img src="/img/placeholder/no-image-found-wide.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
         {% endif %}
@@ -16,7 +18,7 @@
     {% set boxartUrl = image.square(item)|trim %}
     <a href="{{ game_url(item) }}"{% if tabindex is not null %} tabindex="{{ tabindex }}"{% endif %}>
         {% if boxartUrl %}
-            <img src="{{ boxartUrl }}" width="500" height="500" loading="lazy" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+            <img src="{{ boxartUrl }}" width="500" height="500" loading="lazy" class="img-responsive" style="border: 0; width: 100%; height: auto;" alt="{{ item.title }}">
         {% else %}
             <img src="/img/placeholder/no-image-found-square.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
         {% endif %}
@@ -39,7 +41,7 @@
     {% import 'ui/components/image/resolve.twig' as image %}
     {% set boxartUrl = image.square(item)|trim %}
     {% if boxartUrl %}
-        <img src="{{ boxartUrl }}" width="500" height="500" loading="lazy" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
+        <img src="{{ boxartUrl }}" width="500" height="500" loading="lazy" class="img-responsive" style="border: 0; width: 100%; height: auto;" alt="{{ item.title }}">
     {% else %}
         <img src="/img/placeholder/no-image-found-square.png" class="img-responsive" style="border: 0; width: 100%;" alt="{{ item.title }}">
     {% endif %}
