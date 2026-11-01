@@ -101,14 +101,6 @@
                 {% if hideHeader is not defined %}
                 <h1>
                     {{ PageTitle }}
-                    {% if exception is null and hideTweetButton is not defined %}
-                        <div class="pull-right">
-                            <a class="twitter-share-button"
-                               href="https://twitter.com/intent/tweet?text={{ PageTitle }}&via=switchscores"
-                               data-size="medium">
-                                Tweet</a>
-                        </div>
-                    {% endif %}
                 </h1>
                 {% endif %}
                 {% block page_body %}
@@ -120,25 +112,6 @@
     </div>
 
 </div>
-
-<script>
-    window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-            t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
-
-    t._e = [];
-    t.ready = function(f) {
-        t._e.push(f);
-    };
-
-    return t;
-    }(document, "script", "twitter-wjs"));
-</script>
 
 <script src="/js/select2-fix.js"></script>
 
