@@ -94,4 +94,13 @@ class RegisterTest extends TestCase
         $this->post(route('register'), $data)->assertSessionHasNoErrors();
         $this->assertSame('passed', $this->userFor($data)->signup_meta['turnstile']);
     }
+
+    public function testRegisterPageShowsTheFormThenReasonsToJoin()
+    {
+        $response = $this->get(route('register'));
+
+        $response->assertOk();
+        $response->assertSeeInOrder(['name="signup_name"', 'Why join Switch Scores?', 'Track your collection'], false);
+        $response->assertDontSee('Create an account to track your games collection');
+    }
 }

@@ -4,41 +4,10 @@
 
 <div class="row">
 
-    <div class="col-md-6">
+    {# The login form comes first in the markup so returning members reach it first on a phone. On desktop it moves to the right-hand column. #}
+    <div class="col-md-6 col-md-push-6">
 
-        <h2>New member? Sign up here</h2>
-
-        <p>
-            Join Switch Scores to track your games and write reviews.
-        </p>
-        <button class="btn btn-primary" onclick="top.location.href='{{ route('register') }}';">
-            Create an account
-        </button>
-
-        <hr>
-
-        <h2>Twitter login</h2>
-
-        <p>
-            If you have an existing account linked to Twitter, use the button below to log in.
-        </p>
-        <p class="text-muted">
-            <small>New signups via Twitter are no longer available. Please register with your email address.</small>
-        </p>
-
-        <a href="{{ route('auth.login.twitter') }}">
-            <img src="/img/sign-in-with-twitter-gray.png" alt="Sign in with Twitter" style="border: 0;">
-        </a>
-
-    </div>
-
-    <div class="col-md-6">
-
-        <h2>Standard login</h2>
-
-        <p>
-            If you have a standard account, you can login here. <a href="{{ route('password.request') }}">Forgotten your password?</a>
-        </p>
+        <h2>Log in</h2>
 
         {% if errors.any %}
             {% for error in errors.all %}
@@ -83,11 +52,28 @@
             <div class="form-group">
                 <div class="col-md-8 text-left">
                     <button type="submit" class="btn btn-primary">
-                        Login
+                        Log in
                     </button>
                 </div>
             </div>
         </form>
+
+        <p>
+            <a href="{{ route('password.request') }}">Forgotten your password?</a>
+        </p>
+        <p class="text-muted">
+            <small>Have an older account linked to Twitter? <a href="{{ route('auth.login.twitter') }}">Log in with Twitter</a></small>
+        </p>
+
+    </div>
+
+    <div class="col-md-6 col-md-pull-6">
+
+        <h2>New here? Join Switch Scores today:</h2>
+
+        {% include 'auth/join-reasons.twig' %}
+
+        <a class="btn btn-primary" href="{{ route('register') }}">Create an account</a>
 
     </div>
 

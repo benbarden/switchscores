@@ -804,3 +804,33 @@ blockquote {
         font-size: 13px;
     }
 }
+
+/* Login page: reasons to join */
+.join-reasons {
+    list-style: none;
+    margin: 15px 0 20px;
+    padding: 0;
+}
+.join-reasons li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.join-reasons-icon {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 12px;
+    border-radius: 50%;
+    background: #c9302c;
+    color: #fff;
+    font-size: 17px;
+    text-align: center;
+}
+
+/* Register page */
+.register-form .control-label {
+    font-size: 14px;
+    font-weight: bold;
+}
