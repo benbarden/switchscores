@@ -14,35 +14,41 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
+        {# Only the first section shown is near the first screen, so only its first row skips lazy
+           loading. Any section can be empty, so the first one shown isn't always "next 7 days". #}
+        {% set eagerUsed = false %}
         {% if UpcomingNext7Days|length %}
             <h2>Upcoming: next 7 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gamegrid.render(UpcomingNext7Days, 4, 'standard', false, false, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingNext7Days, 4, 'standard', false, false, 'show-date-icons', not eagerUsed) }}
                 </div>
             </div>
+            {% set eagerUsed = true %}
         {% endif %}
         {% if UpcomingNext14Days|length %}
             <h2>Upcoming: next 14 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gamegrid.render(UpcomingNext14Days, 4, 'standard', false, false, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingNext14Days, 4, 'standard', false, false, 'show-date-icons', not eagerUsed) }}
                 </div>
             </div>
+            {% set eagerUsed = true %}
         {% endif %}
         {% if UpcomingNext28Days|length %}
             <h2>Upcoming: next 28 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gamegrid.render(UpcomingNext28Days, 4, 'standard', false, false, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingNext28Days, 4, 'standard', false, false, 'show-date-icons', not eagerUsed) }}
                 </div>
             </div>
+            {% set eagerUsed = true %}
         {% endif %}
         {% if UpcomingBeyond28Days|length %}
             <h2>Upcoming: beyond 28 days</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    {{ gamegrid.render(UpcomingBeyond28Days, 4, 'standard', false, false, 'show-date-icons') }}
+                    {{ gamegrid.render(UpcomingBeyond28Days, 4, 'standard', false, false, 'show-date-icons', not eagerUsed) }}
                 </div>
             </div>
         {% endif %}

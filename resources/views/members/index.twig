@@ -61,7 +61,7 @@
                     <td>{{ UserData.created_at|date('d M Y') }}</td>
                 </tr>
             </table>
-            <a href="{{ route('members.settings') }}" class="btn btn-outline-primary btn-sm">Edit your details</a>
+            <a href="{{ route('members.settings') }}" class="btn btn-outline-primary btn-sm mb-4">Edit your details</a>
         </div>
 
         <div class="col-xs-12 col-sm-4 col-md-4">
@@ -159,7 +159,7 @@
                 </p>
             {% endif %}
             <br>
-            <a class="btn btn-primary btn-lg" href="{{ route('members.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">Suggest a featured game</a>
+            <a class="btn btn-primary btn-lg mb-4" href="{{ route('members.search-modular.find-game', {'searchMode': 'add-featured-game'}) }}">Suggest a featured game</a>
 
         </div>
 

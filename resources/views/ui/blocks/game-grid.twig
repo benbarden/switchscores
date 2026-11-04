@@ -1,4 +1,6 @@
-{% macro render(games, batchSize=3, cardType='standard', hero=false, withConsole=false, mode='default') %}
+{# eagerFirstRow: the first row skips lazy loading, as it's usually on the first screen. A page with
+   several grids passes false for every grid after the first one shown. #}
+{% macro render(games, batchSize=3, cardType='standard', hero=false, withConsole=false, mode='default', eagerFirstRow=true) %}
     {% if mode == 'show-date-icons' %}
         <link type="text/css" rel="stylesheet" href="/css/cal.css">
     {% endif %}
@@ -21,7 +23,7 @@
                 {% for game in batch %}
                     {% if game %}
                         <div class="{{ colClass }}">
-                            {{ _self.renderCard(cardType, game, mode, false, withConsole, not hero and loop.parent.loop.first) }}
+                            {{ _self.renderCard(cardType, game, mode, false, withConsole, eagerFirstRow and not hero and loop.parent.loop.first) }}
                         </div>
                     {% endif %}
                 {% endfor %}
