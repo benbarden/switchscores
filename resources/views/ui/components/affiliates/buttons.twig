@@ -35,13 +35,9 @@
             <span class="buy-prefix">Buy:</span>
         {% endif %}
 
-        {# Amazon UK #}
+        {# Amazon UK: product links only, as UK doesn't pay for search clicks #}
         {% if amazon.urlUk %}
-            {% if amazon.ukType == 'product' %}
-                {% set labelUk = useTiny ? 'Amazon UK' : 'Buy at Amazon UK' %}
-            {% else %}
-                {% set labelUk = useTiny ? 'Amazon UK (search)' : 'Find at Amazon UK' %}
-            {% endif %}
+            {% set labelUk = useTiny ? 'Amazon UK' : 'Buy at Amazon UK' %}
 
             {% if useTiny %}
                 {{ affiliate.amazonTinyButton(amazon.urlUk, labelUk) }}

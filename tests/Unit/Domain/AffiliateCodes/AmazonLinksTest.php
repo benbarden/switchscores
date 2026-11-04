@@ -7,8 +7,9 @@ use App\Models\Game;
 use Tests\TestCase;
 
 /**
- * Which Amazon link a game gets in each store: a product link if we have one, otherwise a search,
- * and nothing where the status says a search wouldn't help.
+ * Which Amazon link a game gets in each store: a product link if we have one. Otherwise US gets
+ * a search, unless the status says a search wouldn't help, and UK gets nothing, as Amazon UK
+ * only pays for direct product page links.
  */
 class AmazonLinksTest extends TestCase
 {
@@ -39,13 +40,12 @@ class AmazonLinksTest extends TestCase
         $this->assertSame('product', $links->usType);
     }
 
-    public function testUncheckedGamesGetASearchInEachStore()
+    public function testUncheckedGamesGetAUsSearchAndNoUkLink()
     {
         $links = (new Amazon())->buildLinksForGame($this->game([]));
 
-        $this->assertStringStartsWith('https://www.amazon.co.uk/s?k=', $links->urlUk);
-        $this->assertStringEndsWith('&tag=switchscore07-21', $links->urlUk);
-        $this->assertSame('search', $links->ukType);
+        $this->assertNull($links->urlUk);
+        $this->assertNull($links->ukType);
         $this->assertStringStartsWith('https://www.amazon.com/s?k=', $links->urlUs);
         $this->assertStringEndsWith('&tag=switchscores-20', $links->urlUs);
         $this->assertSame('search', $links->usType);
@@ -68,25 +68,30 @@ class AmazonLinksTest extends TestCase
 
     public function testEachStoreFollowsItsOwnStatus()
     {
-        $links = (new Amazon())->buildLinksForGame($this->game(['amazon_us_status' => 'no_product']));
+        $links = (new Amazon())->buildLinksForGame($this->game([
+            'amazon_uk_status' => 'linked',
+            'amazon_uk_asin' => 'B0TESTUK01',
+            'amazon_us_status' => 'no_product',
+        ]));
 
         $this->assertNull($links->urlUs);
-        $this->assertSame('search', $links->ukType);
+        $this->assertSame('product', $links->ukType);
     }
 
     public function testSearchKeepsAccentedLettersAsPlainOnes()
     {
         $links = (new Amazon())->buildLinksForGame($this->game(['title' => 'Pokémon Pokopia']));
 
-        $this->assertStringContainsString('Pokemon+Pokopia', $links->urlUk);
         $this->assertStringContainsString('Pokemon+Pokopia', $links->urlUs);
     }
 
-    public function testSearchLinksUseTheWishlistIds()
+    public function testLinksUseTheWishlistIds()
     {
-        $links = (new Amazon())->forWishlist()->buildLinksForGame($this->game([]));
+        $links = (new Amazon())->forWishlist()->buildLinksForGame($this->game([
+            'amazon_uk_asin' => 'B0TESTUK01',
+        ]));
 
-        $this->assertStringEndsWith('&tag=sswishlist-21', $links->urlUk);
+        $this->assertSame('https://www.amazon.co.uk/dp/B0TESTUK01/?tag=sswishlist-21', $links->urlUk);
         $this->assertStringEndsWith('&tag=sswishlist00-20', $links->urlUs);
     }
 }

@@ -95,7 +95,8 @@ class Amazon
     }
 
     /**
-     * UK product link builder with fallback search.
+     * UK product link builder. No search fallback: Amazon UK only pays affiliates for
+     * direct product page links, so a search click earns nothing.
      */
     protected function buildUkLink(Game $game): array
     {
@@ -113,14 +114,7 @@ class Amazon
             ];
         }
 
-        if (!$this->canSearch($game->amazon_uk_status)) {
-            return [null, null];
-        }
-
-        return [
-            $this->buildSearchLink($game->title, 'www.amazon.co.uk', $this->ukId),
-            'search',
-        ];
+        return [null, null];
     }
 
     /**
