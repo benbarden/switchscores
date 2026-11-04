@@ -3,6 +3,7 @@
 
 namespace App\Domain\Game;
 
+use App\Domain\GameSearch\SearchTerm;
 use App\Domain\Repository\AbstractRepository;
 use App\Models\Game;
 use App\Enums\CacheDuration;
@@ -68,6 +69,8 @@ class Repository extends AbstractRepository
 
     public function searchByTitle($keywords)
     {
+        $keywords = SearchTerm::clean($keywords);
+
         return Game::where('title', 'like', '%'.$keywords.'%')->orderBy('eu_release_date', 'DESC')->get();
     }
 
@@ -79,8 +82,9 @@ class Repository extends AbstractRepository
             ->active();
 
         // Keywords
-        if (!empty($filters['keywords'])) {
-            $query->where('title', 'like', '%' . $filters['keywords'] . '%');
+        $keywords = SearchTerm::clean($filters['keywords'] ?? null);
+        if ($keywords !== '') {
+            $query->where('title', 'like', '%' . $keywords . '%');
         }
 
         // Category (including children)
@@ -163,7 +167,7 @@ class Repository extends AbstractRepository
 
     public function partialTitleSearch($title, $includeLowQuality = true, $includeDeListed = true, $sortBy = null, $limit = null)
     {
-        $games = Game::where('title', 'LIKE', '%'.$title.'%');
+        $games = Game::where('title', 'LIKE', '%'.SearchTerm::clean($title).'%');
         if (!$includeLowQuality) {
             $games = $games->where('is_low_quality', 0);
         }

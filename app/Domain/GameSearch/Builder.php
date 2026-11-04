@@ -30,7 +30,7 @@ class Builder
         $collectionId = null;
 
         if (array_key_exists('search_keywords', $params)) {
-            $title = $params['search_keywords'];
+            $title = SearchTerm::clean($params['search_keywords']);
             if ($title != '') {
                 $paramsEntered++;
             }

@@ -240,8 +240,8 @@ class Game extends Model implements Auditable
 
     public function scopeSearchTitle($query, $title)
     {
-        if (is_array($title)) return false;
-        if ($title) $query->where('title', 'like', '%'.$title.'%');
+        $title = \App\Domain\GameSearch\SearchTerm::clean($title);
+        if ($title !== '') $query->where('title', 'like', '%'.$title.'%');
     }
 
     public function scopeSearchShowRankedUnranked($query, $showRankedUnranked)
