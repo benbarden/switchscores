@@ -18,12 +18,20 @@ class TopRatedGaps
 {
     public const ALL_TIME = 'all-time';
 
+    /**
+     * Well-rated games that miss every Top 100, so they only show buy buttons on their own pages.
+     */
+    public const RATED_8_PLUS = 'rated-8-plus';
+
     public const REGIONS = ['us', 'uk'];
 
     private const TOP_RANKS = 100;
 
+    private const RATED_MIN = 8;
+
     /**
-     * Gap counts for the Affiliates page: all-time first, then each year, newest first.
+     * Gap counts for the Affiliates page: all-time first, then each year, newest first, then the
+     * rated 8+ games that aren't on a Top rated page.
      *
      * @return array<int, array{label: string, scope: string, counts: array<int, int>}>
      */
@@ -43,7 +51,21 @@ class TopRatedGaps
             ];
         }
 
+        $rows[] = [
+            'label' => 'Rated 8+, not on Top rated',
+            'scope' => self::RATED_8_PLUS,
+            'counts' => $this->countByConsole($this->rated8PlusQuery($region)),
+        ];
+
         return $rows;
+    }
+
+    /**
+     * How a scope reads in a page title, e.g. "all-time", "2025" or "rated 8+".
+     */
+    public function scopeLabel(string $scope): string
+    {
+        return $scope === self::RATED_8_PLUS ? 'rated 8+' : $scope;
     }
 
     /**
@@ -54,14 +76,7 @@ class TopRatedGaps
      */
     public function progress(string $region): array
     {
-        $topGames = DB::table('game_rank_alltime')
-            ->select('game_id')
-            ->where('game_rank', '<=', self::TOP_RANKS)
-            ->union(
-                DB::table('game_rank_year')->select('game_id')->where('game_rank', '<=', self::TOP_RANKS)
-            );
-
-        $query = fn () => Game::query()->joinSub($topGames, 'top_games', 'top_games.game_id', '=', 'games.id');
+        $query = fn () => Game::query()->joinSub($this->topGameIds(), 'top_games', 'top_games.game_id', '=', 'games.id');
 
         $totals = $this->countByConsole($query());
         $gaps = $this->countByConsole($this->applyGapFilter($query(), $region));
@@ -82,14 +97,27 @@ class TopRatedGaps
 
     public function isValidScope(string $scope): bool
     {
-        return $scope === self::ALL_TIME || in_array((int) $scope, $this->years(), true);
+        return $scope === self::ALL_TIME
+            || $scope === self::RATED_8_PLUS
+            || in_array((int) $scope, $this->years(), true);
     }
 
     /**
-     * @return Collection<int, Game> With the game's rank on that page in page_rank.
+     * @return Collection<int, Game> With the game's rank on that page in page_rank, or its
+     *     overall rank for the rated 8+ list, which has no page.
      */
     public function games(string $region, int $consoleId, string $scope): Collection
     {
+        if ($scope === self::RATED_8_PLUS) {
+            return $this->rated8PlusQuery($region)
+                ->where('games.console_id', $consoleId)
+                ->select('games.*')
+                ->addSelect('games.game_rank as page_rank')
+                ->orderBy('games.game_rank')
+                ->orderBy('games.title')
+                ->get();
+        }
+
         $rankTable = $this->rankTable($scope);
 
         return $this->gapQuery($region, $scope)
@@ -101,8 +129,15 @@ class TopRatedGaps
             ->get();
     }
 
-    public function pagePath(Console $console, string $scope): string
+    /**
+     * The public Top rated page for a list, or null for the rated 8+ list, which has none.
+     */
+    public function pagePath(Console $console, string $scope): ?string
     {
+        if ($scope === self::RATED_8_PLUS) {
+            return null;
+        }
+
         $base = '/c/'.$console->slug.'/top-rated/';
 
         return $base.($scope === self::ALL_TIME ? self::ALL_TIME : 'by-year/'.$scope);
@@ -181,6 +216,33 @@ class TopRatedGaps
         if ($scope !== self::ALL_TIME) {
             $query->where($rankTable.'.release_year', (int) $scope);
         }
+
+        return $this->applyGapFilter($query, $region);
+    }
+
+    /**
+     * Every game in a Top 100, all-time or any year.
+     */
+    private function topGameIds(): \Illuminate\Database\Query\Builder
+    {
+        return DB::table('game_rank_alltime')
+            ->select('game_id')
+            ->where('game_rank', '<=', self::TOP_RANKS)
+            ->union(
+                DB::table('game_rank_year')->select('game_id')->where('game_rank', '<=', self::TOP_RANKS)
+            );
+    }
+
+    /**
+     * Active ranked games rated 8 or more that miss every Top 100.
+     */
+    private function rated8PlusQuery(string $region): Builder
+    {
+        $query = Game::query()
+            ->active()
+            ->whereNotNull('games.game_rank')
+            ->where('games.rating_avg', '>=', self::RATED_MIN)
+            ->whereNotIn('games.id', $this->topGameIds());
 
         return $this->applyGapFilter($query, $region);
     }

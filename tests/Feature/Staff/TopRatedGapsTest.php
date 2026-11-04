@@ -269,6 +269,77 @@ class TopRatedGapsTest extends TestCase
             ->assertSee('No data in the latest snapshot');
     }
 
+    private function rated(float $rating, int $consoleId = Console::ID_SWITCH_1, array $fields = []): Game
+    {
+        return $this->makeGame($consoleId, array_merge([
+            'rating_avg' => $rating,
+            'game_rank' => 50,
+            'game_status' => 'active',
+        ], $fields));
+    }
+
+    public function testRated8PlusListsWellRatedGamesOffEveryTopRatedPage()
+    {
+        $gap = $this->rated(8.5);
+        $onAllTime = $this->rated(9.0);
+        $onYear = $this->rated(8.2);
+        $tooLow = $this->rated(7.9);
+        $unranked = $this->rated(8.5, Console::ID_SWITCH_1, ['game_rank' => null]);
+        $delisted = $this->rated(8.5, Console::ID_SWITCH_1, ['game_status' => 'delisted']);
+        $linked = $this->rated(8.5, Console::ID_SWITCH_1, ['amazon_us_asin' => 'B097BP5DLQ']);
+        $otherConsole = $this->rated(8.5, Console::ID_SWITCH_2);
+
+        $this->rankAllTime($onAllTime, 1);
+        $this->rankYear($onYear, 10);
+
+        $ids = $this->gameIds(TopRatedGaps::RATED_8_PLUS);
+
+        $this->assertContains($gap->id, $ids);
+        foreach ([$onAllTime, $onYear, $tooLow, $unranked, $delisted, $linked, $otherConsole] as $game) {
+            $this->assertNotContains($game->id, $ids);
+        }
+    }
+
+    public function testRated8PlusIsOnTheGapsListWhenOutsideTheTop100()
+    {
+        $outside = $this->rated(8.5);
+        $this->rankAllTime($outside, 101);
+
+        $this->assertContains($outside->id, $this->gameIds(TopRatedGaps::RATED_8_PLUS));
+    }
+
+    public function testOverviewEndsWithTheRated8PlusRow()
+    {
+        $this->rated(8.5);
+
+        $overview = app(TopRatedGaps::class)->overview('us');
+        $last = end($overview);
+
+        $this->assertSame(TopRatedGaps::RATED_8_PLUS, $last['scope']);
+        $this->assertSame('Rated 8+, not on Top rated', $last['label']);
+        $this->assertSame(
+            count($this->gameIds(TopRatedGaps::RATED_8_PLUS)),
+            $last['counts'][Console::ID_SWITCH_1]
+        );
+    }
+
+    public function testRated8PlusPageHasNoTopRatedPageAndOffersFindMatch()
+    {
+        $game = $this->rated(8.5, Console::ID_SWITCH_1, ['game_rank' => 1234]);
+
+        $this->actingAs($this->owner())->get($this->listUrl(TopRatedGaps::RATED_8_PLUS))
+            ->assertStatus(200)
+            ->assertSee('Switch 1 rated 8+')
+            ->assertSee('Not on a Top rated page')
+            ->assertDontSee('Search clicks')
+            ->assertSee($game->title)
+            ->assertSee('1234')
+            ->assertSee('Find match');
+
+        $this->actingAs($this->owner())->get(route('staff.games.affiliates'))
+            ->assertSee($this->listUrl(TopRatedGaps::RATED_8_PLUS), false);
+    }
+
     public function testUnknownScopeIs404()
     {
         $this->actingAs($this->owner())->get($this->listUrl('1999'))->assertStatus(404);

@@ -129,7 +129,7 @@ class AffiliatesController extends Controller
         }
 
         $regionName = 'Amazon '.strtoupper($region);
-        $pageTitle = 'Top rated gaps - '.$regionName.': '.$console->name.' '.$scope;
+        $pageTitle = 'Top rated gaps - '.$regionName.': '.$console->name.' '.$this->topRatedGaps->scopeLabel($scope);
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::gamesAffiliatesSubpage($pageTitle))->bindings;
 
         $rows = [];
@@ -146,7 +146,8 @@ class AffiliatesController extends Controller
         $bindings['RegionName'] = $regionName;
         $bindings['GapRows'] = $rows;
         $bindings['PagePath'] = $pagePath;
-        $bindings['PageStats'] = $this->topRatedGaps->pageStats($pagePath);
+        $bindings['PageStats'] = $pagePath !== null ? $this->topRatedGaps->pageStats($pagePath) : null;
+        $bindings['IsRated8Plus'] = $scope === TopRatedGaps::RATED_8_PLUS;
 
         return view('staff.games.affiliates.top-rated-gaps', $bindings);
     }

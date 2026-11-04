@@ -10,8 +10,15 @@
             <tbody>
                 <tr>
                     <th>Page</th>
-                    <td><a href="{{ PagePath }}" target="_blank" rel="noopener">{{ PagePath }}</a></td>
+                    <td>
+                        {% if PagePath %}
+                            <a href="{{ PagePath }}" target="_blank" rel="noopener">{{ PagePath }}</a>
+                        {% else %}
+                            Not on a Top rated page
+                        {% endif %}
+                    </td>
                 </tr>
+                {% if PagePath %}
                 <tr>
                     <th>Search clicks</th>
                     <td>
@@ -22,6 +29,7 @@
                         {% endif %}
                     </td>
                 </tr>
+                {% endif %}
                 <tr>
                     <th>Gaps</th>
                     <td><span id="gap-count">{{ GapRows|length }}</span></td>
@@ -31,7 +39,11 @@
     </div>
 </div>
 
+{% if IsRated8Plus %}
+<p>Active ranked games rated 8 or more that aren't in any Top 100, with no direct {{ RegionName }} link and an Unchecked status. Their buy buttons only show on their own game pages. Rank is the overall rank. A game leaves the list once it's saved or marked Not found.</p>
+{% else %}
 <p>Ranked games with no direct {{ RegionName }} link and an Unchecked status. A game leaves the list once it's saved or marked Not found.</p>
+{% endif %}
 
 {% if GapRows|length %}
     <table class="table align-middle">
