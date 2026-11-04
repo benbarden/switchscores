@@ -117,6 +117,7 @@ Route::group([
             ->name('editAffiliates');
         Route::get('affiliates/top-rated-gaps/{region}/{console:slug}/{scope}', 'topRatedGaps')->name('affiliates.topRatedGaps');
         Route::post('affiliates/quick-save/{gameId}', 'quickSave')->name('affiliates.quickSave');
+        Route::get('affiliates/find-match/{gameId}', 'findMatch')->name('affiliates.findMatch');
     });
 
     // ---- Bulk edit ----

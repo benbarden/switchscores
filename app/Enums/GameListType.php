@@ -19,8 +19,6 @@ enum GameListType: string
     case NO_EU_RELEASE_DATE = 'no-eu-release-date';
     case NO_ESHOP_PRICE = 'no-eshop-price';
     case NO_VIDEO_TYPE = 'no-video-type';
-    case NO_AMAZON_UK_LINK = 'no-amazon-uk-link';
-    case NO_AMAZON_US_LINK = 'no-amazon-us-link';
     case NO_NINTENDO_CO_UK_LINK = 'no-nintendo-co-uk-link';
     case BROKEN_NINTENDO_CO_UK_LINK = 'broken-nintendo-co-uk-link';
 

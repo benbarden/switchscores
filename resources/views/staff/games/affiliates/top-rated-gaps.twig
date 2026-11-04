@@ -46,19 +46,26 @@
         </thead>
         <tbody>
             {% for row in GapRows %}
-                <tr class="js-gap-row" data-save-url="{{ route('staff.games.affiliates.quickSave', {'gameId': row.game.id}) }}">
+                <tr class="js-gap-row" data-save-url="{{ route('staff.games.affiliates.quickSave', {'gameId': row.game.id}) }}"
+                    {% if Region == 'us' %}data-match-url="{{ route('staff.games.affiliates.findMatch', {'gameId': row.game.id}) }}"{% endif %}>
                     <td class="text-end">{{ row.game.page_rank }}</td>
                     <td>{{ gamelink.title(row.game, 'staff') }}</td>
                     <td>{{ row.game.format_physical }}</td>
-                    <td>
+                    <td class="align-top">
                         <div class="input-group input-group-sm">
+                            {% if Region == 'us' %}
+                                <button type="button" class="btn btn-outline-primary js-find-match">Find match</button>
+                            {% endif %}
                             <a class="btn btn-outline-secondary" href="{{ row.searchUrl }}" target="_blank" rel="noopener">Search</a>
                             <input type="text" class="form-control js-asin"
                                    placeholder="Paste URL" aria-label="{{ RegionName }} URL or ASIN for {{ row.game.title }}">
                         </div>
                         <div class="small text-danger js-message"></div>
+                        {# No margin while empty, so the column lines up with the Save buttons. Width 0 with
+                           min-width 100% keeps long product titles from widening the column: they wrap instead. #}
+                        <div class="js-matches" style="width: 0; min-width: 100%;"></div>
                     </td>
-                    <td>
+                    <td class="align-top">
                         <div class="d-flex gap-1">
                             <button type="button" class="btn btn-primary btn-sm js-save">Save</button>
                             <button type="button" class="btn btn-outline-secondary btn-sm js-not-found">Not found</button>
@@ -123,6 +130,69 @@
         $(document).on('click', '.js-not-found', function () {
             save($(this).closest('.js-gap-row'), {no_product: 1});
         });
+
+        {% if Region == 'us' %}
+        // Find match: one Amazon US search, shown for picking. Built with .text() so product
+        // titles from Amazon can't inject markup.
+        function renderMatches($row, results) {
+            var $matches = $('<div class="mt-2">').appendTo($row.find('.js-matches').empty());
+
+            if (!results.length) {
+                $matches.append($('<div class="small text-muted">').text('No matches found.'));
+                return;
+            }
+
+            $.each(results, function (i, result) {
+                var $item = $('<div class="d-flex align-items-center gap-2 border-top py-1">');
+
+                if (result.imageUrl) {
+                    $item.append($('<img alt="" width="40" style="height: auto; flex-shrink: 0;">').attr('src', result.imageUrl));
+                }
+
+                var $text = $('<div class="small flex-grow-1 text-break" style="min-width: 0;">');
+                $text.append($('<div>').text(result.title || result.asin));
+                var details = [result.brand, result.price, result.asin].filter(Boolean).join(' · ');
+                $text.append($('<div class="text-muted">').text(details));
+                if (result.consoleWarning) {
+                    $text.append($('<span class="badge bg-warning text-dark">').text('Title says ' + result.consoleWarning));
+                }
+                $item.append($text);
+
+                $item.append($('<a class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">')
+                    .attr('href', result.viewUrl).text('View'));
+                $item.append($('<button type="button" class="btn btn-primary btn-sm js-use-match">')
+                    .attr('data-asin', result.asin).text('Use this'));
+
+                $matches.append($item);
+            });
+        }
+
+        $(document).on('click', '.js-find-match', function () {
+            var $button = $(this);
+            var $row = $button.closest('.js-gap-row');
+            var $message = $row.find('.js-message');
+
+            $button.prop('disabled', true);
+            $message.text('');
+            $row.find('.js-matches').empty().append($('<div class="small text-muted mt-2">').text('Searching Amazon US...'));
+
+            $.getJSON($row.data('match-url')).done(function (response) {
+                renderMatches($row, response.results || []);
+            }).fail(function (xhr) {
+                var response = xhr.responseJSON;
+                $row.find('.js-matches').empty();
+                $message.text(response && response.error ? response.error : 'Could not search Amazon. Please try again.');
+            }).always(function () {
+                $button.prop('disabled', false);
+            });
+        });
+
+        $(document).on('click', '.js-use-match', function () {
+            var $row = $(this).closest('.js-gap-row');
+            $row.find('.js-asin').val($(this).attr('data-asin'));
+            saveAsin($row);
+        });
+        {% endif %}
     });
 </script>
 

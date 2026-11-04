@@ -60,4 +60,12 @@ return [
         'key' => env('RELAY_KEY'),
     ],
 
+    // Amazon Creators API, for staff product searches on Amazon US. The approval is for the US
+    // marketplace only. See App\Domain\AffiliateCodes\CreatorsApi.
+    'amazon_creators' => [
+        'credential_id' => env('AMAZON_CREATORS_CREDENTIAL_ID'),
+        'credential_secret' => env('AMAZON_CREATORS_CREDENTIAL_SECRET'),
+        'credential_version' => env('AMAZON_CREATORS_CREDENTIAL_VERSION', '3.1'),
+    ],
+
 ];

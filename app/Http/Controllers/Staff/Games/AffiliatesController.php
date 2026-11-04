@@ -14,6 +14,8 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\AffiliateCodes\Amazon;
 use App\Domain\AffiliateCodes\AsinExtractor;
+use App\Domain\AffiliateCodes\CreatorsApi;
+use App\Domain\AffiliateCodes\CreatorsApiException;
 use App\Domain\AffiliateCodes\TopRatedGaps;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
@@ -34,8 +36,64 @@ class AffiliatesController extends Controller
         private AsinExtractor $asinExtractor,
         private Amazon $affiliateAmazon,
         private TopRatedGaps $topRatedGaps,
+        private CreatorsApi $creatorsApi,
     )
     {
+    }
+
+    /**
+     * Likely Amazon US products for a game, for staff to pick from on the Top rated gaps list.
+     * Saves nothing: a chosen result goes through quickSave like a pasted URL. US only, as the
+     * Creators API approval doesn't cover Amazon UK.
+     */
+    public function findMatch($gameId)
+    {
+        $game = $this->repoGame->findWithoutCache($gameId);
+        if (!$game) {
+            return response()->json(['error' => 'Game not found.'], 404);
+        }
+
+        $isSwitch2 = $game->console_id == Console::ID_SWITCH_2;
+        $keywords = $game->title.' '.($isSwitch2 ? 'Nintendo Switch 2' : 'Nintendo Switch');
+
+        try {
+            $results = $this->creatorsApi->searchItems($keywords);
+        } catch (CreatorsApiException $e) {
+            return response()->json(['error' => $e->getMessage()], 502);
+        }
+
+        foreach ($results as &$result) {
+            $result['consoleWarning'] = $this->consoleWarning($result['title'], $isSwitch2);
+            // Untagged, so staff checking a product don't click through the affiliate tag
+            $result['viewUrl'] = 'https://www.amazon.com/dp/'.rawurlencode($result['asin']);
+        }
+        unset($result);
+
+        return response()->json(['keywords' => $keywords, 'results' => $results]);
+    }
+
+    /**
+     * Flags a product whose title names the other console, e.g. a Switch 2 edition found for a
+     * Switch 1 game. Null when the title doesn't suggest a mismatch.
+     */
+    private function consoleWarning(?string $title, bool $gameIsSwitch2): ?string
+    {
+        if ($title === null) {
+            return null;
+        }
+
+        $namesSwitch2 = (bool) preg_match('/switch\s*2/i', $title);
+        $namesSwitch1 = (bool) preg_match('/switch(?!\s*2)/i', $title);
+
+        if (!$gameIsSwitch2 && $namesSwitch2) {
+            return 'Switch 2';
+        }
+
+        if ($gameIsSwitch2 && $namesSwitch1 && !$namesSwitch2) {
+            return 'Switch 1';
+        }
+
+        return null;
     }
 
     /**
