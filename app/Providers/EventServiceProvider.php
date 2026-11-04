@@ -25,6 +25,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\GameCollectionRemoved' => [
             'App\Listeners\LogGameCollectionRemoved'
         ],
+        'App\Events\GameWishlistAdded' => [
+            'App\Listeners\LogGameWishlistAdded'
+        ],
+        'App\Events\GameWishlistRemoved' => [
+            'App\Listeners\LogGameWishlistRemoved'
+        ],
     ];
 
     /**

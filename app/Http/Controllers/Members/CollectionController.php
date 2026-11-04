@@ -22,6 +22,7 @@ use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
 use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 use App\Events\GameCollectionAdded;
 use App\Events\GameCollectionRemoved;
+use App\Events\GameWishlistRemoved;
 
 class CollectionController extends Controller
 {
@@ -239,7 +240,9 @@ class CollectionController extends Controller
             );
 
             // Remove from wishlist if present
-            $this->repoWishlist->deleteByUserAndGame($userId, $request->game_id);
+            if ($this->repoWishlist->deleteByUserAndGame($userId, $request->game_id)) {
+                event(new GameWishlistRemoved($userId, (int) $request->game_id));
+            }
 
             // Trigger event
             event(new GameCollectionAdded($userGamesCollection));

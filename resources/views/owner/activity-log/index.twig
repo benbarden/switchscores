@@ -2,6 +2,25 @@
 
 {% block page_inner %}
 
+<form method="get" action="{{ route('owner.activityLog') }}" class="row g-2 align-items-center mb-3">
+    <div class="col-auto">
+        <label for="activity-log-type" class="col-form-label">Type</label>
+    </div>
+    <div class="col-auto">
+        <select id="activity-log-type" name="type" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="">All</option>
+            {% for eventType in EventTypes %}
+                <option value="{{ eventType }}"{% if eventType == SelectedType %} selected{% endif %}>{{ eventType }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <noscript>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-sm btn-outline-primary">Filter</button>
+        </div>
+    </noscript>
+</form>
+
 {% if ActivityLog|length %}
     <table class="table table-sm table-responsive data-sortable">
         <thead>
@@ -50,7 +69,7 @@
                 <td class="text-right">
                     <small>
                     {% if item.event_model_id %}
-                        {% if item.event_model == 'App\\Domain\\UserGamesCollection' %}
+                        {% if item.event_model in ['App\\Domain\\UserGamesCollection', 'App\\Models\\UserWishlist'] %}
                             {{ item.game.title }}
                         {% else %}
                             {{ item.event_model_id }}

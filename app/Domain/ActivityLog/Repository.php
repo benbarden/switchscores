@@ -23,8 +23,14 @@ class Repository
         return $activityLog;
     }
 
-    public function getAll()
+    public function getAll(?string $eventType = null)
     {
-        return ActivityLog::orderBy('id', 'desc')->get();
+        $query = ActivityLog::with('user', 'game')->orderBy('id', 'desc');
+
+        if ($eventType) {
+            $query->where('event_type', $eventType);
+        }
+
+        return $query->get();
     }
 }

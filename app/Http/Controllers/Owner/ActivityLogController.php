@@ -8,6 +8,7 @@ use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
 use App\Domain\ActivityLog\Repository as ActivityLogRepository;
+use App\Models\ActivityLog;
 
 class ActivityLogController extends Controller
 {
@@ -23,8 +24,15 @@ class ActivityLogController extends Controller
         $pageTitle = 'Activity log';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::staffGenericTopLevel($pageTitle))->bindings;
 
-        $activityLog = $this->repoActivityLog->getAll();
-        $bindings['ActivityLog'] = $activityLog;
+        // An unknown type shows everything rather than an empty page
+        $eventType = request()->query('type');
+        if (!in_array($eventType, ActivityLog::eventTypes(), true)) {
+            $eventType = null;
+        }
+
+        $bindings['ActivityLog'] = $this->repoActivityLog->getAll($eventType);
+        $bindings['EventTypes'] = ActivityLog::eventTypes();
+        $bindings['SelectedType'] = $eventType;
 
         return view('owner.activity-log.index', $bindings);
     }

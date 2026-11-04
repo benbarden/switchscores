@@ -7,6 +7,7 @@ use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 use App\Domain\View\Breadcrumbs\MembersBreadcrumbs;
 use App\Domain\View\PageBuilders\MembersPageBuilder;
 use App\Enums\MemberIntent;
+use App\Events\GameWishlistAdded;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -176,6 +177,7 @@ class IntentController extends Controller
         }
 
         $this->repoWishlist->add($user->id, $gameId);
+        event(new GameWishlistAdded($user->id, $gameId));
 
         // Check if this was after verification (no prior session means they just verified)
         $message = $game->title . ' has been added to your wishlist!';

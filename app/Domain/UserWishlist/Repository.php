@@ -19,9 +19,12 @@ class Repository
         UserWishlist::where('id', $id)->delete();
     }
 
-    public function deleteByUserAndGame($userId, $gameId)
+    /**
+     * Returns whether a row was deleted, so callers only log a removal that happened.
+     */
+    public function deleteByUserAndGame($userId, $gameId): bool
     {
-        UserWishlist::where('user_id', $userId)->where('game_id', $gameId)->delete();
+        return UserWishlist::where('user_id', $userId)->where('game_id', $gameId)->delete() > 0;
     }
 
     public function find($id)

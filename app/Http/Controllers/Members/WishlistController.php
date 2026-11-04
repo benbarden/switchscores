@@ -14,6 +14,8 @@ use App\Domain\AffiliateCodes\Amazon as AmazonAffiliate;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\UserWishlist\Repository as UserWishlistRepository;
 use App\Domain\UserGamesCollection\Repository as UserGamesCollectionRepository;
+use App\Events\GameWishlistAdded;
+use App\Events\GameWishlistRemoved;
 
 class WishlistController extends Controller
 {
@@ -68,6 +70,7 @@ class WishlistController extends Controller
         }
 
         $this->repoWishlist->add($userId, $gameId);
+        event(new GameWishlistAdded($userId, $game->id));
 
         return response()->json(['status' => 'OK', 'message' => 'Added to wishlist']);
     }
@@ -77,7 +80,9 @@ class WishlistController extends Controller
         $currentUser = resolve('User/Repository')->currentUser();
         $userId = $currentUser->id;
 
-        $this->repoWishlist->deleteByUserAndGame($userId, $gameId);
+        if ($this->repoWishlist->deleteByUserAndGame($userId, $gameId)) {
+            event(new GameWishlistRemoved($userId, (int) $gameId));
+        }
 
         return response()->json(['status' => 'OK', 'message' => 'Removed from wishlist']);
     }
