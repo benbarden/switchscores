@@ -8,6 +8,7 @@ use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
 use App\Domain\View\PageBuilders\PublicPageBuilder;
 
 use App\Models\Console;
+use App\Domain\AffiliateCodes\Amazon;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\DbQueries as GameListsDb;
 use App\Domain\ReviewLink\DbQueries as ReviewLinkDb;
@@ -16,6 +17,8 @@ use App\Domain\Console\Repository as ConsoleRepository;
 
 class ListsController extends Controller
 {
+    const BUYERS_GUIDE_REGIONS = ['us' => 'US', 'uk' => 'UK'];
+
     public function __construct(
         private PublicPageBuilder $pageBuilder,
         private GameListsRepository $repoGameLists,
@@ -23,6 +26,7 @@ class ListsController extends Controller
         private ReviewLinkDb $dbReviewLink,
         private ReviewLinkRepository $repoReviewLink,
         private ConsoleRepository $repoConsole,
+        private Amazon $affiliateAmazon,
     )
     {
     }
@@ -68,57 +72,99 @@ class ListsController extends Controller
         return view('public.lists.list-recently-ranked', $bindings);
     }
 
-    public function buyersGuideHoliday2024US()
+    /**
+     * Asks visitors to pick a region, so nobody lands on the other country's Amazon links.
+     */
+    public function buyersGuideLanding()
     {
-        $pageTitle = 'Buyer\'s Guide Holiday 2024 (US)';
+        $pageTitle = 'Nintendo Switch buyer\'s guide';
         $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::topLevel($pageTitle))->bindings;
 
-        $topRatedAllTime = [
-            1, // Zelda: Breath of the Wild
-            66, // Super Mario Odyssey
-            9416, // Metroid Prime Remastered
-            74, // Celeste
-            //4496, // Hades
-            9452, // Zelda: Tears of the Kingdom
-            8560, // Persona 5 Royal
-            7740, // Xenoblade Chronicles 3
-            //6696, // Tetris Effect: Connected
-            4610, // Monster Hunter Rise
-            40, // Mario Kart 8 Deluxe
-            927, // Dead Cells
-            //458, // SteamWorld Heist
-            //4423, // A Short Hike
-            67, // Hollow Knight
-            11947, // Unicorn Overlord
-            //8071, // Portal: Companion Collection
-            98, // Stardew Valley
-            627, // Super Smash Bros Ultimate
-            2147, // Dragon Quest XI S
-            7154, // Kirby and the Forgotten Land
-            5893, // The Great Ace Attorney Chronicles
-            2583, // Animal Crossing New Horizons
-            11026, // Super Mario Bros Wonder
-            12498, // Paper Mario: The Thousand Year Door
+        $bindings = array_merge($bindings, $this->buyersGuideUpdated());
+
+        return view('public.lists.buyers-guide.landing', $bindings);
+    }
+
+    /**
+     * The guide for one region. Content comes from config/buyers-guide.php, and every Amazon link
+     * carries the guide's own tracking ID so Amazon's reports show what it earns.
+     */
+    public function buyersGuide(string $region)
+    {
+        $regionName = self::BUYERS_GUIDE_REGIONS[$region];
+
+        $pageTitle = 'Nintendo Switch buyer\'s guide '.config('buyers-guide.year').' ('.$regionName.')';
+        $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::buyersGuideRegion($regionName))->bindings;
+
+        $amazon = $this->affiliateAmazon->forBuyersGuide();
+
+        $hardware = [];
+        foreach (config('buyers-guide.hardware', []) as $item) {
+            $asin = $item['asin_'.$region] ?? null;
+            if (!$asin) {
+                continue;
+            }
+            $hardware[] = [
+                'title' => $item['title'],
+                'note' => $item['note'] ?? null,
+                'url' => $amazon->productLink($region, $asin),
+            ];
+        }
+
+        $bindings = array_merge($bindings, $this->buyersGuideUpdated());
+        $bindings['Region'] = $region;
+        $bindings['RegionName'] = $regionName;
+        $bindings['OtherRegion'] = $region === 'uk' ? 'us' : 'uk';
+        $bindings['OtherRegionName'] = self::BUYERS_GUIDE_REGIONS[$bindings['OtherRegion']];
+        $bindings['Hardware'] = $hardware;
+        $bindings['Switch2Games'] = $this->buyersGuideGames(config('buyers-guide.games.switch-2', []), $region, $amazon);
+        $bindings['Switch1Games'] = $this->buyersGuideGames(config('buyers-guide.games.switch-1', []), $region, $amazon);
+
+        return view('public.lists.buyers-guide.region', $bindings);
+    }
+
+    /**
+     * The "Updated 7 November 2026 for Black Friday and the holidays." line, from the config.
+     */
+    private function buyersGuideUpdated(): array
+    {
+        $updated = config('buyers-guide.updated');
+
+        return [
+            'UpdatedDate' => $updated ? \Carbon\Carbon::parse($updated)->format('j F Y') : null,
+            'UpdatedNote' => config('buyers-guide.updated_note'),
         ];
+    }
 
-        $amazonBestsellers = [
-            13592, // Mario Party Jamboree
-            8104, // Pac-Man World Re-Pac
-            7328, // Lego Star Wars Skywalker Saga
-            12772, // Echoes of Wisdom
-            40, // Mario Kart
-            8981, // The Oregon Trail
-            319, // Yoshi's Crafted World
-            2126, // Super Mario Maker 2
-            10614, // Sonic Superstars
-            1223, // Super Mario Party
-            627, // Super Smash Bros Ultimate
-        ];
+    /**
+     * The picked games in the order listed, each with its buy link for the region. UK links are
+     * product links only, as Amazon UK doesn't pay for searches.
+     */
+    private function buyersGuideGames(array $gameIds, string $region, Amazon $amazon): array
+    {
+        $order = array_flip($gameIds);
+        $games = $this->repoGameLists->byIdList($gameIds)
+            ->sortBy(fn($game) => $order[$game->id])
+            ->values();
 
-        $bindings['TopRatedAllTimeList'] = $this->repoGameLists->byIdList($topRatedAllTime);
-        $bindings['AmazonBestsellersList'] = $this->repoGameLists->byIdList($amazonBestsellers);
+        $items = [];
+        foreach ($games as $game) {
+            $links = $amazon->buildLinksForGame($game);
+            if ($region === 'uk') {
+                $buyUrl = $links->urlUk;
+                $buyLabel = 'Buy at Amazon UK';
+            } else {
+                $buyUrl = $links->urlUs;
+                $buyLabel = $links->usType === 'search' ? 'Find at Amazon US' : 'Buy at Amazon US';
+            }
+            $items[] = [
+                'game' => $game,
+                'buyUrl' => $game->isDelisted() ? null : $buyUrl,
+                'buyLabel' => $buyLabel,
+            ];
+        }
 
-        return view('public.lists.buyers-guide-holiday-2024-us', $bindings);
+        return $items;
     }
 
 }

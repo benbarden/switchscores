@@ -18,6 +18,16 @@ final class PublicBreadcrumbs
         ]);
     }
 
+    // *** BUYER'S GUIDE *** //
+    public static function buyersGuideRegion(string $regionName): BreadcrumbNav
+    {
+        return new BreadcrumbNav([
+            new BreadcrumbItem('Home', route('welcome')),
+            new BreadcrumbItem('Buyer\'s guide', route('buyersGuide.landing')),
+            new BreadcrumbItem($regionName),
+        ]);
+    }
+
     // *** GAMES *** //
     public static function game(Game $game): BreadcrumbNav
     {

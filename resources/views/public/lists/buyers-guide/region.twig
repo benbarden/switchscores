@@ -1,0 +1,88 @@
+{% extends 'theme/wos/base.twig' %}
+
+{% macro gameGrid(items) %}
+    {% import 'ui/components/game/packshots.twig' as gamepackshots %}
+    {% import 'ui/components/game/rating.twig' as gamerating %}
+    {% for batch in items|batch(3, null) %}
+        <div class="row">
+            {% for item in batch %}
+                {% if item %}
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="margin-bottom: 24px;">
+                        <div style="margin-top: 16px;">
+                            {{ gamepackshots.header(item.game) }}
+                        </div>
+                        <div class="row" style="margin-top: 8px;">
+                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                                <span class="h5"><a href="{{ game_url(item.game) }}">{{ item.game.title }}</a></span>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <div class="pull-right">{{ gamerating.standard(item.game) }}</div>
+                            </div>
+                        </div>
+                        {% if item.buyUrl %}
+                            <div style="margin-top: 8px;">
+                                <a href="{{ item.buyUrl }}" class="btn btn-primary btn-sm" target="_blank" rel="nofollow sponsored">{{ item.buyLabel }}</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+{% block page_body %}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        {% include 'public/lists/buyers-guide/_updated.twig' %}
+
+        <div class="alert alert-info">
+            <strong>{{ RegionName }} edition.</strong> Links go to Amazon {{ RegionName }}.
+            <a href="{{ route('buyersGuide.region', {'region': OtherRegion}) }}" class="alert-link">Switch to the {{ OtherRegionName }} guide</a>
+        </div>
+
+        <p>
+            The best games to buy for Nintendo Switch 2 and Switch, picked from the highest-rated games on
+            Switch Scores, plus consoles and accessories.
+        </p>
+
+        <p class="text-muted">
+            We may earn a commission from these links. Prices and stock are set by Amazon and can change.
+        </p>
+
+        {% if Hardware|length > 0 %}
+            <h2>Consoles and accessories</h2>
+            {% for batch in Hardware|batch(3, null) %}
+                <div class="row">
+                    {% for item in batch %}
+                        {% if item %}
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="margin-bottom: 24px;">
+                                <h3 class="h4">{{ item.title }}</h3>
+                                {% if item.note %}
+                                    <p>{{ item.note }}</p>
+                                {% endif %}
+                                <a href="{{ item.url }}" class="btn btn-primary btn-sm" target="_blank" rel="nofollow sponsored">Buy at Amazon {{ RegionName }}</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if Switch2Games|length > 0 %}
+            <h2>Top Nintendo Switch 2 games</h2>
+            {{ _self.gameGrid(Switch2Games) }}
+        {% endif %}
+
+        {% if Switch1Games|length > 0 %}
+            <h2>Top Nintendo Switch games</h2>
+            <p>Most Switch games also play on Switch 2.</p>
+            {{ _self.gameGrid(Switch1Games) }}
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock page_body %}

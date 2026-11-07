@@ -18,6 +18,11 @@ class Amazon
 
     const AMAZON_US_WISHLIST_ID = 'sswishlist00-20';
 
+    // The buyer's guide has its own IDs for the same reason
+    const AMAZON_UK_BUYERS_GUIDE_ID = 'ssbuyersguide-21';
+
+    const AMAZON_US_BUYERS_GUIDE_ID = 'ssbuyersguide-20';
+
     protected string $ukId;
     protected string $usId;
 
@@ -37,6 +42,26 @@ class Amazon
         $wishlist->usId = self::AMAZON_US_WISHLIST_ID;
 
         return $wishlist;
+    }
+
+    /**
+     * The same link builder, tagged with the buyer's guide's tracking IDs.
+     */
+    public function forBuyersGuide(): static
+    {
+        $guide = clone $this;
+        $guide->ukId = self::AMAZON_UK_BUYERS_GUIDE_ID;
+        $guide->usId = self::AMAZON_US_BUYERS_GUIDE_ID;
+
+        return $guide;
+    }
+
+    /**
+     * A product link for an ASIN that isn't a game, such as a console or accessory.
+     */
+    public function productLink(string $region, string $asin): string
+    {
+        return $region === 'uk' ? $this->buildUkLinkFromAsin($asin) : $this->buildUsLinkFromAsin($asin);
     }
 
     public function getUKId()

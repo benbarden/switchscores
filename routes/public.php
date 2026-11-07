@@ -30,7 +30,10 @@ Route::redirect('/games/upcoming', '/c/switch-1/upcoming', 301)->name('games.upc
 Route::get('/games/on-sale', 'PublicSite\ListsController@gamesOnSale')->name('games.onSale');
 Route::get('/reviews', 'PublicSite\ListsController@recentReviews')->name('reviews.landing');
 Route::get('/lists/recently-ranked', 'PublicSite\ListsController@recentlyRanked')->name('lists.recently-ranked');
-Route::get('/lists/buyers-guide-holiday-2024-us', 'PublicSite\ListsController@buyersGuideHoliday2024US')->name('lists.buyersGuideHoliday2024US');
+// Buyer's guide: one URL kept from year to year. The 2024 page redirects here (see public/.htaccess
+// and nginx/redirects.conf).
+Route::get('/buyers-guide', 'PublicSite\ListsController@buyersGuideLanding')->name('buyersGuide.landing');
+Route::get('/buyers-guide/{region}', 'PublicSite\ListsController@buyersGuide')->whereIn('region', ['us', 'uk'])->name('buyersGuide.region');
 
 // Switch 1/2
 Route::controller('PublicSite\Console\ConsoleController')->group(function () {

@@ -47,6 +47,9 @@ RewriteEngine On
     Redirect 301 /news/20180807/removing-the-tba-titles /news
     Redirect 301 /news/20180204/you-can-now-register-at-world-of-switch /news
 
+    # Page redirects: Lists
+    Redirect 301 /lists/buyers-guide-holiday-2024-us /buyers-guide/us
+
     # Page redirects: Category to tag
     RedirectMatch 301 ^/c/([^/]+)/category/music-adventure/?$ /c/$1/tag/rhythm-based
     RedirectMatch 301 ^/c/([^/]+)/category/escape-room/?$ /c/$1/tag/escape-room

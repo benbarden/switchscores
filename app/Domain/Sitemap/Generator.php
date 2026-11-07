@@ -116,6 +116,8 @@ class Generator
         $sitemapPages[] = array('url' => route('games.recentReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.8');
         $sitemapPages[] = array('url' => route('games.upcomingReleases'), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7');
         $sitemapPages[] = array('url' => route('games.onSale'), 'lastmod' => $timestamp, 'changefreq' => 'daily', 'priority' => '0.5');
+        $sitemapPages[] = array('url' => route('buyersGuide.region', ['region' => 'us']), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7');
+        $sitemapPages[] = array('url' => route('buyersGuide.region', ['region' => 'uk']), 'lastmod' => $timestamp, 'changefreq' => 'weekly', 'priority' => '0.7');
 
         $bindings['SitemapPages'] = $sitemapPages;
 
