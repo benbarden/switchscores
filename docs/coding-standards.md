@@ -106,17 +106,55 @@ $query->where('game_status', 'active');
 
 ### Domain folder structure
 
-`App\Domain\` should contain folders that map to models or features:
+**Rule: a folder in `App\Domain\` is a model or a feature.**
 
 ```
-App\Domain\Game\           # Game-related logic
-App\Domain\Category\       # Category-related logic
-App\Domain\ReviewLink\     # Review link logic
+App\Domain\Game\           # The Game model: repositories, packshots, quality filter
+App\Domain\Category\       # The Category model
+App\Domain\GameImport\     # A feature: importing games
+App\Domain\Sitemap\        # A feature: building the sitemaps
 ```
+
+- A folder about its own model stays separate, even if its name starts with `Game` (`GameSeries`, `GameTag`).
+- A folder that is really a set of queries over `games` belongs under `Game\Repository\` (for example game stats and game lists), not in a folder of its own.
+- Don't fold everything into `Game\` either: it would become the next oversized folder.
+
+### Class roles and names
+
+One name per role:
+
+- **`Repository`** - reads and writes for a model, using Eloquent, with caching through `AbstractRepository`.
+- **`DbQueries`** - only for queries that need the query builder or raw SQL rather than Eloquent, usually for performance (large result sets, aggregates, joins Eloquent makes slow). Don't mix the two styles in one file: Eloquent methods go in the `Repository`, query-builder methods in `DbQueries`.
+- **A role name for classes that do work** - `PackshotWriter`, `PriceLookup`, `TitleNormaliser`. Not `Repository`, not `Service`.
+- No other names for the same roles (`Repo`, `Queries`, `Helper`); rename them when the file is touched.
+
+**Prefer Eloquent.** Use the query builder only when it clearly helps, and then return what the callers need. Avoid query-builder code that fetches ids and then loads models by hand, or builds collections that Eloquent would have returned anyway. A big loop can be faster with the query builder, but if every caller expects Eloquent models, keep returning models.
+
+### Repository size
+
+**Split repositories by the question they answer, not by size.** Sub-repositories go in a `Repository\` folder next to the main one:
+
+```
+App\Domain\Game\Repository.php                          # Core lookups: find, search by title
+App\Domain\Game\Repository\GameCrawlRepository.php      # The crawl queue and crawl status
+App\Domain\Game\Repository\GameStatsRepository.php      # Counts and totals
+App\Domain\Game\Repository\GameImageRepository.php      # Packshot rows
+```
+
+As a signal, not a hard limit: a repository past about 250 lines or 15 public methods is doing more than one job, and its next new method should start a sub-repository rather than add to it.
 
 ### Retiring App\Services
 
-`App\Services\` is deprecated. New code should go in `App\Domain\`. See task #114 for migration plan.
+`App\Services\` is deprecated and is being emptied into `App\Domain\`. Never add a class to it. When a change substantially rewrites a class in it, move the class to the right `App\Domain\` folder as part of that change.
+
+## Improving as we go
+
+Every change should leave the structure no worse, and a bit better where it's cheap.
+
+- **Never make it worse:** no new classes in `App\Services\`, no queries in controllers, and no new methods in a repository that's already past the size signal - put them in the right sub-repository, creating it if it's the first.
+- **Improve what you touch, within a budget:** when a change edits methods in an oversized repository, move those methods (and close neighbours) to the right sub-repository if it's cheap. Rule of thumb: no more refactoring than the size of the change itself. Anything bigger is its own change.
+- **Moves with many callers are always their own change** (for example the main `Game\Repository`), never folded into a feature.
+- **Refactor alongside planned work:** when a feature is going to rework an area anyway, that's the time to restructure it.
 
 ## Templates
 
