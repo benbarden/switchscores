@@ -119,7 +119,7 @@ class ImageStorageMigrator
         $filename = $this->resolver->targetFilename($game, $legacyFilename);
         $key = $this->resolver->storageKey($game, $type, $filename);
 
-        Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($sourcePath));
+        Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($sourcePath), ImageResolver::uploadOptions());
 
         return $filename;
     }

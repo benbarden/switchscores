@@ -63,7 +63,7 @@ class PackshotProdCopier
                 continue;
             }
 
-            $disk->put($key, $response->body(), 'public');
+            $disk->put($key, $response->body(), ImageResolver::uploadOptions());
             $results[$type] = 'copied';
         }
 

@@ -30,6 +30,13 @@ class ImageResolver
 
     const DISK = 'packshots';
 
+    /**
+     * Browser and CDN cache lifetime for every packshot object. Safe at a year because
+     * spacesUrl() adds ?v={updated_at}, a replaced packshot gets a new one, and the CDN keys
+     * its cache on the query string. Without it the CDN sends its default max-age=3600.
+     */
+    const CACHE_CONTROL = 'public, max-age=31536000, immutable';
+
     const LEGACY_PATHS = [
         self::TYPE_HEADER => '/img/ps-header/',
         self::TYPE_SQUARE => '/img/ps-square/',
@@ -110,6 +117,19 @@ class ImageResolver
         $prefix = self::CONSOLE_PREFIXES[$consoleId] ?? self::CONSOLE_PREFIXES[Console::ID_SWITCH_1];
 
         return "{$prefix}/{$type}/{$filename}";
+    }
+
+    /**
+     * Options for every put onto the `packshots` disk. A put replaces the whole object,
+     * metadata included, so a writer that left these out would drop a re-downloaded packshot
+     * back to the CDN's one-hour default.
+     */
+    public static function uploadOptions(): array
+    {
+        return [
+            'visibility' => 'public',
+            'CacheControl' => self::CACHE_CONTROL,
+        ];
     }
 
     /**

@@ -114,7 +114,7 @@ class PackshotWriter
         );
         $key = $this->resolver->storageKey($game, $type, $filename);
 
-        Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($tempPath));
+        Storage::disk(ImageResolver::DISK)->put($key, file_get_contents($tempPath), ImageResolver::uploadOptions());
 
         if (file_exists($tempPath)) {
             unlink($tempPath);
