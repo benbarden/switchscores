@@ -52,6 +52,39 @@
             We may earn a commission from these links. Prices and stock are set by Amazon and can change.
         </p>
 
+        {% if Deals|length > 0 %}
+            <h2>Deals at Amazon {{ RegionName }}</h2>
+            <p>Games and accessories from this guide that are on offer right now.</p>
+            {% for batch in Deals|batch(3, null) %}
+                <div class="row">
+                    {% for deal in batch %}
+                        {% if deal %}
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="margin-bottom: 24px;">
+                                {% if deal.imageUrl %}
+                                    <div style="height: 160px; margin-bottom: 8px;">
+                                        <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored">
+                                            <img src="{{ deal.imageUrl }}" alt="{{ deal.title }}" loading="lazy" style="max-height: 160px; max-width: 100%;">
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                <h3 class="h4">{{ deal.title }}</h3>
+                                <p>
+                                    <strong class="h4">{{ deal.price }}</strong>
+                                    <span class="label label-success">{{ deal.savingsPercent }}% off</span><br>
+                                    <span class="text-muted">{{ deal.wasLabel }}: <s>{{ deal.wasPrice }}</s></span>
+                                </p>
+                                <a href="{{ deal.url }}" class="btn btn-primary btn-sm" target="_blank" rel="nofollow sponsored">Buy at Amazon {{ RegionName }}</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <p class="text-muted small">
+                Prices checked {{ PricesCheckedAt }}.
+                Product prices and availability are accurate as of the date/time indicated and are subject to change.
+            </p>
+        {% endif %}
+
         {% if Hardware|length > 0 %}
             <h2>Consoles and accessories</h2>
             {% for batch in Hardware|batch(3, null) %}
@@ -59,6 +92,13 @@
                     {% for item in batch %}
                         {% if item %}
                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="margin-bottom: 24px;">
+                                {% if item.imageUrl %}
+                                    <div style="height: 160px; margin-bottom: 8px;">
+                                        <a href="{{ item.url }}" target="_blank" rel="nofollow sponsored">
+                                            <img src="{{ item.imageUrl }}" alt="{{ item.title }}" loading="lazy" style="max-height: 160px; max-width: 100%;">
+                                        </a>
+                                    </div>
+                                {% endif %}
                                 <h3 class="h4">{{ item.title }}</h3>
                                 {% if item.note %}
                                     <p>{{ item.note }}</p>

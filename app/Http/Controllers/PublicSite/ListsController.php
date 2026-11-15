@@ -9,6 +9,8 @@ use App\Domain\View\PageBuilders\PublicPageBuilder;
 
 use App\Models\Console;
 use App\Domain\AffiliateCodes\Amazon;
+use App\Domain\BuyersGuide\DealPicker;
+use App\Domain\BuyersGuide\OfferStore;
 use App\Domain\GameLists\Repository as GameListsRepository;
 use App\Domain\GameLists\DbQueries as GameListsDb;
 use App\Domain\ReviewLink\DbQueries as ReviewLinkDb;
@@ -27,6 +29,8 @@ class ListsController extends Controller
         private ReviewLinkRepository $repoReviewLink,
         private ConsoleRepository $repoConsole,
         private Amazon $affiliateAmazon,
+        private OfferStore $buyersGuideOffers,
+        private DealPicker $buyersGuideDeals,
     )
     {
     }
@@ -98,17 +102,42 @@ class ListsController extends Controller
 
         $amazon = $this->affiliateAmazon->forBuyersGuide();
 
+        // Amazon US offers from the hourly refresh, or null if it hasn't run lately
+        $offers = $this->buyersGuideOffers->latest();
+        $offerItems = $offers['items'] ?? [];
+        $showImages = $region === 'us' || config('buyers-guide.uk_images');
+
         $hardware = [];
+        $dealCandidates = [];
         foreach (config('buyers-guide.hardware', []) as $item) {
             $asin = $item['asin_'.$region] ?? null;
             if (!$asin) {
                 continue;
             }
+            $url = $amazon->productLink($region, $asin);
+            $usAsin = $item['asin_us'] ?? null;
             $hardware[] = [
                 'title' => $item['title'],
                 'note' => $item['note'] ?? null,
-                'url' => $amazon->productLink($region, $asin),
+                'url' => $url,
+                // The UK page can only reuse the image of the same row's US product
+                'imageUrl' => $showImages && $usAsin ? ($offerItems[$usAsin]['imageUrl'] ?? null) : null,
             ];
+            $dealCandidates[] = ['asin' => $asin, 'title' => $item['title'], 'url' => $url];
+        }
+
+        $switch2Games = $this->buyersGuideGames(config('buyers-guide.games.switch-2', []), $region, $amazon);
+        $switch1Games = $this->buyersGuideGames(config('buyers-guide.games.switch-1', []), $region, $amazon);
+        foreach (array_merge($switch2Games, $switch1Games) as $item) {
+            if ($item['buyUrl'] && $item['game']->amazon_us_asin) {
+                $dealCandidates[] = ['asin' => $item['game']->amazon_us_asin, 'title' => $item['game']->title, 'url' => $item['buyUrl']];
+            }
+        }
+
+        // US only: prices come from the Creators API, which only covers Amazon US
+        $deals = [];
+        if ($region === 'us' && $offers && config('buyers-guide.deals.enabled')) {
+            $deals = $this->buyersGuideDeals->pick($dealCandidates, $offerItems);
         }
 
         $bindings = array_merge($bindings, $this->buyersGuideUpdated());
@@ -117,8 +146,10 @@ class ListsController extends Controller
         $bindings['OtherRegion'] = $region === 'uk' ? 'us' : 'uk';
         $bindings['OtherRegionName'] = self::BUYERS_GUIDE_REGIONS[$bindings['OtherRegion']];
         $bindings['Hardware'] = $hardware;
-        $bindings['Switch2Games'] = $this->buyersGuideGames(config('buyers-guide.games.switch-2', []), $region, $amazon);
-        $bindings['Switch1Games'] = $this->buyersGuideGames(config('buyers-guide.games.switch-1', []), $region, $amazon);
+        $bindings['Switch2Games'] = $switch2Games;
+        $bindings['Switch1Games'] = $switch1Games;
+        $bindings['Deals'] = $deals;
+        $bindings['PricesCheckedAt'] = $deals ? $offers['fetchedAt']->copy()->utc()->format('j F Y, H:i').' UTC' : null;
 
         return view('public.lists.buyers-guide.region', $bindings);
     }

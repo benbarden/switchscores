@@ -6,16 +6,29 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 /**
- * Amazon Creators API client, for staff product searches on Amazon US.
+ * Amazon Creators API client for Amazon US: staff product searches, and offer lookups by ASIN
+ * for the buyer's guide.
  *
- * Results are shown to staff to pick from and never stored: only the ASIN chosen is saved,
- * through the usual row save. The credential and token must never be logged or shown.
+ * Search results are shown to staff to pick from and never stored: only the ASIN chosen is
+ * saved, through the usual row save. The credential and token must never be logged or shown.
  */
 class CreatorsApi
 {
     const TOKEN_URL = 'https://api.amazon.com/auth/o2/token';
 
     const SEARCH_URL = 'https://creatorsapi.amazon/catalog/v1/searchItems';
+
+    const GET_ITEMS_URL = 'https://creatorsapi.amazon/catalog/v1/getItems';
+
+    // Amazon's limit on ASINs in one getItems request
+    const GET_ITEMS_MAX = 10;
+
+    const OFFER_RESOURCES = [
+        'itemInfo.title',
+        'images.primary.large',
+        'offersV2.listings.price',
+        'offersV2.listings.isBuyBoxWinner',
+    ];
 
     const MARKETPLACE = 'www.amazon.com';
 
@@ -74,17 +87,73 @@ class CreatorsApi
     }
 
     /**
+     * Price, saving and image for up to 10 ASINs on Amazon US, keyed by ASIN. An ASIN Amazon
+     * doesn't return is left out. Each item has:
+     *   title, imageUrl, price (display text), wasPrice (display text), savingBasisType
+     *   (e.g. LIST_PRICE, WAS_PRICE), savingsPercent (int) and violatesMap (bool).
+     * Any of them can be null. A listing that violates MAP comes back with no price, and must
+     * never have one shown.
+     *
+     * @param string[] $asins
+     * @throws CreatorsApiException
+     */
+    public function getItems(array $asins): array
+    {
+        if (count($asins) > self::GET_ITEMS_MAX) {
+            throw new \InvalidArgumentException('getItems takes at most '.self::GET_ITEMS_MAX.' ASINs.');
+        }
+
+        $response = $this->request(self::GET_ITEMS_URL, [
+            'itemIds' => array_values($asins),
+            'itemIdType' => 'ASIN',
+            'resources' => self::OFFER_RESOURCES,
+            'marketplace' => self::MARKETPLACE,
+            'partnerTag' => Amazon::AMAZON_US_ID,
+        ]);
+
+        $results = [];
+        foreach ($response['itemsResult']['items'] ?? [] as $item) {
+            if (empty($item['asin'])) {
+                continue;
+            }
+            $listing = $this->listing($item['offersV2']['listings'] ?? []);
+            $price = $listing['price'] ?? [];
+            $percent = $price['savings']['percentage'] ?? null;
+
+            $results[$item['asin']] = [
+                'title' => $item['itemInfo']['title']['displayValue'] ?? null,
+                'imageUrl' => $item['images']['primary']['large']['url'] ?? null,
+                'price' => $price['money']['displayAmount'] ?? null,
+                'wasPrice' => $price['savingBasis']['money']['displayAmount'] ?? null,
+                'savingBasisType' => $price['savingBasis']['savingBasisType'] ?? null,
+                'savingsPercent' => is_numeric($percent) ? (int) $percent : null,
+                'violatesMap' => !empty($listing['violatesMAP']),
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
      * The buy box price if there is one, otherwise the first listing's.
      */
     private function price(array $listings): ?string
     {
+        return $this->listing($listings)['price']['money']['displayAmount'] ?? null;
+    }
+
+    /**
+     * The buy box listing if there is one, otherwise the first.
+     */
+    private function listing(array $listings): array
+    {
         foreach ($listings as $listing) {
             if (!empty($listing['isBuyBoxWinner'])) {
-                return $listing['price']['money']['displayAmount'] ?? null;
+                return $listing;
             }
         }
 
-        return $listings[0]['price']['money']['displayAmount'] ?? null;
+        return $listings[0] ?? [];
     }
 
     private function request(string $url, array $body): array

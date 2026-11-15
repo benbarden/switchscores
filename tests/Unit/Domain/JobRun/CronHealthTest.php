@@ -96,13 +96,19 @@ class CronHealthTest extends TestCase
 
         // Every line is a known group or a single job, and the cron file uses every group
         $expected = 0;
+        $standalone = 0;
         foreach ($jobLines as $line) {
             $jobs = $schedule->parseLineJobs($line);
             $this->assertNotEmpty($jobs, 'Line has no jobs: '.$line);
             $expected += count($jobs);
+            if (!str_contains($line, 'cron:group')) {
+                $standalone++;
+            }
         }
         $this->assertCount($expected, $schedule->jobs());
-        $this->assertCount(array_sum(array_map(fn ($g) => count($g['steps']), config('cron-groups'))), $schedule->jobs());
+        // Every group step, plus the lines that run one job on their own schedule (e.g. hourly)
+        $groupSteps = array_sum(array_map(fn ($g) => count($g['steps']), config('cron-groups')));
+        $this->assertCount($groupSteps + $standalone, $schedule->jobs());
     }
 
     public function testGroupOrderFollowsTheCronFileThenUnscheduledGroups()

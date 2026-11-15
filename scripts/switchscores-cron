@@ -16,3 +16,7 @@
 30 5 * * * www-data cd /var/www/switchscores.com && php artisan cron:group games >/dev/null 2>&1
 0 6 * * * www-data cd /var/www/switchscores.com && php artisan cron:group site >/dev/null 2>&1
 30 6 * * * www-data cd /var/www/switchscores.com && php artisan cron:group crawl >/dev/null 2>&1
+
+# Hourly, not part of a group: Amazon US prices and images for the buyer's guide. Amazon's
+# terms allow its data to be kept for 24 hours at most, so it's fetched fresh each hour.
+15 * * * * www-data cd /var/www/switchscores.com && php artisan cron:record "buyers-guide:refresh-offers" >/dev/null 2>&1

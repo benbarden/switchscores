@@ -25,6 +25,21 @@ return [
     'updated' => '2026-11-07',
     'updated_note' => 'for Black Friday and the holidays',
 
+    // Deals at the top of the US page: guide items Amazon US has on offer, from the hourly
+    // buyers-guide:refresh-offers. UK has no API access, so no deals there.
+    'deals' => [
+        // Turn off after the season, e.g. after Cyber Monday or Christmas
+        'enabled' => true,
+        // The savings that count: against Amazon's list price, or its recent "was" price
+        'saving_types' => ['LIST_PRICE', 'WAS_PRICE'],
+        'min_percent' => 10,
+    ],
+
+    // Hardware images on the UK page, reusing the US image for the same row. Off until the UK
+    // Associates terms are settled: they say Product Advertising Content links "to, and only
+    // to, the relevant page of an Amazon Site", and these images come from the US API.
+    'uk_images' => false,
+
     'hardware' => [
         [
             'title' => 'Nintendo Switch 2',
