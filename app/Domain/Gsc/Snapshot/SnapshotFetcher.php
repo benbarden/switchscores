@@ -12,10 +12,15 @@ class SnapshotFetcher
         protected string $siteUrl
     ) {}
 
+    /**
+     * $operator is a GSC dimension filter operator: contains by default, or e.g.
+     * excludingRegex, where $contains is the regex.
+     */
     public function fetch(
         string $contains,
         int $windowDays,
-        int $rowLimit
+        int $rowLimit,
+        string $operator = 'contains'
     ): array {
         $request = new SearchAnalyticsQueryRequest([
             'startDate' => now()->subDays($windowDays + 2)->toDateString(),
@@ -26,7 +31,7 @@ class SnapshotFetcher
                     'filters' => [
                         [
                             'dimension'  => 'page',
-                            'operator'   => 'contains',
+                            'operator'   => $operator,
                             'expression' => $contains,
                         ],
                     ],

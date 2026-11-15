@@ -13,6 +13,8 @@ use App\Domain\Gsc\Snapshot\Repository\GscPageSnapshotRepository;
 
 class InsightsController extends Controller
 {
+    const SITE_MIN_IMPRESSIONS = 10;
+
     public function __construct(
         private StaffPageBuilder $pageBuilder,
         private GscPageSnapshotRepository $repoGscPageSnapshot,
@@ -25,10 +27,14 @@ class InsightsController extends Controller
         $pageTitle = 'Insights';
         $bindings = $this->pageBuilder->build($pageTitle, StaffBreadcrumbs::insightsDashboard())->bindings;
 
+        // Site pages include many small year and month pages, so leave out the ones with almost
+        // no impressions, as the Games list does
+        $sitePages  = $this->repoGscPageSnapshot->latestSnapshotForPageType('site', minImpressions: self::SITE_MIN_IMPRESSIONS);
         $categories = $this->repoGscPageSnapshot->latestSnapshotForPageType('category');
         $topRated   = $this->repoGscPageSnapshot->latestSnapshotForPageType('top_rated');
         $games      = $this->repoGscPageSnapshot->latestGamesSnapshot();
 
+        $bindings['SiteList'] = $sitePages['rows'];
         $bindings['CategoryList'] = $categories['rows'];
         $bindings['TopRatedList'] = $topRated['rows'];
         $bindings['GamesList'] = $games['rows'];

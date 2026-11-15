@@ -23,7 +23,7 @@ class FetchGscPageSnapshots extends Command
      *
      * @var string
      */
-    protected $description = 'Stores 28-day GSC page snapshots for category and game pages.';
+    protected $description = 'Stores 28-day GSC page snapshots for site, Top rated, category and game pages.';
 
     /**
      * Execute the console command.
@@ -64,9 +64,16 @@ class FetchGscPageSnapshots extends Command
 
         $storedGames = $this->store($pages, $snapshotDate, $windowDays);
 
+        // Site pages: everything outside the families above. Rows are page and query pairs, and
+        // the homepage alone matches many queries, so the limit is higher.
+        $rows = $fetcher->fetch(PageSnapshotBuilder::SITE_FETCH_EXCLUDE_REGEX, $windowDays, 5000, 'excludingRegex');
+        $pages = array_filter($builder->build($rows), fn ($d) => $d['page_type'] === 'site');
+
+        $storedSite = $this->store($pages, $snapshotDate, $windowDays);
+
         $logger->info(sprintf(
-            'Snapshot %s: stored /c/ %d, /browse/category %d, /games/ %d',
-            $snapshotDate, $storedCategories, $storedBrowse, $storedGames
+            'Snapshot %s: stored /c/ %d, /browse/category %d, /games/ %d, site %d',
+            $snapshotDate, $storedCategories, $storedBrowse, $storedGames, $storedSite
         ));
 
         return Command::SUCCESS;

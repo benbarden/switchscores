@@ -9,7 +9,8 @@ class GscPageSnapshotRepository
 {
     public function latestSnapshotForPageType(
         string $pageType,
-        int $windowDays = 28
+        int $windowDays = 28,
+        int $minImpressions = 0
     ): array {
         $latestDate = GscPageSnapshot::where('page_type', $pageType)
             ->where('window_days', $windowDays)
@@ -29,6 +30,7 @@ class GscPageSnapshotRepository
             'rows' => GscPageSnapshot::where('page_type', $pageType)
                 ->where('window_days', $windowDays)
                 ->where('snapshot_date', $latestDate)
+                ->where('impressions', '>=', $minImpressions)
                 ->orderByDesc('impressions')
                 ->get(),
         ];

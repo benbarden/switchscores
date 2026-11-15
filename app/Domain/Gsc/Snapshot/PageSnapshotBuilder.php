@@ -64,21 +64,57 @@ class PageSnapshotBuilder
         return $pages;
     }
 
-    protected function detectPageType(string $url): string
+    /**
+     * Page families that are neither site pages nor shown on Insights: one page per tag,
+     * series, collection, news article, review site or games company. Matched against the
+     * URL path. The bare landing pages (/browse/tag, /news) don't match, so they're site pages.
+     */
+    const OTHER_PATTERNS = [
+        '#^/browse/(tag|series|collection)/#',
+        '#^/c/[^/]+/(category|tag|series|collection)/#',
+        '#^/news/(\d|category/|database-updates/\d)#',
+        '#^/reviews/site/#',
+        '#^/partners/(games-company|guides)/#',
+    ];
+
+    const GAME_PATTERN = '#^/(switch-2/)?games/\d+(/|$)#';
+
+    /**
+     * For the site pages fetch: a GSC excludingRegex (RE2, on the full URL) that leaves out
+     * games, Top rated, categories and the other families, so what's left is site pages.
+     */
+    const SITE_FETCH_EXCLUDE_REGEX = '/(switch-2/)?games/[0-9]+|/top-rated|/browse/(category|tag|series|collection)/'
+        .'|/c/[^/]+/(category|tag|series|collection)/|/news/([0-9]|category/|database-updates/[0-9])'
+        .'|/reviews/site/|/partners/(games-company|guides)/';
+
+    /**
+     * top_rated, game, category (only /browse/category/...), other (see OTHER_PATTERNS), or
+     * site for everything else: the homepage, about, the buyer's guide, the console pages
+     * (/c/switch-1, its new releases, upcoming and year pages) and the like.
+     */
+    public function detectPageType(string $url): string
     {
-        if (str_contains($url, '/top-rated')) {
+        $path = parse_url($url, PHP_URL_PATH) ?: '/';
+
+        if (str_contains($path, '/top-rated')) {
             return 'top_rated';
         }
 
-        if (str_contains($url, '/games/')) {
+        if (preg_match(self::GAME_PATTERN, $path)) {
             return 'game';
         }
 
-        if (str_contains($url, '/c/') || str_contains($url, '/browse/category')) {
+        if (str_starts_with($path, '/browse/category/')) {
             return 'category';
         }
 
-        return 'other';
+        foreach (self::OTHER_PATTERNS as $pattern) {
+            if (preg_match($pattern, $path)) {
+                return 'other';
+            }
+        }
+
+        return 'site';
     }
 
     protected function keepGamePage(array $data): bool
