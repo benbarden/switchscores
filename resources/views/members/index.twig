@@ -15,7 +15,11 @@
         Follow us for the latest updates.
     </p>
 #}
-    {{ alerts.siteSurvey() }}
+    {% include 'ui/components/alerts/buyers-guide-banner.twig' %}
+    {# One banner at a time: the survey comes back when the buyer's guide banner ends #}
+    {% if not show_buyers_guide_banner() %}
+        {{ alerts.siteSurvey() }}
+    {% endif %}
 
     <div class="row">
 

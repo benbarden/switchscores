@@ -8,6 +8,7 @@ use Twig\TwigFunction;
 
 use App\Enums\GameStatus;
 use App\Models\Console;
+use App\Domain\BuyersGuide\Banner as BuyersGuideBanner;
 use App\Domain\Game\ImageResolver;
 use App\Support\Links;
 
@@ -15,6 +16,10 @@ class TwigViewServiceProvider extends ServiceProvider
 {
     public function boot(Environment $twig, ImageResolver $imageResolver)
     {
+        $twig->addFunction(new TwigFunction('show_buyers_guide_banner', function () {
+            return app(BuyersGuideBanner::class)->isShown(request()->route()?->getName());
+        }));
+
         $twig->addFunction(new TwigFunction('eshop_url', function (?string $region, ?string $path) {
             return Links::eshopUrl($region, $path);
         }));

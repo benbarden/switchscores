@@ -1,0 +1,13 @@
+{#
+    The banner linking to the buyer's guide. Included once in the public layout and on the members
+    home; show_buyers_guide_banner() hides it on the guide's own pages and after banner_until in
+    config/buyers-guide.php. The alert markup is the same in Bootstrap 3 and 5.
+#}
+{% if show_buyers_guide_banner() %}
+    <div class="alert alert-info" role="note" style="font-size: 17px; margin-top: 12px;">
+        <i class="fas fa-gift" aria-hidden="true" style="margin-right: 6px;"></i>
+        Shopping for a Switch fan?
+        <a href="{{ route('buyersGuide.landing') }}" class="alert-link">See our buyer's guide</a>:
+        the top games, consoles and accessories, with deals at Amazon.
+    </div>
+{% endif %}

@@ -35,10 +35,14 @@ return [
         'min_percent' => 10,
     ],
 
-    // Hardware images on the UK page, reusing the US image for the same row. Off until the UK
-    // Associates terms are settled: they say Product Advertising Content links "to, and only
-    // to, the relevant page of an Amazon Site", and these images come from the US API.
+    // Hardware images on the UK page, reusing the US image for the same row. Left off: the UK
+    // Associates terms say Product Advertising Content links "to, and only to, the relevant
+    // page of an Amazon Site", and these images come from the US API.
     'uk_images' => false,
+
+    // The banner linking to the guide, on every public page and the members home. Shown up to
+    // and including this date; set a new one next season, or null to turn it off.
+    'banner_until' => '2026-12-25',
 
     'hardware' => [
         [
