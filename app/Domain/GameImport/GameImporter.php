@@ -11,7 +11,7 @@ use App\Domain\GameCollection\Repository as GameCollectionRepository;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameTitleHash\HashGenerator;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
-use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Repository\AliasRepository as GamesCompanyAliasRepository;
 use App\Domain\Url\LinkTitle;
 use App\Events\GameCreated;
 use App\Models\Console;
@@ -26,7 +26,7 @@ class GameImporter
         private GameCollectionRepository $repoGameCollection,
         private GamePublisherRepository $repoGamePublisher,
         private GameTitleHashRepository $repoTitleHash,
-        private GamesCompanyRepository $repoGamesCompany,
+        private GamesCompanyAliasRepository $repoGamesCompanyAlias,
         private GameQualityFilter $gameQualityFilter,
         private HashGenerator $hashGenerator,
         private SquareImageDownloader $squareImageDownloader,
@@ -110,7 +110,7 @@ class GameImporter
 
             // Publisher — link to existing record (created in the Publishers step)
             if ($data->publisher) {
-                $company = $this->repoGamesCompany->findByNameCaseInsensitive($data->publisher);
+                $company = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($data->publisher);
                 if ($company) {
                     $this->repoGamePublisher->create($game->id, $company->id);
                     $this->gameQualityFilter->updateGame($game, $company);

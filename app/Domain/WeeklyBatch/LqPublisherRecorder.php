@@ -3,6 +3,7 @@
 namespace App\Domain\WeeklyBatch;
 
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Repository\AliasRepository as GamesCompanyAliasRepository;
 use App\Domain\Url\LinkTitle;
 use App\Models\GamesCompany;
 use App\Models\WeeklyBatchItem;
@@ -25,6 +26,7 @@ class LqPublisherRecorder
 
     public function __construct(
         private GamesCompanyRepository $repoGamesCompany,
+        private GamesCompanyAliasRepository $repoGamesCompanyAlias,
         private LinkTitle $linkTitle
     )
     {
@@ -48,7 +50,7 @@ class LqPublisherRecorder
             return ['outcome' => self::NO_PUBLISHER, 'company' => null];
         }
 
-        $existing = $this->repoGamesCompany->findByNameCaseInsensitive($name);
+        $existing = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($name);
         if ($existing) {
             return ['outcome' => self::EXISTS, 'company' => $existing];
         }

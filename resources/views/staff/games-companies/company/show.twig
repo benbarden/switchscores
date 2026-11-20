@@ -5,6 +5,10 @@
 
 {% block page_inner %}
 
+{% if session('success') %}
+    <div class="alert alert-success">{{ session('success') }}</div>
+{% endif %}
+
 <div class="row">
 
     <div class="col-md-4">
@@ -171,43 +175,27 @@
     </div>
 
     <div class="col-sm-12 col-md-6 col-lg-6">
-        <h2>Outreach</h2>
-        <p>
-            <a href="{{ route('staff.partners.outreach.add', {'gamesCompany': GamesCompany} ) }}" class="btn btn-primary">Add outreach</a>
-            {% if OutreachList %}
-                <a href="{{ route('staff.partners.outreach.list', {'gamesCompany': GamesCompany}) }}" class="btn btn-primary">View all</a>
-            {% endif %}
-        </p>
-        {% if OutreachList.count %}
-            <p>
-                View all outreach to see messages and notes.
-            </p>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th class="text-center">New status</th>
-                    <th class="text-center">Contact method</th>
-                    <th class="text-center">Date</th>
-                </tr>
-                </thead>
+        <h2>Aliases</h2>
+        <p class="text-muted small">Other names this company appears under, e.g. on the Nintendo store. A publisher with one of these names links to {{ GamesCompany.name }}. Added from the weekly update's Publishers step.</p>
+        {% if Aliases|length > 0 %}
+            <table class="table table-sm">
                 <tbody>
-                {% for item in OutreachList %}
+                {% for alias in Aliases %}
                     <tr>
-                        <td class="text-center">
-                            {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item} %}
-                        </td>
-                        <td class="text-center">
-                            {{ item.contact_method }}
-                        </td>
-                        <td class="text-center">
-                            {{ item.created_at }}
+                        <td class="align-middle">{{ alias.name }}</td>
+                        <td class="text-end">
+                            <form method="post" action="{{ route('staff.games-companies.alias.remove', {'gamesCompany': GamesCompany.id, 'aliasId': alias.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Remove the alias &quot;{{ alias.name|e('js') }}&quot;?')">
+                                {{ csrf_field()|raw }}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No outreach for this partner.</p>
+            <p>No aliases.</p>
         {% endif %}
     </div>
 
@@ -272,5 +260,48 @@
         </div>
     </div>
 {% endif %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <h2>Outreach</h2>
+        <p>
+            <a href="{{ route('staff.partners.outreach.add', {'gamesCompany': GamesCompany} ) }}" class="btn btn-primary">Add outreach</a>
+            {% if OutreachList %}
+                <a href="{{ route('staff.partners.outreach.list', {'gamesCompany': GamesCompany}) }}" class="btn btn-primary">View all</a>
+            {% endif %}
+        </p>
+        {% if OutreachList.count %}
+            <p>
+                View all outreach to see messages and notes.
+            </p>
+            <table class="table" style="max-width: 800px;">
+                <thead>
+                <tr>
+                    <th class="text-center">New status</th>
+                    <th class="text-center">Contact method</th>
+                    <th class="text-center">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in OutreachList %}
+                    <tr>
+                        <td class="text-center">
+                            {% include 'staff/partners/outreach/status-badge.twig' with {'partnerOutreach': item} %}
+                        </td>
+                        <td class="text-center">
+                            {{ item.contact_method }}
+                        </td>
+                        <td class="text-center">
+                            {{ item.created_at }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No outreach for this partner.</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock page_inner %}

@@ -5,7 +5,7 @@ namespace App\Domain\WeeklyBatch;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
 
-use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Repository\AliasRepository as GamesCompanyAliasRepository;
 use App\Domain\Scraper\NintendoCoUkGameData;
 use App\Domain\Scraper\NintendoPageStatus;
 
@@ -14,35 +14,11 @@ class NintendoPageFetcher
     // Games by the same publisher threshold — below this count, flag for review
     private const NEW_PUBLISHER_GAME_THRESHOLD = 3;
 
-    // Publisher name mappings: Nintendo site format → DB name
-    private const PUBLISHER_NAME_MAP = [
-        'Bandai Namco'              => 'Bandai Namco Entertainment',
-        'Bethesda'                  => 'Bethesda Softworks',
-        'Brain Seal Entertainment'  => 'Brain Seal',
-        'D3PUBLISHER'               => 'D3 Publisher',
-        'Dolores Ent.'              => 'Dolores Entertainment',
-        'Dolores Entertainment SL'  => 'Dolores Entertainment',
-        'Fáyer'                     => 'Fayer',
-        'LAN - GAMES EOOD'          => 'Lan Games',
-        'Reddeer.Games'             => 'RedDeerGames',
-        'Sanuk'                     => 'Sanuk Games',
-        'SERIALGAMES'               => 'Serial Games',
-        'Terarin Games'             => 'Terarin',
-        'Koei Tecmo Europe'         => 'Koei Tecmo',
-        'CRAFTS&MEISTER'            => 'Crafts & Meister',
-        'TREVA'                     => 'Treva Entertainment',
-        'Anxious Noob Games Ltd'    => 'Anxious Noob Games',
-        'Trefl S.A'                 => 'Trefl SA',
-        'DreadXP'                   => 'Dread XP',
-        'LocaGames'                 => 'Loca Games',
-        'ODDCADIA'                  => 'Oddcadia',
-        'RiverseGames'              => 'Rioverse Games',
-        'Take IT Studio!'           => 'Take IT Studio',
-        'Telltale'                  => 'Telltale Games',
-    ];
+    // Other store spellings of a publisher's name are games company aliases, kept in the DB and
+    // added from the Publishers step
 
     public function __construct(
-        private GamesCompanyRepository $repoCompany
+        private GamesCompanyAliasRepository $repoCompanyAlias
     ) {}
 
     /**
@@ -124,12 +100,8 @@ class NintendoPageFetcher
 
         $raw = trim($raw);
 
-        // Apply explicit name mapping first
-        if (isset(self::PUBLISHER_NAME_MAP[$raw])) {
-            return self::PUBLISHER_NAME_MAP[$raw];
-        }
-
-        // ALL CAPS publisher not in map → convert to Title Case (COLOPL → Colopl)
+        // ALL CAPS → Title Case (COLOPL → Colopl). A known company is matched on the raw name
+        // first, so this only shapes the name of a new one.
         $letters = preg_replace('/[^a-zA-Z]/', '', $raw);
         if ($letters !== '' && $letters === strtoupper($letters)) {
             return ucwords(strtolower($raw));
@@ -149,7 +121,9 @@ class NintendoPageFetcher
             return [false, true, 'Publisher not found on Nintendo page', null, null];
         }
 
-        $company = $this->repoCompany->findByNameCaseInsensitive($publisherNormalised);
+        // The raw name first, as an alias can hold the store's exact spelling (D3PUBLISHER)
+        $company = ($publisherRaw ? $this->repoCompanyAlias->findCompanyByNameOrAlias($publisherRaw) : null)
+            ?? $this->repoCompanyAlias->findCompanyByNameOrAlias($publisherNormalised);
 
         if ($company === null) {
             return [false, true, "Publisher not in DB: {$publisherNormalised}", $publisherNormalised, null];

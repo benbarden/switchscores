@@ -16,6 +16,7 @@ use App\Domain\GameDeveloper\DbQueries as GameDeveloperDbQueries;
 use App\Domain\GamePublisher\Repository as GamePublisherRepository;
 use App\Domain\GameDeveloper\Repository as GameDeveloperRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Repository\AliasRepository as GamesCompanyAliasRepository;
 use App\Domain\GamesCompany\Stats as GamesCompanyStats;
 use App\Domain\PartnerOutreach\Repository as PartnerOutreachRepository;
 use App\Factories\GamesCompanyFactory;
@@ -42,7 +43,8 @@ class CompanyController extends Controller
         private GamePublisherRepository $repoGamePublisher,
         private GamePublisherDbQueries $dbGamePublisher,
         private GameDeveloperRepository $repoGameDeveloper,
-        private GameDeveloperDbQueries $dbGameDeveloper
+        private GameDeveloperDbQueries $dbGameDeveloper,
+        private GamesCompanyAliasRepository $repoGamesCompanyAlias
     )
     {
     }
@@ -76,7 +78,20 @@ class CompanyController extends Controller
         $bindings['MergedGameList'] = $mergedGameList;
         $bindings['TotalGameCount'] = $totalGameCount;
 
+        $bindings['Aliases'] = $gamesCompany->aliases;
+
         return view('staff.games-companies.company.show', $bindings);
+    }
+
+    public function removeAlias(GamesCompany $gamesCompany, $aliasId)
+    {
+        $alias = $this->repoGamesCompanyAlias->find((int) $aliasId);
+        if (!$alias || (int) $alias->games_company_id !== (int) $gamesCompany->id) abort(404);
+
+        $this->repoGamesCompanyAlias->delete($alias);
+
+        return redirect()->route('staff.games-companies.show', ['gamesCompany' => $gamesCompany])
+            ->with('success', "Alias \"{$alias->name}\" removed.");
     }
 
     public function add()

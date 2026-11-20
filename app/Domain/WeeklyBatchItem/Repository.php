@@ -107,9 +107,21 @@ class Repository
             ->pluck('total', 'item_status')
             ->toArray();
 
+        // Games outside the batch dates keep their own status. Those in the DB are shown as
+        // already in DB; the rest can't be imported yet (Upcoming games with no exact date).
+        $outOfRange     = $rows[WeeklyBatchItem::STATUS_OUT_OF_RANGE] ?? 0;
+        $outOfRangeInDb = $outOfRange === 0 ? 0 : WeeklyBatchItem::where('batch_id', $batchId)
+            ->where('console', $console)
+            ->where('list_type', $listType)
+            ->where('item_status', WeeklyBatchItem::STATUS_OUT_OF_RANGE)
+            ->whereNotNull('game_id')
+            ->count();
+
         return [
             'already_in_db'    => $rows[WeeklyBatchItem::STATUS_ALREADY_IN_DB]  ?? 0,
-            'out_of_range'     => $rows[WeeklyBatchItem::STATUS_OUT_OF_RANGE]   ?? 0,
+            'out_of_range'     => $outOfRange,
+            'in_db_total'      => ($rows[WeeklyBatchItem::STATUS_ALREADY_IN_DB] ?? 0) + $outOfRangeInDb,
+            'not_added'        => $outOfRange - $outOfRangeInDb,
             'low_quality'      => $rows[WeeklyBatchItem::STATUS_LOW_QUALITY]    ?? 0,
             'bundle'           => $rows[WeeklyBatchItem::STATUS_BUNDLE]         ?? 0,
             'excluded'         => $rows[WeeklyBatchItem::STATUS_EXCLUDED]       ?? 0,
@@ -224,17 +236,6 @@ class Repository
         $item->nintendo_url = $url;
         $item->item_status  = WeeklyBatchItem::STATUS_FETCH_PENDING;
         $item->fetch_status = WeeklyBatchItem::FETCH_STATUS_PENDING;
-        $item->save();
-    }
-
-    /**
-     * Move an item into the active pipeline using the fields worked out by
-     * ParseService::classifyActiveItem(). Used when an out-of-range item is added
-     * to the batch after parsing.
-     */
-    public function activateItem(WeeklyBatchItem $item, array $classification): void
-    {
-        $item->fill($classification);
         $item->save();
     }
 

@@ -58,7 +58,7 @@ class WeeklyBatchItem extends Model
 
     protected $fillable = [
         'batch_id', 'console', 'list_type', 'page_number', 'sort_order',
-        'title', 'title_auto', 'title_raw', 'nsuid', 'release_date', 'price_gbp', 'price_raw',
+        'title', 'title_auto', 'title_raw', 'nsuid', 'release_date', 'release_date_raw', 'price_gbp', 'price_raw',
         'nintendo_genres', 'description',
         'nintendo_url', 'packshot_url',
         'publisher_raw', 'publisher_normalised', 'players',

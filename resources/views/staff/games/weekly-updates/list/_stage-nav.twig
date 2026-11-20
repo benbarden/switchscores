@@ -47,8 +47,9 @@
 
         {# Status counts summary #}
         {% set pendingCount    = Counts['pending'] ?? 0 %}
-        {% set inDbCount       = Counts['already_in_db'] ?? 0 %}
-        {% set outOfRangeCount = Counts['out_of_range'] ?? 0 %}
+        {% set inDbCount       = Counts['in_db_total'] ?? 0 %}
+        {# Only Upcoming lists leave games out for their date; on New lists they join the batch #}
+        {% set noExactDate     = ListType != 'new' ? (Counts['not_added'] ?? 0) : 0 %}
         {% set excludedCount   = Counts['excluded'] ?? 0 %}
         {% set fetchPending    = Counts['fetch_pending'] ?? 0 %}
         {% set lqReview        = Counts['lq_review'] ?? 0 %}
@@ -67,7 +68,7 @@
             {% if readyCount > 0 %}{% set parts = parts|merge([readyCount ~ ' ready']) %}{% endif %}
             {% if importedCount > 0 %}{% set parts = parts|merge([importedCount ~ ' imported']) %}{% endif %}
             {% if inDbCount > 0 %}{% set parts = parts|merge([inDbCount ~ ' already in DB']) %}{% endif %}
-            {% if outOfRangeCount > 0 %}{% set parts = parts|merge([outOfRangeCount ~ ' out of range']) %}{% endif %}
+            {% if noExactDate > 0 %}{% set parts = parts|merge([noExactDate ~ ' no exact date']) %}{% endif %}
             {% if excludedCount > 0 %}{% set parts = parts|merge([excludedCount ~ ' excluded']) %}{% endif %}
             {{ parts|join(' · ') }}
         </div>

@@ -46,4 +46,9 @@ class GamesCompany extends Model implements Auditable
     {
         return $this->hasMany('App\Models\PartnerOutreach', 'partner_id', 'id');
     }
+
+    public function aliases()
+    {
+        return $this->hasMany(GamesCompanyAlias::class, 'games_company_id', 'id')->orderBy('name');
+    }
 }

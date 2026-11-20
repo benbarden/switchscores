@@ -16,6 +16,7 @@ Route::group(['middleware' => ['auth.staff', 'check.user.role:'. \App\Models\Use
     Route::match(['get', 'post'], '/staff/games-companies/delete/{gamesCompanyId}', 'Staff\GamesCompanies\CompanyController@delete')->name('staff.games-companies.delete');
 
     Route::get('/staff/games-companies/show/{gamesCompany}', 'Staff\GamesCompanies\CompanyController@show')->name('staff.games-companies.show');
+    Route::post('/staff/games-companies/show/{gamesCompany}/alias/{aliasId}/remove', 'Staff\GamesCompanies\CompanyController@removeAlias')->name('staff.games-companies.alias.remove');
 
     Route::match(['get', 'post'], '/staff/games-companies/search', 'Staff\GamesCompanies\ListController@search')->name('staff.games-companies.search');
 

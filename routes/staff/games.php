@@ -211,8 +211,6 @@ Route::group([
             Route::get('raw', 'raw')->name('raw');
             Route::post('raw/save-page', 'savePage')->name('raw.save-page');
             Route::post('raw/remove-page', 'removePage')->name('raw.remove-page');
-            Route::post('raw/item/{itemId}/activate', 'activateOutOfRange')->name('raw.activate-out-of-range');
-            Route::post('raw/activate-all', 'activateAllOutOfRange')->name('raw.activate-all-out-of-range');
             Route::get('urls', 'urls')->name('urls');
             Route::post('urls/save', 'saveUrls')->name('urls.save');
 
@@ -223,6 +221,7 @@ Route::group([
 
             Route::get('publishers', 'publishers')->name('publishers');
             Route::post('publishers/create', 'createPublisher')->name('publishers.create');
+            Route::post('publishers/link', 'linkPublisher')->name('publishers.link');
             Route::post('publishers/mark-lq', 'markPublisherLq')->name('publishers.mark-lq');
 
             Route::get('prices', 'prices')->name('prices');

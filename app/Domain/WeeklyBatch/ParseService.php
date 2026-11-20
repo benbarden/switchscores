@@ -87,19 +87,27 @@ class ParseService
         }
 
         $summary = [
-            'in_range' => 0, 'out_of_range' => 0, 'out_of_range_not_in_db' => 0,
-            'already_in_db' => 0, 'pre_excluded' => 0,
+            'added' => 0, 'already_in_db' => 0, 'skipped' => 0, 'not_added' => 0,
             'total_parsed' => count($rawEntries),
             'expected_blocks' => $expectedCount,
             'dropped' => max(0, $expectedCount - count($rawEntries)),
             'source' => $useHtml ? 'html' : 'text',
         ];
 
+        $titles = [];
+        foreach ($rawEntries as $sortOrder => $entry) {
+            $titles[$sortOrder] = $this->titleNormaliser->normalise($entry['title_raw']);
+        }
+        $priorExclusions = $listType === 'new'
+            ? $this->repoItem->getPriorExclusions(array_values(array_unique($titles)), $console)
+            : collect();
+
         foreach ($rawEntries as $sortOrder => $entry) {
             $titleRaw        = $entry['title_raw'];
-            $title           = $this->titleNormaliser->normalise($titleRaw);
+            $title           = $titles[$sortOrder];
             $releaseDate     = $entry['release_date'];
             $nsuid           = $entry['nsuid'] ?? null;
+            $releaseDateRaw  = trim((string) ($entry['release_date_raw'] ?? ''));
 
             // Fields common to every item, regardless of status. HTML paste supplies
             // nsuid/nintendo_url/packshot_url; the text parser leaves them null.
@@ -113,6 +121,7 @@ class ParseService
                 'title_raw'   => $titleRaw,
                 'nsuid'       => $nsuid,
                 'release_date' => $releaseDate,
+                'release_date_raw' => $releaseDateRaw === '' ? null : mb_substr($releaseDateRaw, 0, 50),
                 'price_gbp'   => $entry['price_gbp'],
                 'price_raw'   => $entry['price_raw'],
                 'price_flag'  => $entry['price_flag'] ? 1 : 0,
@@ -128,41 +137,27 @@ class ParseService
                 $this->repoItem->create($baseData + [
                     'item_status' => WeeklyBatchItem::STATUS_EXCLUDED,
                 ]);
-                $summary['pre_excluded']++;
+                $summary['skipped']++;
                 continue;
             }
 
-            // Date range filter
-            if (!$this->isInRange($releaseDate, $dateFrom, $dateTo)) {
-                $outOfRangeGame = $this->matchGame($nsuid, $title, $titleRaw, $consoleId);
-                $item = $this->repoItem->create($baseData + [
-                    'item_status' => 'out_of_range',
-                    'game_id'     => $outOfRangeGame ? $outOfRangeGame->id : null,
-                ]);
-
-                // Added to the batch before this re-parse: keep it there, unless the game has
-                // reached the DB since.
-                $previous = $snapshot->get($titleRaw);
-                $wasAdded = $previous && !in_array($previous->item_status, [
-                    WeeklyBatchItem::STATUS_OUT_OF_RANGE,
-                    WeeklyBatchItem::STATUS_ALREADY_IN_DB,
-                ]);
-                if ($wasAdded && !$outOfRangeGame) {
-                    $this->activateOutOfRangeItem($item);
-                    $this->repoItem->restoreSnapshot($item, $previous);
-                    $summary['in_range']++;
-                    continue;
-                }
-
-                $summary['out_of_range']++;
-                if (!$outOfRangeGame) {
-                    $summary['out_of_range_not_in_db']++;
-                }
-                continue;
-            }
-
-            // DB duplicate check
+            $inRange      = $this->isInRange($releaseDate, $dateFrom, $dateTo);
             $existingGame = $this->matchGame($nsuid, $title, $titleRaw, $consoleId);
+
+            // Outside the batch dates and either already in the DB, or on an Upcoming list with no
+            // exact date (or already released), so it can't be imported yet. Stored with its own
+            // status, so import doesn't reorder old games from a partial deep paste.
+            // New lists take everything else: lots of games reach the store long after their
+            // release date, so deep pastes are normal.
+            if (!$inRange && ($existingGame || $listType !== 'new')) {
+                $this->repoItem->create($baseData + [
+                    'item_status' => WeeklyBatchItem::STATUS_OUT_OF_RANGE,
+                    'game_id'     => $existingGame ? $existingGame->id : null,
+                ]);
+                $summary[$existingGame ? 'already_in_db' : 'not_added']++;
+                continue;
+            }
+
             if ($existingGame) {
                 $this->repoItem->create($baseData + [
                     'item_status' => 'already_in_db',
@@ -181,11 +176,19 @@ class ParseService
 
             $item = $this->repoItem->create($activeData);
 
-            if ($snapshot->has($titleRaw)) {
-                $this->repoItem->restoreSnapshot($item, $snapshot->get($titleRaw));
+            // A re-parse keeps what was decided on this page, including a reset of the earlier
+            // exclusion below. A row saved under the old out-of-range rule had no decision.
+            $previous = $snapshot->get($titleRaw);
+            if ($previous) {
+                $this->repoItem->restoreSnapshot($item, $previous);
+            }
+            $undecided = !$previous || $previous->item_status === WeeklyBatchItem::STATUS_OUT_OF_RANGE;
+            if (!$inRange && $undecided && $priorExclusions->has($title)) {
+                // A late game skipped on purpose in an earlier batch stays out unless reset
+                $this->repoItem->updateStatus($item, $priorExclusions->get($title)->item_status);
             }
 
-            $summary['in_range']++;
+            $summary[$item->isSkipped() ? 'skipped' : 'added']++;
         }
 
         $summary['prices_resolved'] = $this->flaggedPriceResolver->resolvePasted(
@@ -198,28 +201,9 @@ class ParseService
     }
 
     /**
-     * Out-of-range items are created before the parser classifies active items, so run that
-     * classification now. Without it the item lands at `pending` even when the paste already
-     * supplied a store URL, and the fetch step then reports it as having no URL; it would also
-     * miss collection matching and LQ flagging.
-     */
-    public function activateOutOfRangeItem(WeeklyBatchItem $item): void
-    {
-        $this->repoItem->activateItem($item, $this->classifyActiveItem(
-            $item->title,
-            $item->price_gbp === null ? null : (float) $item->price_gbp,
-            $item->nintendo_url
-        ));
-    }
-
-    /**
      * Work out where an item entering the active pipeline belongs: its collection,
      * whether it is an auto-LQ title or a bundle, any LQ signals to flag, and the
      * status it starts at. Returns the fields to set on the item.
-     *
-     * Shared by parsePage() and by the "add to batch" action for items originally
-     * filtered out as out of range, so both routes into the pipeline classify an
-     * item the same way.
      */
     public function classifyActiveItem(string $title, ?float $price, ?string $nintendoUrl): array
     {

@@ -56,13 +56,6 @@ class Repository
         return GamesCompany::where('name', $name)->first();
     }
 
-    public function findByNameCaseInsensitive(string $name): ?GamesCompany
-    {
-        return GamesCompany::whereRaw('LOWER(name) = ?', [strtolower($name)])
-            ->withCount('publisherGames')
-            ->first();
-    }
-
     public function getAll()
     {
         return GamesCompany::orderBy('name', 'asc')->get();

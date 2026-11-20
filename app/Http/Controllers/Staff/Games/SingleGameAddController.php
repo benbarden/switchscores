@@ -13,6 +13,7 @@ use App\Domain\GameImport\ImportGameData;
 use App\Domain\GameTitleHash\HashGenerator;
 use App\Domain\GameTitleHash\Repository as GameTitleHashRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Repository\AliasRepository as GamesCompanyAliasRepository;
 use App\Domain\Url\LinkTitle;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
@@ -53,6 +54,7 @@ class SingleGameAddController extends Controller
         private GameRepository $repoGame,
         private GameTitleHashRepository $repoTitleHash,
         private GamesCompanyRepository $repoGamesCompany,
+        private GamesCompanyAliasRepository $repoGamesCompanyAlias,
         private HashGenerator $hashGenerator
     ) {
     }
@@ -220,7 +222,7 @@ class SingleGameAddController extends Controller
 
         $publisher       = $page['publisher_normalised'] ?? null;
         $publisherExists = $publisher !== null
-            && $this->repoGamesCompany->findByNameCaseInsensitive($publisher) !== null;
+            && $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($publisher) !== null;
 
         $lqReasons = array_values(array_filter([
             $classification['lq_flag_reason'],
@@ -292,7 +294,7 @@ class SingleGameAddController extends Controller
         $newPublisher = null;
         $publisherName = trim((string) ($validated['publisher'] ?? ''));
         $validated['publisher'] = $publisherName !== '' ? $publisherName : null;
-        if ($publisherName !== '' && !$this->repoGamesCompany->findByNameCaseInsensitive($publisherName)) {
+        if ($publisherName !== '' && !$this->repoGamesCompanyAlias->findCompanyByNameOrAlias($publisherName)) {
             $this->repoGamesCompany->createCompany(
                 $publisherName,
                 (new LinkTitle())->generate($publisherName),

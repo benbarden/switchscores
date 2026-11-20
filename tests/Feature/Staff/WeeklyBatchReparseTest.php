@@ -3,6 +3,7 @@
 namespace Tests\Feature\Staff;
 
 use App\Domain\WeeklyBatch\ParseService;
+use App\Domain\WeeklyBatchItem\Repository as WeeklyBatchItemRepository;
 use App\Domain\WeeklyBatchRawPage\Repository as WeeklyBatchRawPageRepository;
 use App\Models\Console;
 use App\Models\Game;
@@ -12,8 +13,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 /**
- * Re-parsing a page rebuilds its items from the paste, so anything done to them since has to be
- * carried over: games added from out of range, and prices settled by hand or from the price API.
+ * Parsing and re-parsing a page. On New lists, games outside the batch dates that aren't in the
+ * DB join the batch, unless they were skipped in an earlier batch. Upcoming lists leave out games
+ * with no exact date. A re-parse rebuilds the items from the paste, so anything done to them since
+ * has to be carried over, including prices settled by hand or from the price API.
  * Plain text pastes have no NSUID or URL, so these tests make no price API calls.
  */
 class WeeklyBatchReparseTest extends TestCase
@@ -34,22 +37,22 @@ class WeeklyBatchReparseTest extends TestCase
         ]);
     }
 
-    private function paste(string $date, string $price): void
+    private function paste(string $date, string $price, string $listType = 'new'): array
     {
         $raw = self::TITLE."\n".self::TITLE."\n\n"
             ."Nintendo Switch 2 • ".$date." • Adventure\n\n"
             .$price."\n\n"
             ."A game.\n";
 
-        app(WeeklyBatchRawPageRepository::class)->saveOrReplace($this->batch->id, 'switch-2', 'new', 1, $raw, null);
-        app(ParseService::class)->parsePage(
-            $this->batch->id, 'switch-2', 'new', 1, $this->batch->batch_date->toDateString()
+        app(WeeklyBatchRawPageRepository::class)->saveOrReplace($this->batch->id, 'switch-2', $listType, 1, $raw, null);
+        return app(ParseService::class)->parsePage(
+            $this->batch->id, 'switch-2', $listType, 1, $this->batch->batch_date->toDateString()
         );
     }
 
-    private function pasteOutOfRange(string $price = '£17.75'): void
+    private function pasteOutOfRange(string $price = '£17.75'): array
     {
-        $this->paste('01/01/2001', $price);
+        return $this->paste('01/01/2001', $price);
     }
 
     private function pasteInRange(string $price): void
@@ -62,36 +65,56 @@ class WeeklyBatchReparseTest extends TestCase
         return WeeklyBatchItem::where('batch_id', $this->batch->id)->where('title_raw', self::TITLE)->firstOrFail();
     }
 
-    private function add(): WeeklyBatchItem
+    private function makeGame(): Game
     {
+        $game = new Game();
+        $game->title = self::TITLE;
+        $game->link_title = 'test-reparse-'.uniqid();
+        $game->console_id = Console::ID_SWITCH_2;
+        $game->save();
+        return $game;
+    }
+
+    private function skippedInAnEarlierBatch(string $status): void
+    {
+        $earlier = WeeklyBatch::create([
+            'batch_date' => $this->batch->batch_date->copy()->subDays(28)->toDateString(),
+            'status' => WeeklyBatch::STATUS_SETUP,
+        ]);
+        WeeklyBatchItem::create([
+            'batch_id' => $earlier->id,
+            'console' => 'switch-2',
+            'list_type' => 'new',
+            'page_number' => 1,
+            'sort_order' => 0,
+            'title' => self::TITLE,
+            'title_raw' => self::TITLE,
+            'item_status' => $status,
+        ]);
+    }
+
+    public function testAGameFromAnEarlierWeekJoinsTheBatch()
+    {
+        $summary = $this->pasteOutOfRange();
+
         $item = $this->item();
-        app(ParseService::class)->activateOutOfRangeItem($item);
-        return $item->fresh();
+        $this->assertSame(WeeklyBatchItem::STATUS_PENDING, $item->item_status);
+        $this->assertNull($item->game_id);
+        $this->assertSame(1, $summary['added']);
     }
 
-    public function testAGameNeverAddedStaysOutOfRange()
+    public function testAGameFromAnEarlierWeekStaysInTheBatchOnReparse()
     {
         $this->pasteOutOfRange();
-        $this->pasteOutOfRange();
-
-        $this->assertSame(WeeklyBatchItem::STATUS_OUT_OF_RANGE, $this->item()->item_status);
-    }
-
-    public function testAnAddedGameStaysInTheBatch()
-    {
-        $this->pasteOutOfRange();
-        $this->assertSame(WeeklyBatchItem::STATUS_PENDING, $this->add()->item_status);
-
         $this->pasteOutOfRange();
 
         $this->assertSame(WeeklyBatchItem::STATUS_PENDING, $this->item()->item_status);
     }
 
-    public function testAnAddedGameKeepsItsFetchedDetails()
+    public function testAGameFromAnEarlierWeekKeepsItsFetchedDetails()
     {
         $this->pasteOutOfRange();
-        $item = $this->add();
-        $item->fill([
+        $this->item()->fill([
             'nintendo_url' => 'https://www.nintendo.com/en-gb/zqx.html',
             'fetch_status' => WeeklyBatchItem::FETCH_STATUS_FETCHED,
             'publisher_normalised' => 'Zqx Publisher',
@@ -105,22 +128,59 @@ class WeeklyBatchReparseTest extends TestCase
         $this->assertSame('Zqx Publisher', $item->publisher_normalised);
     }
 
-    public function testAnAddedGameNowInTheDbIsNotAddedAgain()
+    public function testAGameFromAnEarlierWeekInTheDbKeepsItsOwnStatus()
     {
         $this->pasteOutOfRange();
-        $this->add();
+        $game = $this->makeGame();
 
-        $game = new Game();
-        $game->title = self::TITLE;
-        $game->link_title = 'test-reparse-'.uniqid();
-        $game->console_id = Console::ID_SWITCH_2;
-        $game->save();
-
-        $this->pasteOutOfRange();
+        $summary = $this->pasteOutOfRange();
 
         $item = $this->item();
         $this->assertSame(WeeklyBatchItem::STATUS_OUT_OF_RANGE, $item->item_status);
         $this->assertEquals($game->id, $item->game_id);
+        $this->assertSame(1, $summary['already_in_db']);
+    }
+
+    public function testAGameSkippedInAnEarlierBatchComesInWithThatStatus()
+    {
+        $this->skippedInAnEarlierBatch(WeeklyBatchItem::STATUS_LOW_QUALITY);
+
+        $summary = $this->pasteOutOfRange();
+
+        $this->assertSame(WeeklyBatchItem::STATUS_LOW_QUALITY, $this->item()->item_status);
+        $this->assertSame(1, $summary['skipped']);
+    }
+
+    public function testAResetGameStaysInTheBatchOnReparse()
+    {
+        $this->skippedInAnEarlierBatch(WeeklyBatchItem::STATUS_BUNDLE);
+        $this->pasteOutOfRange();
+        $this->assertSame(WeeklyBatchItem::STATUS_BUNDLE, $this->item()->item_status);
+
+        app(WeeklyBatchItemRepository::class)->resetItem($this->item());
+        $this->pasteOutOfRange();
+
+        $this->assertSame(WeeklyBatchItem::STATUS_PENDING, $this->item()->item_status);
+    }
+
+    public function testAnUpcomingGameWithNoExactDateIsNotAdded()
+    {
+        $summary = $this->paste('2027', '', 'upcoming');
+
+        $item = $this->item();
+        $this->assertSame(WeeklyBatchItem::STATUS_OUT_OF_RANGE, $item->item_status);
+        $this->assertNull($item->release_date);
+        $this->assertSame('2027', $item->release_date_raw);
+        $this->assertSame(1, $summary['not_added']);
+    }
+
+    public function testAnUpcomingGameWithAFullDateIsAdded()
+    {
+        $date = $this->batch->batch_date->copy()->addYear()->format('d/m/Y');
+
+        $this->paste($date, '£17.75', 'upcoming');
+
+        $this->assertSame(WeeklyBatchItem::STATUS_PENDING, $this->item()->item_status);
     }
 
     public function testASettledPriceSurvivesOnAFetchedItem()

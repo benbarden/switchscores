@@ -182,43 +182,6 @@
 
 {% endif %}
 
-{# ---- Combined skipped items (informational) ---- #}
-{% if SkippedItems|length > 0 %}
-<hr class="mt-2">
-<h2 class="mt-4">Skipped items</h2>
-<p class="text-muted">These games will not be imported. No action needed.</p>
-<table class="table table-sm table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th style="width: 35%;">Title</th>
-            <th style="width: 15%;">Publisher</th>
-            <th style="width: 12%;">Reason</th>
-            <th>Details</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for item in SkippedItems %}
-        <tr class="text-muted">
-            <td>{{ item.title }}</td>
-            <td>{{ item.publisher_normalised ?? '—' }}</td>
-            <td>
-                {% if item.item_status == 'low_quality' %}
-                    <span class="badge bg-danger">Low quality</span>
-                {% elseif item.item_status == 'bundle' %}
-                    <span class="badge bg-info text-dark">Bundle</span>
-                {% elseif item.item_status == 'already_in_db' %}
-                    <span class="badge bg-secondary">Already in DB</span>
-                {% elseif item.item_status == 'excluded' %}
-                    <span class="badge bg-secondary">Manually excluded</span>
-                {% endif %}
-            </td>
-            <td><small>{{ item.lq_flag_reason ?? '' }}</small></td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
 {# ---- Continue button ---- #}
 <hr class="mt-4">
 {% set lqReviewCount = Counts['lq_review'] ?? 0 %}

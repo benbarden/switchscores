@@ -20,7 +20,7 @@
 
 {% if HasOutOfRangeReadyItems %}
 <div class="alert alert-warning mb-3">
-    <strong>Out-of-range games included.</strong> One or more games in this import have a release date outside the normal batch range. The release hub link below uses a fixed date window and will not show these games — you will need to locate them manually in the release hub after importing.
+    <strong>Games from earlier weeks included.</strong> One or more games in this import have a release date outside this week's dates. The release hub link below uses a fixed date window and will not show these games — you will need to locate them manually in the release hub after importing.
 </div>
 {% endif %}
 {% if MissingPublishers|length > 0 %}
@@ -39,8 +39,8 @@
         {{ Counts['bundle'] ?? 0 }} bundle,
         {{ Counts['excluded'] ?? 0 }} excluded
         &mdash;
-        {{ Counts['already_in_db'] ?? 0 }} already in DB,
-        {{ Counts['out_of_range'] ?? 0 }} out of range
+        {{ Counts['in_db_total'] ?? 0 }} already in DB{% if ListType != 'new' %},
+        {{ Counts['not_added'] ?? 0 }} no exact date{% endif %}
     </p>
 </div>
 
@@ -62,6 +62,10 @@
                 {% include 'staff/games/weekly-updates/list/_title-edit.twig' %}
                 {% if item.nintendo_url %}
                     <br><a href="{{ item.nintendo_url }}" target="_blank" class="small text-muted" tabindex="-1">Nintendo ↗</a>
+                {% endif %}
+                {% if OtherConsoleWarnings[item.id] ?? null %}
+                    <br><span class="badge bg-danger">⚑ Switch 1 game?</span>
+                    <small class="text-muted">{{ OtherConsoleWarnings[item.id] }}</small>
                 {% endif %}
             </td>
             <td class="align-middle small">{{ item.release_date ? item.release_date|date('d M Y') : '—' }}</td>

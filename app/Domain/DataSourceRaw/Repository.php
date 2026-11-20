@@ -29,6 +29,13 @@ class Repository
         return DataSourceRaw::where('source_id', $sourceId)->where('link_id', $linkId)->first();
     }
 
+    public function getBySourceIdAndLinkIds($sourceId, array $linkIds)
+    {
+        if (empty($linkIds)) return collect();
+
+        return DataSourceRaw::where('source_id', $sourceId)->whereIn('link_id', $linkIds)->get();
+    }
+
     public function getByIds(array $ids)
     {
         return DataSourceRaw::whereIn('id', $ids)->get();

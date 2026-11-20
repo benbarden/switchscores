@@ -36,6 +36,12 @@
         {% endif %}
     </td>
     <td>
+        {% if OtherConsoleWarnings[item.id] ?? null %}
+            <div class="mb-1">
+                <span class="badge bg-danger">⚑ Switch 1 game?</span>
+                <br><small class="text-muted">{{ OtherConsoleWarnings[item.id] }}</small>
+            </div>
+        {% endif %}
         {% if item.lq_flag %}
             <div class="mb-1">
                 <span class="badge bg-warning text-dark">⚑ LQ signal</span>

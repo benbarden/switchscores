@@ -9,11 +9,13 @@ use App\Domain\View\PageBuilders\StaffPageBuilder;
 use App\Domain\Category\Repository as CategoryRepository;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\GamesCompany\Repository as GamesCompanyRepository;
+use App\Domain\GamesCompany\Repository\AliasRepository as GamesCompanyAliasRepository;
 use App\Domain\WeeklyBatch\Repository as WeeklyBatchRepository;
 use App\Domain\WeeklyBatch\CategorySuggester;
 use App\Domain\WeeklyBatch\ExistingGameMatcher;
 use App\Domain\WeeklyBatch\FlaggedPriceResolver;
 use App\Domain\WeeklyBatch\LqPublisherRecorder;
+use App\Domain\WeeklyBatch\OtherConsoleCheck;
 use App\Domain\WeeklyBatch\ParseService;
 use App\Domain\GameImport\GameImporter;
 use App\Domain\WeeklyBatch\NintendoPageFetcher;
@@ -43,7 +45,9 @@ class WeeklyBatchListController extends Controller
         private WeeklyBatchExclusionRepository $repoExclusion,
         private LqPublisherRecorder $lqPublisherRecorder,
         private ExistingGameMatcher $existingGameMatcher,
-        private FlaggedPriceResolver $flaggedPriceResolver
+        private FlaggedPriceResolver $flaggedPriceResolver,
+        private OtherConsoleCheck $otherConsoleCheck,
+        private GamesCompanyAliasRepository $repoGamesCompanyAlias
     ) {
     }
 
@@ -109,28 +113,32 @@ class WeeklyBatchListController extends Controller
 
         [$dateFrom, $dateTo] = $this->parseService->getDateRange($batch->batch_date->toDateString(), $listType);
 
-        // Per-page counts for the pages table
-        $skippedStatuses  = [WeeklyBatchItem::STATUS_ALREADY_IN_DB, WeeklyBatchItem::STATUS_OUT_OF_RANGE];
+        // Games outside the batch dates that are in the DB show as Already in DB, though they keep
+        // their own status so import doesn't reorder them. The rest can't be imported yet: on
+        // Upcoming lists, games with no exact date.
+        $outOfRange = $items->where('item_status', WeeklyBatchItem::STATUS_OUT_OF_RANGE);
+        $inDbItems  = $items->where('item_status', WeeklyBatchItem::STATUS_ALREADY_IN_DB)
+            ->merge($outOfRange->whereNotNull('game_id'))
+            ->sortBy(fn($i) => [$i->page_number, $i->sort_order])
+            ->values();
+        // New lists take every game that isn't in the DB, so any such rows there were saved under
+        // the old out-of-range rule and aren't shown
+        $notAddedItems = $listType === 'new' ? collect() : $outOfRange->whereNull('game_id')->values();
+
+        // Per-page counts for the pages table. The six counts after Total add up to it.
         $pageCounts = [];
         foreach ($items->groupBy('page_number') as $pageNum => $pageItems) {
             $pageCounts[$pageNum] = [
                 'total'         => $pageItems->count(),
-                'in_range'      => $pageItems->whereNotIn('item_status', $skippedStatuses)->count(),
+                'low_quality'   => $pageItems->where('item_status', WeeklyBatchItem::STATUS_LOW_QUALITY)->count(),
+                'bundle'        => $pageItems->where('item_status', WeeklyBatchItem::STATUS_BUNDLE)->count(),
+                'excluded'      => $pageItems->where('item_status', WeeklyBatchItem::STATUS_EXCLUDED)->count(),
+                'already_in_db' => $inDbItems->where('page_number', $pageNum)->count(),
+                'not_added'     => $notAddedItems->where('page_number', $pageNum)->count(),
+                'in_progress'   => $pageItems->whereIn('item_status', WeeklyBatchItem::ACTIVE_STATUSES)->count(),
                 'imported'      => $pageItems->where('item_status', WeeklyBatchItem::STATUS_IMPORTED)->count(),
-                'already_in_db' => $pageItems->where('item_status', WeeklyBatchItem::STATUS_ALREADY_IN_DB)->count(),
-                'out_of_range'  => $pageItems->where('item_status', WeeklyBatchItem::STATUS_OUT_OF_RANGE)->count(),
             ];
         }
-
-        // Out-of-range games not in the DB can be added to the batch, but some were
-        // skipped on purpose in an earlier week. Flag those so they aren't re-added by mistake.
-        $outOfRangeNotInDbTitles = $items
-            ->where('item_status', WeeklyBatchItem::STATUS_OUT_OF_RANGE)
-            ->whereNull('game_id')
-            ->pluck('title')
-            ->unique()
-            ->values()
-            ->all();
 
         $bindings['Batch']          = $batch;
         $bindings['Console']        = $console;
@@ -140,7 +148,12 @@ class WeeklyBatchListController extends Controller
         $bindings['Items']          = $items;
         $bindings['Counts']         = $counts;
         $bindings['PageCounts']     = $pageCounts;
-        $bindings['PriorExclusions'] = $this->repoItem->getPriorExclusions($outOfRangeNotInDbTitles, $console);
+        $bindings['InDbByPage']     = $inDbItems->groupBy('page_number');
+        $bindings['InDbCount']      = $inDbItems->count();
+        $bindings['NotAddedItems']  = $notAddedItems;
+        $bindings['OtherConsoleWarnings'] = $this->otherConsoleCheck->warnings(
+            $items->whereIn('item_status', WeeklyBatchItem::ACTIVE_STATUSES)
+        );
         $bindings['ExpectedPageSize'] = self::NINTENDO_PAGE_SIZE;
         $bindings['NextPageNumber'] = $this->repoRawPage->getNextPageNumber($batchId, $console, $listType);
         $bindings['DateFrom']       = $dateFrom;
@@ -178,12 +191,13 @@ class WeeklyBatchListController extends Controller
         );
 
         $source  = ($summary['source'] ?? 'text') === 'html' ? 'rich HTML' : 'plain text';
-        $message = "Page {$pageNumber} saved and parsed from {$source}: {$summary['in_range']} in range, {$summary['already_in_db']} already in DB, {$summary['out_of_range']} out of range.";
+        $message = "Page {$pageNumber} saved and parsed from {$source}: {$summary['added']} added, {$summary['already_in_db']} already in DB, {$summary['skipped']} LQ, bundle or excluded";
+        if ($summary['not_added'] > 0) {
+            $message .= ", {$summary['not_added']} not added yet (see No exact date below)";
+        }
+        $message .= '.';
         if ($summary['prices_resolved'] > 0) {
             $message .= " {$summary['prices_resolved']} flagged price(s) filled from the price API.";
-        }
-        if ($summary['out_of_range_not_in_db'] > 0) {
-            $message .= " ⚠ {$summary['out_of_range_not_in_db']} out-of-range game(s) not found in DB — check below.";
         }
 
         // Safety check: the parser should recognise every game block on the page.
@@ -243,15 +257,20 @@ class WeeklyBatchListController extends Controller
         foreach ($items as $item) {
             $name = $item->publisher_normalised;
             if (!isset($publishers[$name])) {
-                $company = $this->repoGamesCompany->findByNameCaseInsensitive($name);
+                $company = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($name);
                 $status  = $company === null ? 'new' : ($company->is_low_quality ? 'lq' : 'known');
                 $publishers[$name] = [
                     'name'               => $name,
                     'item_count'         => 0,
                     'company'            => $company,
                     'status'             => $status,
+                    'via_alias'          => $company !== null && mb_strtolower($company->name) !== mb_strtolower($name),
                     'db_game_count'      => $company?->publisher_games_count ?? 0,
                     'sample_nintendo_url' => null,
+                    // Saves searching for the company in another tab
+                    'possible_matches'   => $company === null
+                        ? $this->repoGamesCompanyAlias->getCompaniesStartingWith($this->matchPrefix($name))
+                        : collect(),
                 ];
             }
             $publishers[$name]['item_count']++;
@@ -293,15 +312,14 @@ class WeeklyBatchListController extends Controller
             $this->repoItem->renamePublisher($batchId, $console, $listType, $oldName, $newName);
         }
 
-        // Check if the name already exists in the DB
-        $existing = $this->repoGamesCompany->findByNameCaseInsensitive($newName);
+        // Already in the DB under this name or an alias: link to it rather than make a duplicate,
+        // and say so
+        $existing = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($newName);
         if ($existing) {
-            return response()->json([
-                'status'    => 'already_exists',
-                'is_lq'     => (bool) $existing->is_low_quality,
-                'name'      => $existing->name,
-                'company_id' => $existing->id,
-            ]);
+            if ($existing->name !== $newName) {
+                $this->repoItem->renamePublisher($batchId, $console, $listType, $newName, $existing->name);
+            }
+            return response()->json($this->linkedResponse($batchId, $console, $listType, $existing));
         }
 
         $linkTitle = (new \App\Domain\Url\LinkTitle())->generate($newName);
@@ -313,12 +331,82 @@ class WeeklyBatchListController extends Controller
         }
 
         return response()->json([
-            'status'     => 'created',
-            'is_lq'      => $isLq,
-            'name'       => $newName,
-            'company_id' => $company->id,
-            'item_count' => $itemCount,
+            'status'      => 'created',
+            'is_lq'       => $isLq,
+            'name'        => $newName,
+            'company_id'  => $company->id,
+            'company_url' => route('staff.games-companies.show', ['gamesCompany' => $company->id]),
+            'item_count'  => $itemCount,
         ]);
+    }
+
+    /**
+     * Link a new publisher name to an existing games company: the batch's games take the
+     * company's name. With add_alias, the pasted name is saved as an alias, so it links on its
+     * own next time.
+     */
+    public function linkPublisher($batchId, $console, $listType, \Illuminate\Http\Request $request)
+    {
+        $this->getBatch($batchId);
+
+        $oldName = trim($request->input('old_name', ''));
+        $company = $this->repoGamesCompany->find((int) $request->input('company_id'));
+        if ($oldName === '' || !$company) abort(422);
+
+        $this->repoItem->renamePublisher($batchId, $console, $listType, $oldName, $company->name);
+
+        $aliasNote = null;
+        if ($request->boolean('add_alias') && mb_strtolower($oldName) !== mb_strtolower($company->name)) {
+            $taken = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($oldName);
+            if (!$taken) {
+                $this->repoGamesCompanyAlias->add($company, $oldName);
+                $aliasNote = "Alias \"{$oldName}\" added.";
+            } elseif ($taken->id === $company->id) {
+                $aliasNote = "\"{$oldName}\" was already an alias.";
+            } else {
+                $aliasNote = "Alias not added: \"{$oldName}\" already belongs to {$taken->name} (id: {$taken->id}).";
+            }
+        }
+
+        $company->loadCount('publisherGames');
+
+        return response()->json($this->linkedResponse($batchId, $console, $listType, $company, $aliasNote));
+    }
+
+    /**
+     * After linking a batch's games to an existing company. An LQ company's games are marked LQ,
+     * as the fetch does when it finds a known LQ publisher.
+     */
+    private function linkedResponse($batchId, string $console, string $listType, \App\Models\GamesCompany $company, ?string $aliasNote = null): array
+    {
+        $lqCount = $company->is_low_quality
+            ? $this->repoItem->markPublisherItemsLq($batchId, $console, $listType, $company->name)
+            : 0;
+
+        return [
+            'status'      => 'linked',
+            'is_lq'       => (bool) $company->is_low_quality,
+            'name'        => $company->name,
+            'company_id'  => $company->id,
+            'game_count'  => $company->publisher_games_count ?? 0,
+            'company_url' => route('staff.games-companies.show', ['gamesCompany' => $company->id]),
+            'alias_note'  => $aliasNote,
+            'item_count'  => $lqCount,
+        ];
+    }
+
+    /**
+     * The start of a publisher name to look for matches with: the first word, or the first two
+     * when the first is an article ("The Arcade Crew").
+     */
+    private function matchPrefix(string $name): string
+    {
+        $words = preg_split('/[\s,.]+/', trim($name), -1, PREG_SPLIT_NO_EMPTY);
+        if (!$words) return '';
+        if (count($words) > 1 && in_array(mb_strtolower($words[0]), ['the', 'a', 'an'], true)) {
+            return $words[0].' '.$words[1];
+        }
+        return $words[0];
     }
 
     public function markPublisherLq($batchId, $console, $listType, \Illuminate\Http\Request $request)
@@ -399,15 +487,24 @@ class WeeklyBatchListController extends Controller
         $allItems = $this->repoItem->getForList($batchId, $console, $listType);
         $counts   = $this->repoItem->getStatusCounts($batchId, $console, $listType);
 
-        // Group items by page number for the tabbed UI
-        $itemsByPage = $allItems->groupBy('page_number');
+        // One list across all pages (already ordered by page, then position): the games still in
+        // the batch, including imported ones so their URL stays visible
+        $urlItems = $allItems
+            ->whereNotIn('item_status', [
+                WeeklyBatchItem::STATUS_OUT_OF_RANGE,
+                WeeklyBatchItem::STATUS_ALREADY_IN_DB,
+                WeeklyBatchItem::STATUS_LOW_QUALITY,
+                WeeklyBatchItem::STATUS_BUNDLE,
+                WeeklyBatchItem::STATUS_EXCLUDED,
+            ])
+            ->values();
 
         $bindings['Batch']        = $batch;
         $bindings['Console']      = $console;
         $bindings['ListType']     = $listType;
         $bindings['Label']        = $label;
         $bindings['RawPages']     = $rawPages;
-        $bindings['ItemsByPage']  = $itemsByPage;
+        $bindings['UrlItems']     = $urlItems;
         $bindings['Counts']       = $counts;
         $bindings['Stages']       = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
         $bindings['CurrentStage'] = 'urls';
@@ -428,6 +525,10 @@ class WeeklyBatchListController extends Controller
             $item = $this->repoItem->find((int) $itemId);
             if (!$item || $item->batch_id != $batchId) continue;
 
+            // One form covers every page, so only act on URLs that changed: saving the same URL
+            // again would send a fetched item back to the fetch step
+            if ($item->isImported() || $url === (string) $item->nintendo_url) continue;
+
             if ($url === '') {
                 if ($item->nintendo_url) {
                     $this->repoItem->clearUrl($item);
@@ -437,10 +538,8 @@ class WeeklyBatchListController extends Controller
             }
         }
 
-        $pageNumber = request('page_number', 1);
-
         return redirect()->route('staff.games.weekly-updates.list.urls', compact('batchId', 'console', 'listType'))
-            ->with('success', "URLs saved for page {$pageNumber}.");
+            ->with('success', 'URLs saved.');
     }
 
     // ---- Fetch & LQ review ----
@@ -471,13 +570,6 @@ class WeeklyBatchListController extends Controller
             ->filter(fn($i) => !in_array($i->item_status, $skippedStatuses))
             ->values();
 
-        $skippedItems = $allItems->filter(fn($i) => in_array($i->item_status, [
-            WeeklyBatchItem::STATUS_LOW_QUALITY,
-            WeeklyBatchItem::STATUS_BUNDLE,
-            WeeklyBatchItem::STATUS_ALREADY_IN_DB,
-            WeeklyBatchItem::STATUS_EXCLUDED,
-        ]))->sortBy('sort_order');
-
         $bindings['Batch']            = $batch;
         $bindings['Console']          = $console;
         $bindings['ListType']         = $listType;
@@ -486,7 +578,6 @@ class WeeklyBatchListController extends Controller
         $bindings['Counts']           = $counts;
         $bindings['FetchItems']       = $fetchItems;
         $bindings['LqItems']          = $lqItems;
-        $bindings['SkippedItems']     = $skippedItems;
         $bindings['Stages']           = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
         $bindings['CurrentStage']     = 'fetch';
 
@@ -600,62 +691,6 @@ class WeeklyBatchListController extends Controller
             ->with('success', 'LQ decisions saved.');
     }
 
-    /**
-     * Add every out-of-range game that isn't in the DB, leaving out the greyed-out rows: titles
-     * skipped on purpose in an earlier batch stay a one-at-a-time decision.
-     */
-    public function activateAllOutOfRange($batchId, $console, $listType)
-    {
-        $this->getBatch((int) $batchId);
-
-        $items = $this->repoItem
-            ->getByStatus((int) $batchId, $console, $listType, WeeklyBatchItem::STATUS_OUT_OF_RANGE)
-            ->whereNull('game_id');
-        $priorExclusions = $this->repoItem->getPriorExclusions($items->pluck('title')->unique()->values()->all(), $console);
-        $toAdd = $items->reject(fn($item) => $priorExclusions->has($item->title));
-
-        foreach ($toAdd as $item) {
-            $this->parseService->activateOutOfRangeItem($item);
-        }
-
-        return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'))
-            ->with('success', $toAdd->count().' game(s) added to this batch.');
-    }
-
-    public function activateOutOfRange($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
-    {
-        $item = $this->repoItem->find((int) $itemId);
-
-        if (!$item || $item->batch_id != $batchId) abort(404);
-        if ($item->item_status !== WeeklyBatchItem::STATUS_OUT_OF_RANGE) abort(422);
-        if ($item->game_id) abort(422); // already in DB — shouldn't be activated
-
-        $this->parseService->activateOutOfRangeItem($item);
-
-        if ($request->ajax()) {
-            $item->refresh();
-
-            // Render the same partial the Raw screen uses, so the new row can be added
-            // to the active items table without a reload.
-            $rowHtml = view('staff.games.weekly-updates.list._active-item-row', [
-                'item'     => $item,
-                'Batch'    => $this->getBatch((int) $batchId),
-                'Console'  => $console,
-                'ListType' => $listType,
-            ])->render();
-
-            return response()->json([
-                'status'      => 'ok',
-                'item_status' => $item->item_status,
-                'page_number' => $item->page_number,
-                'sort_order'  => $item->sort_order,
-                'row_html'    => $rowHtml,
-            ]);
-        }
-
-        return redirect()->route('staff.games.weekly-updates.list.raw', compact('batchId', 'console', 'listType'));
-    }
-
     public function itemAction($batchId, $console, $listType, $itemId, \Illuminate\Http\Request $request)
     {
         $item = $this->repoItem->find((int) $itemId);
@@ -709,17 +744,27 @@ class WeeklyBatchListController extends Controller
         $allItems = $this->repoItem->getForList($batchId, $console, $listType);
         $counts   = $this->repoItem->getStatusCounts($batchId, $console, $listType);
 
-        $itemsByPage = $allItems->groupBy('page_number');
+        // One list across all pages (already ordered by page, then position): the games still in
+        // the batch
+        $packshotItems = $allItems
+            ->whereNotIn('item_status', [
+                WeeklyBatchItem::STATUS_OUT_OF_RANGE,
+                WeeklyBatchItem::STATUS_ALREADY_IN_DB,
+                WeeklyBatchItem::STATUS_LOW_QUALITY,
+                WeeklyBatchItem::STATUS_BUNDLE,
+                WeeklyBatchItem::STATUS_EXCLUDED,
+            ])
+            ->values();
 
-        $bindings['Batch']        = $batch;
-        $bindings['Console']      = $console;
-        $bindings['ListType']     = $listType;
-        $bindings['Label']        = $label;
-        $bindings['RawPages']     = $rawPages;
-        $bindings['ItemsByPage']  = $itemsByPage;
-        $bindings['Counts']       = $counts;
-        $bindings['Stages']       = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
-        $bindings['CurrentStage'] = 'packshots';
+        $bindings['Batch']         = $batch;
+        $bindings['Console']       = $console;
+        $bindings['ListType']      = $listType;
+        $bindings['Label']         = $label;
+        $bindings['RawPages']      = $rawPages;
+        $bindings['PackshotItems'] = $packshotItems;
+        $bindings['Counts']        = $counts;
+        $bindings['Stages']        = $this->getStages($batchId, $console, $listType, count($rawPages), $counts);
+        $bindings['CurrentStage']  = 'packshots';
 
         return view('staff.games.weekly-updates.list.packshots', $bindings);
     }
@@ -737,6 +782,12 @@ class WeeklyBatchListController extends Controller
 
             $item = $this->repoItem->find((int) $itemId);
             if (!$item || $item->batch_id != $batchId) continue;
+
+            // One form covers every page, so only act on packshots that changed: saving the same
+            // URL again would send an item with a category back to the Categories step
+            $unchanged = $url === (string) $item->packshot_url
+                && $item->item_status !== WeeklyBatchItem::STATUS_PACKSHOT_PENDING;
+            if ($item->isImported() || $unchanged) continue;
 
             $this->repoItem->updatePackshot($item, $url);
             $saved++;
@@ -862,7 +913,7 @@ class WeeklyBatchListController extends Controller
         $item->publisher_normalised = $name;
         $item->save();
 
-        $exists = $this->repoGamesCompany->findByNameCaseInsensitive($name) !== null;
+        $exists = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($name) !== null;
 
         return response()->json(['status' => 'ok', 'exists' => $exists, 'name' => $name]);
     }
@@ -942,7 +993,7 @@ class WeeklyBatchListController extends Controller
         foreach ($readyItems as $item) {
             $name = $item->publisher_normalised;
             if ($name && !isset($missingPublishers[$name])) {
-                $exists = $this->repoGamesCompany->findByNameCaseInsensitive($name) !== null;
+                $exists = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($name) !== null;
                 if (!$exists) {
                     $missingPublishers[] = $name;
                 }
@@ -955,7 +1006,7 @@ class WeeklyBatchListController extends Controller
         foreach ($lqItems as $item) {
             $name = $item->publisher_normalised;
             if ($name && !isset($lqReminderPublishers[$name])) {
-                $company = $this->repoGamesCompany->findByNameCaseInsensitive($name);
+                $company = $this->repoGamesCompanyAlias->findCompanyByNameOrAlias($name);
                 if ($company && !$company->is_low_quality) {
                     $lqReminderPublishers[$name] = $company->id;
                 }
@@ -973,6 +1024,7 @@ class WeeklyBatchListController extends Controller
         $bindings['LqReminderPublishers']   = $lqReminderPublishers;
         $bindings['ReleaseHubUrl']          = $releaseHubUrl;
         $bindings['HasOutOfRangeReadyItems'] = $hasOutOfRangeReadyItems;
+        $bindings['OtherConsoleWarnings']   = $this->otherConsoleCheck->warnings($readyItems);
         $bindings['Stages']                 = $this->getStages($batchId, $console, $listType, $rawPageCount, $counts);
         $bindings['CurrentStage']           = 'confirm';
 
