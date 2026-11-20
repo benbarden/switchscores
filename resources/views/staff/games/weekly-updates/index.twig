@@ -23,13 +23,15 @@
     <table class="table table-striped table-hover" id="batch-list" style="max-width: 900px;">
         <thead>
             <tr>
-                <th style="width: 15%;">Date</th>
-                <th style="width: 13%;">Status</th>
-                <th class="text-center" style="width: 12%;">S2 New</th>
-                <th class="text-center" style="width: 12%;">S2 Upcoming</th>
-                <th class="text-center" style="width: 12%;">S1 New</th>
-                <th class="text-center" style="width: 12%;">S1 Upcoming</th>
-                <th class="text-center" style="width: 12%;">Excluded</th>
+                <th style="width: 14%;">Date</th>
+                <th style="width: 12%;">Status</th>
+                <th class="text-center" style="width: 11%;">S2 New</th>
+                <th class="text-center" style="width: 11%;">S2 Upcoming</th>
+                <th class="text-center" style="width: 11%;">S1 New</th>
+                <th class="text-center" style="width: 11%;">S1 Upcoming</th>
+                <th class="text-center" style="width: 7%;">LQ</th>
+                <th class="text-center" style="width: 7%;">Bundle</th>
+                <th class="text-center" style="width: 8%;">Excluded</th>
             </tr>
         </thead>
         <tbody>
@@ -55,14 +57,17 @@
                         <span class="badge bg-secondary">Setup</span>
                     {% endif %}
                 </td>
+                {% set totalLq = 0 %}
+                {% set totalBundle = 0 %}
                 {% set totalExcluded = 0 %}
                 {% for console in ['switch-2', 'switch-1'] %}
                     {% for listType in ['new', 'upcoming'] %}
                         {% set lc = c[console][listType] ?? {} %}
                         {% set imported = lc['imported'] ?? 0 %}
                         {% set ready = lc['ready'] ?? 0 %}
-                        {% set totalExcluded = totalExcluded
-                            + (lc['low_quality'] ?? 0) + (lc['bundle'] ?? 0) + (lc['excluded'] ?? 0) %}
+                        {% set totalLq = totalLq + (lc['low_quality'] ?? 0) %}
+                        {% set totalBundle = totalBundle + (lc['bundle'] ?? 0) %}
+                        {% set totalExcluded = totalExcluded + (lc['excluded'] ?? 0) %}
                         <td class="text-center">
                             {% if imported > 0 %}
                                 <span class="count text-success">{{ imported }}</span>
@@ -76,13 +81,11 @@
                         </td>
                     {% endfor %}
                 {% endfor %}
-                <td class="text-center">
-                    {% if totalExcluded > 0 %}
-                        <span class="count text-muted">{{ totalExcluded }}</span>
-                    {% else %}
-                        <span class="count text-muted">—</span>
-                    {% endif %}
-                </td>
+                {% for n in [totalLq, totalBundle, totalExcluded] %}
+                    <td class="text-center">
+                        <span class="count text-muted">{{ n > 0 ? n : '—' }}</span>
+                    </td>
+                {% endfor %}
             </tr>
         {% endfor %}
         </tbody>

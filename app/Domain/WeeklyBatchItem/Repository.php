@@ -7,6 +7,11 @@ use Illuminate\Support\Collection;
 
 class Repository
 {
+    // Keys in the batch count arrays: out-of-range rows split by whether the game is in the DB.
+    // In the DB shows as already in DB; not in the DB is Upcoming's No exact date (as on Raw).
+    public const COUNT_OUT_OF_RANGE_IN_DB     = 'out_of_range_in_db';
+    public const COUNT_OUT_OF_RANGE_NOT_IN_DB = 'out_of_range_not_in_db';
+
     public function create(array $data): WeeklyBatchItem
     {
         $item = new WeeklyBatchItem();
@@ -135,16 +140,27 @@ class Repository
         ];
     }
 
+    /**
+     * Counts keyed by status, except that out-of-range rows are split by whether the game is in
+     * the DB (see the COUNT_ constants).
+     */
+    private function statusKeySql(): string
+    {
+        return "CASE WHEN item_status = '".WeeklyBatchItem::STATUS_OUT_OF_RANGE."'"
+            ." THEN IF(game_id IS NULL, '".self::COUNT_OUT_OF_RANGE_NOT_IN_DB."', '".self::COUNT_OUT_OF_RANGE_IN_DB."')"
+            ." ELSE item_status END";
+    }
+
     public function getAllStatusCountsForBatches(array $batchIds): array
     {
         $rows = WeeklyBatchItem::whereIn('batch_id', $batchIds)
-            ->selectRaw('batch_id, console, list_type, item_status, count(*) as total')
-            ->groupBy('batch_id', 'console', 'list_type', 'item_status')
+            ->selectRaw('batch_id, console, list_type, '.$this->statusKeySql().' as status_key, count(*) as total')
+            ->groupBy('batch_id', 'console', 'list_type', 'status_key')
             ->get();
 
         $counts = [];
         foreach ($rows as $row) {
-            $counts[$row->batch_id][$row->console][$row->list_type][$row->item_status] = $row->total;
+            $counts[$row->batch_id][$row->console][$row->list_type][$row->status_key] = $row->total;
         }
         return $counts;
     }
@@ -152,13 +168,13 @@ class Repository
     public function getAllStatusCounts(int $batchId): array
     {
         $rows = WeeklyBatchItem::where('batch_id', $batchId)
-            ->selectRaw('console, list_type, item_status, count(*) as total')
-            ->groupBy('console', 'list_type', 'item_status')
+            ->selectRaw('console, list_type, '.$this->statusKeySql().' as status_key, count(*) as total')
+            ->groupBy('console', 'list_type', 'status_key')
             ->get();
 
         $counts = [];
         foreach ($rows as $row) {
-            $counts[$row->console][$row->list_type][$row->item_status] = $row->total;
+            $counts[$row->console][$row->list_type][$row->status_key] = $row->total;
         }
         return $counts;
     }
