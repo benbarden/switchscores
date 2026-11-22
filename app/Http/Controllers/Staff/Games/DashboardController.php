@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff\Games;
 use Illuminate\Routing\Controller as Controller;
 
 use App\Domain\AffiliateCodes\TopRatedGaps;
+use App\Domain\AffiliateCodes\UsLinkCheckSummary;
 use App\Domain\View\Breadcrumbs\StaffBreadcrumbs;
 use App\Domain\View\PageBuilders\StaffPageBuilder;
 
@@ -26,6 +27,7 @@ class DashboardController extends Controller
         private GameAffiliateRepository $repoGameAffiliate,
         private GameRepository $repoGame,
         private TopRatedGaps $topRatedGaps,
+        private UsLinkCheckSummary $usLinkCheck,
     )
     {
     }
@@ -130,6 +132,9 @@ class DashboardController extends Controller
         $bindings['GapOverviewUk'] = $this->topRatedGaps->overview('uk');
         $bindings['GapProgressUs'] = $this->topRatedGaps->progress('us');
         $bindings['GapProgressUk'] = $this->topRatedGaps->progress('uk');
+
+        $bindings['LinkCheck'] = $this->usLinkCheck->build();
+        $bindings['LinkCheckGroups'] = UsLinkCheckSummary::GROUPS;
 
         return view('staff.games.affiliates', $bindings);
     }

@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 class GameAffiliateRepository
 {
+    /**
+     * A store set to No product or Ignored is saved with no ASIN or link: the buy button is built
+     * from the ASIN or link whatever the status says, so one left behind would still show.
+     */
     public function updateAffiliateData(
         Game $game,
         ?string $amazonUKAsin,
@@ -17,9 +21,19 @@ class GameAffiliateRepository
         ?string $amazonUSLink,
         ?string $amazonUSStatus,
     ): void {
+        if ($this->statusMeansNoLink($amazonUKStatus)) {
+            $amazonUKAsin = null;
+            $amazonUKLink = null;
+        }
+        if ($this->statusMeansNoLink($amazonUSStatus)) {
+            $amazonUSAsin = null;
+            $amazonUSLink = null;
+        }
+
         $game->amazon_uk_asin = $amazonUKAsin;
         $game->amazon_uk_link = $amazonUKLink;
         $game->amazon_uk_status = $amazonUKStatus;
+        $this->clearUsCheckIfAsinChanges($game, $amazonUSAsin);
         $game->amazon_us_asin = $amazonUSAsin;
         $game->amazon_us_link = $amazonUSLink;
         $game->amazon_us_status = $amazonUSStatus;
@@ -32,6 +46,9 @@ class GameAffiliateRepository
      */
     public function saveRegionAsin(Game $game, string $region, string $asin): void
     {
+        if ($region === 'us') {
+            $this->clearUsCheckIfAsinChanges($game, $asin);
+        }
         $game->{$this->asinFieldForRegion($region)} = $asin;
         $game->{$this->statusFieldForRegion($region)} = AmazonAffiliateStatus::LINKED->value;
 
@@ -40,6 +57,11 @@ class GameAffiliateRepository
 
     public function markRegionNoProduct(Game $game, string $region): void
     {
+        if ($region === 'us') {
+            $this->clearUsCheckIfAsinChanges($game, null);
+        }
+        $game->{$this->asinFieldForRegion($region)} = null;
+        $game->{$region === 'uk' ? 'amazon_uk_link' : 'amazon_us_link'} = null;
         $game->{$this->statusFieldForRegion($region)} = AmazonAffiliateStatus::NO_PRODUCT->value;
 
         $game->save();
@@ -50,6 +72,23 @@ class GameAffiliateRepository
         return (bool) ($region === 'uk'
             ? ($game->amazon_uk_asin ?: $game->amazon_uk_link)
             : ($game->amazon_us_asin ?: $game->amazon_us_link));
+    }
+
+    /**
+     * A new US ASIN hasn't been checked yet, so the last result no longer applies: the game drops
+     * off the link check list straight away, and the next nightly run checks the new one.
+     */
+    private function clearUsCheckIfAsinChanges(Game $game, ?string $newAsin): void
+    {
+        if ($newAsin !== $game->amazon_us_asin) {
+            $game->amazon_us_check_result = null;
+            $game->amazon_us_checked_at = null;
+        }
+    }
+
+    private function statusMeansNoLink(?string $status): bool
+    {
+        return in_array($status, [AmazonAffiliateStatus::NO_PRODUCT->value, AmazonAffiliateStatus::IGNORED->value], true);
     }
 
     private function asinFieldForRegion(string $region): string

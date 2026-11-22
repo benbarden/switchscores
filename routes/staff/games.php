@@ -25,6 +25,7 @@ use App\Http\Controllers\Staff\Games\ImageMigrationController;
 use App\Http\Controllers\Staff\Games\GameImagesDashboardController;
 
 use App\Http\Controllers\Staff\Games\AffiliatesController;
+use App\Http\Controllers\Staff\Games\AffiliateLinkCheckController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchExclusionController;
 use App\Http\Controllers\Staff\Games\WeeklyUpdates\WeeklyBatchListController;
@@ -118,6 +119,11 @@ Route::group([
         Route::get('affiliates/top-rated-gaps/{region}/{console:slug}/{scope}', 'topRatedGaps')->name('affiliates.topRatedGaps');
         Route::post('affiliates/quick-save/{gameId}', 'quickSave')->name('affiliates.quickSave');
         Route::get('affiliates/find-match/{gameId}', 'findMatch')->name('affiliates.findMatch');
+    });
+    Route::controller(AffiliateLinkCheckController::class)->group(function () {
+        Route::get('affiliates/us-link-check', 'index')->name('affiliates.usLinkCheck');
+        Route::post('affiliates/us-link-check/{gameId}/ok', 'markOk')->name('affiliates.usLinkCheck.markOk');
+        Route::post('affiliates/us-link-check/{gameId}/undo-ok', 'undoOk')->name('affiliates.usLinkCheck.undoOk');
     });
 
     // ---- Bulk edit ----

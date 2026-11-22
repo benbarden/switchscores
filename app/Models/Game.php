@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AmazonLinkCheckResult;
 use App\Enums\GameStatus;
 use App\Enums\SteamStatus;
 use App\Enums\VideoType;
@@ -56,6 +57,8 @@ class Game extends Model implements Auditable
         'game_status' => GameStatus::class,
         'steam_status' => SteamStatus::class,
         'last_crawled_at' => 'datetime',
+        'amazon_us_checked_at' => 'datetime',
+        'amazon_us_check_result' => AmazonLinkCheckResult::class,
     ];
 
     public function steamReviewData()

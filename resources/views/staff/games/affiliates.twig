@@ -76,6 +76,26 @@
 
     <div class="col-md-4">
 
+        {{ heading.renderStaff('Amazon US link check') }}
+
+        <table class="table">
+            <tbody>
+            {% for key, group in LinkCheckGroups %}
+                {{ rowstat.renderB5(
+                    group.label, route('staff.games.affiliates.usLinkCheck') ~ '#' ~ key, LinkCheck.counts[key]
+                ) }}
+            {% endfor %}
+            </tbody>
+        </table>
+        <p class="small text-muted">
+            {% if LinkCheck.lastCheckedAt %}
+                Last checked {{ LinkCheck.lastCheckedAt|date('j M Y, H:i') }} UTC.
+            {% else %}
+                Not checked yet.
+            {% endif %}
+            <a href="{{ route('staff.games.affiliates.usLinkCheck') }}">View the list</a>
+        </p>
+
         {{ heading.renderStaff('Amazon US') }}
 
         <table class="table">

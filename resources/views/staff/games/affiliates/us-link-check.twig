@@ -1,0 +1,83 @@
+{% extends 'theme/staff-b5/layout-default.twig' %}
+
+{% import 'ui/components/links/game.twig' as gamelink %}
+
+{% macro problemTable(rows, mode) %}
+    {% import 'ui/components/links/game.twig' as gamelink %}
+    {% import 'ui/components/game/console-badge.twig' as consolebadge %}
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th class="text-end">Rank</th>
+                <th>Game</th>
+                <th>Result</th>
+                <th>Amazon title</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td class="text-end">{{ row.game.game_rank }}</td>
+                    <td>
+                        {{ gamelink.title(row.game, 'staff') }}
+                        {{ consolebadge.short(row.game) }}
+                    </td>
+                    <td>{{ row.result.label() }}</td>
+                    <td class="small">{{ row.amazonTitle ?: '-' }}</td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ row.amazonUrl }}" target="_blank" rel="noopener">View</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ row.searchUrl }}" target="_blank" rel="noopener">Search</a>
+                        <a class="btn btn-primary btn-sm" href="{{ route('staff.games.editAffiliates', {'gameId': row.game.id}) }}">Edit</a>
+                        {% if mode == 'check' %}
+                            <form class="d-inline" method="post" action="{{ route('staff.games.affiliates.usLinkCheck.markOk', {'gameId': row.game.id}) }}">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-outline-success btn-sm">Mark as fine</button>
+                            </form>
+                        {% elseif mode == 'ok' %}
+                            <form class="d-inline" method="post" action="{{ route('staff.games.affiliates.usLinkCheck.undoOk', {'gameId': row.game.id}) }}">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">Undo</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% block page_inner %}
+
+{% if LinkCheck.lastCheckedAt %}
+    <p>Last checked {{ LinkCheck.lastCheckedAt|date('j M Y, H:i') }} UTC, by the nightly check of every linked Amazon US game. A game leaves the list as soon as its ASIN is changed, and the new one is checked the next night.</p>
+{% else %}
+    <p>Not checked yet. The nightly check of every linked Amazon US game runs at 02:30 UTC.</p>
+{% endif %}
+
+<p>
+    {% for key, group in Groups %}
+        <a href="#{{ key }}" class="me-3">{{ group.label }}: {{ LinkCheck.counts[key] }}</a>
+    {% endfor %}
+    {% if LinkCheck.markedOk|length %}
+        <a href="#marked-ok">Marked as fine: {{ LinkCheck.markedOk|length }}</a>
+    {% endif %}
+</p>
+
+{% for key, group in Groups %}
+    <h2 class="h4 mt-4" id="{{ key }}">{{ group.label }} ({{ LinkCheck.counts[key] }})</h2>
+    <p class="text-muted">{{ group.help }}</p>
+    {% if LinkCheck.groups[key]|length %}
+        {{ _self.problemTable(LinkCheck.groups[key], key == 'check_by_hand' ? 'check' : '') }}
+    {% else %}
+        <p>None.</p>
+    {% endif %}
+{% endfor %}
+
+{% if LinkCheck.markedOk|length %}
+    <h2 class="h4 mt-4" id="marked-ok">Marked as fine ({{ LinkCheck.markedOk|length }})</h2>
+    <p class="text-muted">Checked by hand and left as they are. Not counted on the staff home.</p>
+    {{ _self.problemTable(LinkCheck.markedOk, 'ok') }}
+{% endif %}
+
+{% endblock page_inner %}

@@ -16,25 +16,32 @@
 
                 <fieldset>
                     <legend>Amazon US</legend>
+                    {% if UsCheckedAt %}
+                        <p class="small">
+                            <strong>Last link check:</strong>
+                            {{ UsCheckResult ? UsCheckResult.label() : 'Not checked' }},
+                            {{ UsCheckedAt|date('j M Y, H:i') }} UTC{% if UsCheckMarkedOk %} (marked as fine){% endif %}.
+                            <a href="{{ route('staff.games.affiliates.usLinkCheck') }}">Link check list</a>
+                        </p>
+                    {% endif %}
                     <div class="row mb-3">
                         <label for="amazon_us_asin" class="col-md-2 col-form-label">US ASIN</label>
                         <div class="col-sm-4">
-                            <input id="amazon_us_asin" type="text" class="form-control" name="amazon_us_asin">
-                            <div class="form-text">
+                            <input id="amazon_us_asin" type="text" class="form-control js-asin" data-region="us" name="amazon_us_asin">
+                            <div class="form-text js-asin-hint">
                                 ASIN, or paste the full Amazon product URL
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            {% if FindMatchUrl %}
+                                <button type="button" class="btn btn-outline-primary btn-sm js-find-match">Find match</button>
+                            {% endif %}
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ AmazonSearchUs }}" target="_blank" rel="noopener">Search Amazon US</a>
+                            <div class="small text-danger js-match-message"></div>
+                        </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="amazon_us_link" class="col-md-2 col-form-label">US link</label>
-                        <div class="col-sm-6">
-                            <input id="amazon_us_link" type="text" class="form-control" name="amazon_us_link">
-                        </div>
-                        <div class="col-sm-2">
-                            {% if GameData %}
-                                <a class="btn btn-outline-secondary btn-sm" href="{{ AmazonSearchUs }}" target="_blank">Search Amazon US</a>
-                            {% endif %}
-                        </div>
+                        <div class="offset-md-2 col-md-10 js-matches"></div>
                     </div>
                     {{ affiliateStatusSelect.render(
                         'amazon_us_status',
@@ -43,6 +50,16 @@
                         null,
                         false
                     ) }}
+                    <details class="mb-3" {% if GameData.amazon_us_link %}open{% endif %}>
+                        <summary class="small">Other link (only used when there's no ASIN)</summary>
+                        <div class="row mt-2">
+                            <label for="amazon_us_link" class="col-md-2 col-form-label">US link</label>
+                            <div class="col-sm-6">
+                                <input id="amazon_us_link" type="text" class="form-control" name="amazon_us_link">
+                                <div class="form-text">A full link, for a page with no ASIN. The ASIN wins whenever there is one, so this is ignored while the ASIN box is filled in.</div>
+                            </div>
+                        </div>
+                    </details>
                 </fieldset>
 
                 <fieldset>
@@ -50,21 +67,13 @@
                     <div class="row mb-3">
                         <label for="amazon_uk_asin" class="col-md-2 col-form-label">UK ASIN</label>
                         <div class="col-sm-4">
-                            <input id="amazon_uk_asin" type="text" class="form-control" name="amazon_uk_asin">
-                            <div class="form-text">
+                            <input id="amazon_uk_asin" type="text" class="form-control js-asin" data-region="uk" name="amazon_uk_asin">
+                            <div class="form-text js-asin-hint">
                                 ASIN, or paste the full Amazon product URL
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="amazon_uk_link" class="col-md-2 col-form-label">UK link</label>
                         <div class="col-sm-6">
-                            <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
-                        </div>
-                        <div class="col-sm-2">
-                            {% if GameData %}
-                                <a class="btn btn-outline-secondary btn-sm" href="{{ AmazonSearchUk }}" target="_blank">Search Amazon UK</a>
-                            {% endif %}
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ AmazonSearchUk }}" target="_blank" rel="noopener">Search Amazon UK</a>
                         </div>
                     </div>
                     {{ affiliateStatusSelect.render(
@@ -74,6 +83,16 @@
                         null,
                         false
                     ) }}
+                    <details class="mb-3" {% if GameData.amazon_uk_link %}open{% endif %}>
+                        <summary class="small">Other link (only used when there's no ASIN)</summary>
+                        <div class="row mt-2">
+                            <label for="amazon_uk_link" class="col-md-2 col-form-label">UK link</label>
+                            <div class="col-sm-6">
+                                <input id="amazon_uk_link" type="text" class="form-control" name="amazon_uk_link">
+                                <div class="form-text">A full link, for a page with no ASIN. The ASIN wins whenever there is one, so this is ignored while the ASIN box is filled in.</div>
+                            </div>
+                        </div>
+                    </details>
                 </fieldset>
 
             </div>
@@ -85,10 +104,6 @@
     </form>
 
     <script>
-        var formMode = '{{ FormMode }}';
-
-        var gameId = '{{ GameId }}';
-
         window.formVals = {
             amazon_uk_link: "{{ old('amazon_uk_link', GameData.amazon_uk_link ?? '') }}",
             amazon_us_link: "{{ old('amazon_us_link', GameData.amazon_us_link ?? '') }}",
@@ -105,43 +120,132 @@
         $('#amazon_uk_asin').val(formVals.amazon_uk_asin);
         $('#amazon_us_asin').val(formVals.amazon_us_asin);
 
-        function updateUkStatusFromAsin() {
-            const asin = $('#amazon_uk_asin').val().trim();
+        // The same pattern as AsinExtractor, so what's shown here is what gets saved
+        var PRODUCT_URL = /^(?:https?:\/\/)?(?:[a-z0-9-]+\.)*amazon\.([a-z.]+)\/(?:[^?#]*\/)?(?:dp|gp\/product|gp\/aw\/d|product|ASIN)\/([A-Z0-9]{10})(?=[\/?#]|$)/i;
+        var STORE_DOMAINS = {us: 'com', uk: 'co.uk'};
+        var STORE_NAMES = {us: 'Amazon US', uk: 'Amazon UK'};
+        var DEFAULT_HINT = 'ASIN, or paste the full Amazon product URL';
 
-            if (asin === '') {
-                $('#amazon_uk_status').val('no_product');
+        function updateStatusFromAsin(region) {
+            var asin = $('#amazon_' + region + '_asin').val().trim();
+            $('#amazon_' + region + '_status').val(asin === '' ? 'no_product' : 'linked');
+        }
+
+        function setHint($input, text, isWarning) {
+            $input.siblings('.js-asin-hint').text(text).toggleClass('text-danger', !!isWarning);
+        }
+
+        // A pasted product URL becomes its ASIN straight away, rather than only on save
+        function tidyAsin($input) {
+            var region = $input.data('region');
+            var match = $input.val().trim().match(PRODUCT_URL);
+
+            if (match) {
+                if (match[1].toLowerCase() === STORE_DOMAINS[region]) {
+                    $input.val(match[2].toUpperCase());
+                    setHint($input, 'ASIN taken from the URL.');
+                } else {
+                    setHint($input, 'This link is from amazon.' + match[1].toLowerCase() + ', not ' + STORE_NAMES[region] + '. It won\'t save.', true);
+                }
             } else {
-                $('#amazon_uk_status').val('linked');
+                setHint($input, DEFAULT_HINT);
             }
+            updateStatusFromAsin(region);
         }
 
-        function updateUsStatusFromAsin() {
-            const asin = $('#amazon_us_asin').val().trim();
+        $('.js-asin').on('input change', function () {
+            tidyAsin($(this));
+        });
 
-            if (asin === '') {
-                $('#amazon_us_status').val('no_product');
-            } else {
-                $('#amazon_us_status').val('linked');
-            }
-        }
+        // No product and Ignored mean no buy button, and the button is built from the ASIN or
+        // link whatever the status, so both are cleared (the save clears them too)
+        $.each(['us', 'uk'], function (i, region) {
+            $('#amazon_' + region + '_status').on('change', function () {
+                var status = $(this).val();
+                var $asin = $('#amazon_' + region + '_asin');
+                var $link = $('#amazon_' + region + '_link');
 
-        $('#amazon_uk_asin').on('change', updateUkStatusFromAsin);
-        $('#amazon_us_asin').on('change', updateUsStatusFromAsin);
+                if ((status === 'no_product' || status === 'ignored') && ($asin.val().trim() !== '' || $link.val().trim() !== '')) {
+                    $asin.val('').removeClass('is-valid');
+                    $link.val('');
+                    setHint($asin, 'Cleared: a game with no product, or ignored, has no ASIN or link.');
+                }
+            });
+        });
 
-        function urlencode(str) {
-            str = (str + '').toString();
+        {% if FindMatchUrl %}
+        // Find match: one Amazon US search, as on the Top rated gaps list. Built with .text() so
+        // product titles from Amazon can't inject markup. Picking one fills in the ASIN box only.
+        $('.js-find-match').on('click', function () {
+            var $button = $(this);
+            var $matches = $('.js-matches');
+            var $message = $('.js-match-message');
 
-            // Tilde should be allowed unescaped in future versions of PHP (as reflected below), but if you want to reflect current
-            // PHP behavior, you would need to add ".replace(/~/g, '%7E');" to the following.
-            return encodeURIComponent(str)
-                .replace('!', '%21')
-                .replace('\'', '%27')
-                .replace('(', '%28')
-                .replace(')', '%29')
-                .replace('*', '%2A')
-                .replace('%20', '+');
-        }
+            $button.prop('disabled', true);
+            $message.text('');
+            $matches.empty().append($('<div class="small text-muted">').text('Searching Amazon US...'));
 
+            $.getJSON('{{ FindMatchUrl }}').done(function (response) {
+                var results = response.results || [];
+                $matches.empty();
+
+                if (!results.length) {
+                    $matches.append($('<div class="small text-muted">').text('No matches found.'));
+                    return;
+                }
+
+                $.each(results, function (i, result) {
+                    var $item = $('<div class="d-flex align-items-center gap-2 border-top py-1 px-1 js-match-item">');
+
+                    if (result.imageUrl) {
+                        $item.append($('<img alt="" width="40" style="height: auto; flex-shrink: 0;">').attr('src', result.imageUrl));
+                    }
+
+                    var $text = $('<div class="small flex-grow-1 text-break" style="min-width: 0;">');
+                    $text.append($('<div>').text(result.title || result.asin));
+                    var details = [result.brand, result.price, result.asin].filter(Boolean).join(' · ');
+                    $text.append($('<div class="text-muted">').text(details));
+                    if (result.consoleWarning) {
+                        $text.append($('<span class="badge bg-warning text-dark">').text('Title says ' + result.consoleWarning));
+                    }
+                    $item.append($text);
+
+                    $item.append($('<a class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">')
+                        .attr('href', result.viewUrl).text('View'));
+                    $item.append($('<button type="button" class="btn btn-primary btn-sm js-use-match">')
+                        .attr('data-asin', result.asin).text('Use this'));
+
+                    $matches.append($item);
+                });
+            }).fail(function (xhr) {
+                var response = xhr.responseJSON;
+                $matches.empty();
+                $message.text(response && response.error ? response.error : 'Could not search Amazon. Please try again.');
+            }).always(function () {
+                $button.prop('disabled', false);
+            });
+        });
+
+        // Nothing is saved yet, so show clearly which one was picked and where it went
+        $(document).on('click', '.js-use-match', function () {
+            var $button = $(this);
+            var $input = $('#amazon_us_asin');
+            var asin = $button.attr('data-asin');
+
+            $input.val(asin).addClass('is-valid');
+            updateStatusFromAsin('us');
+            setHint($input, 'ASIN ' + asin + ' picked from Find match. Save to keep it.');
+
+            $('.js-use-match').removeClass('btn-success').addClass('btn-primary').text('Use this')
+                .closest('.js-match-item').removeClass('bg-success bg-opacity-10');
+            $button.removeClass('btn-primary').addClass('btn-success').text('Picked')
+                .closest('.js-match-item').addClass('bg-success bg-opacity-10');
+        });
+
+        $('#amazon_us_asin').on('input', function () {
+            $(this).removeClass('is-valid');
+        });
+        {% endif %}
     </script>
 
 {% endblock page_inner %}

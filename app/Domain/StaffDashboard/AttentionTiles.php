@@ -4,7 +4,9 @@ namespace App\Domain\StaffDashboard;
 
 use Carbon\Carbon;
 
+use App\Domain\AffiliateCodes\UsLinkCheckSummary;
 use App\Domain\JobRun\CronHealth;
+use App\Enums\AmazonLinkCheckResult;
 use App\Domain\WeeklyBatch\DateDifferences;
 use App\Models\User;
 use App\Models\UserRole;
@@ -27,6 +29,7 @@ class AttentionTiles
         private DbQueries $dbQueries,
         private CronHealth $cronHealth,
         private DateDifferences $dateDifferences,
+        private UsLinkCheckSummary $usLinkCheck,
     )
     {
     }
@@ -61,6 +64,7 @@ class AttentionTiles
                 $this->dbQueries->oldestGameToRelease(),
                 Thresholds::GAMES_TO_RELEASE_AMBER_DAYS, Thresholds::GAMES_TO_RELEASE_RED_DAYS,
                 route('staff.games.games-to-release'), $now);
+            $tiles[] = $this->amazonUsLinksTile();
         }
 
         if ($this->canSee($user, [UserRole::ROLE_DATA_SOURCE_MANAGER])) {
@@ -116,6 +120,53 @@ class AttentionTiles
             $batchDates ? Carbon::parse(min($batchDates)) : null,
             Thresholds::PASTE_DIFFERENCES_AMBER_DAYS, Thresholds::PASTE_DIFFERENCES_RED_DAYS,
             route('staff.data-sources.differences.weekly-paste.release-date'), $now);
+    }
+
+    /**
+     * Problems the nightly Amazon US link check found. Red when any link is broken; amber for
+     * out of stock or ones to check by hand (Ben, 2026-11-22). Ones marked as fine aren't counted.
+     */
+    public function amazonUsLinksTile(): array
+    {
+        $summary = $this->usLinkCheck->build();
+        $counts = $summary['counts'];
+        $groups = UsLinkCheckSummary::GROUPS;
+
+        $parts = [];
+        foreach ($counts as $group => $count) {
+            if ($count > 0) {
+                $parts[] = $count.' '.strtolower($groups[$group]['label']);
+            }
+        }
+
+        if ($summary['lastCheckedAt'] === null) {
+            $state = TileState::NONE;
+            $stateLabel = 'Not checked';
+            $context = 'Not checked yet';
+        } elseif ($counts[AmazonLinkCheckResult::GROUP_BROKEN] > 0) {
+            $state = TileState::RED;
+            $stateLabel = 'Broken';
+            $context = implode(', ', $parts);
+        } elseif ($summary['total'] > 0) {
+            $state = TileState::AMBER;
+            $stateLabel = 'Check';
+            $context = implode(', ', $parts);
+        } else {
+            $state = TileState::OK;
+            $stateLabel = 'All working';
+            $context = 'No problems found';
+        }
+
+        return [
+            'key' => 'amazon-us-links',
+            'label' => 'Amazon US links',
+            'count' => $summary['total'],
+            'context' => $context,
+            'state' => $state,
+            'stateLabel' => $stateLabel,
+            'url' => route('staff.games.affiliates.usLinkCheck'),
+            'group' => 'queue',
+        ];
     }
 
     private function queueTile($key, $label, $count, ?Carbon $oldest, ?int $amberDays, ?int $redDays, $url, Carbon $now): array

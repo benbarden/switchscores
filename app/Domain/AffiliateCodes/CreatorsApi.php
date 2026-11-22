@@ -30,6 +30,11 @@ class CreatorsApi
         'offersV2.listings.isBuyBoxWinner',
     ];
 
+    const CHECK_RESOURCES = [
+        'itemInfo.title',
+        'offersV2.listings.availability',
+    ];
+
     const MARKETPLACE = 'www.amazon.com';
 
     const TOKEN_CACHE_KEY = 'amazon-creators-token';
@@ -135,6 +140,67 @@ class CreatorsApi
     }
 
     /**
+     * Whether up to 10 ASINs still work on Amazon US, for the link check. Returns:
+     *   items: keyed by ASIN, each with title (can be null) and availability (the availability
+     *     type of each listing, e.g. IN_STOCK or OUT_OF_STOCK; empty when there are no listings)
+     *   errors: keyed by ASIN, Amazon's error code for each ASIN it didn't return, e.g.
+     *     ItemNotAccessible or InvalidParameterValue. NotReturned when Amazon left an ASIN out
+     *     without naming it in an error.
+     *
+     * Amazon returns the rest of a batch when some ASINs fail, and names those in a top-level
+     * errors array, which getItems ignores.
+     *
+     * @param string[] $asins
+     * @throws CreatorsApiException
+     */
+    public function checkItems(array $asins): array
+    {
+        if (count($asins) > self::GET_ITEMS_MAX) {
+            throw new \InvalidArgumentException('checkItems takes at most '.self::GET_ITEMS_MAX.' ASINs.');
+        }
+
+        $response = $this->request(self::GET_ITEMS_URL, [
+            'itemIds' => array_values($asins),
+            'itemIdType' => 'ASIN',
+            'resources' => self::CHECK_RESOURCES,
+            'marketplace' => self::MARKETPLACE,
+            'partnerTag' => Amazon::AMAZON_US_ID,
+        ]);
+
+        $items = [];
+        foreach ($response['itemsResult']['items'] ?? [] as $item) {
+            if (empty($item['asin'])) {
+                continue;
+            }
+            $availability = [];
+            foreach ($item['offersV2']['listings'] ?? [] as $listing) {
+                $availability[] = $listing['availability']['type'] ?? null;
+            }
+            $items[$item['asin']] = [
+                'title' => $item['itemInfo']['title']['displayValue'] ?? null,
+                'availability' => array_values(array_filter($availability)),
+            ];
+        }
+
+        // Error messages name the ASIN, e.g. "The ItemId B072JSM93F is not accessible ..."
+        $errors = [];
+        foreach ($asins as $asin) {
+            if (isset($items[$asin])) {
+                continue;
+            }
+            $errors[$asin] = 'NotReturned';
+            foreach ($response['errors'] ?? [] as $error) {
+                if (str_contains((string) ($error['message'] ?? ''), $asin)) {
+                    $errors[$asin] = (string) ($error['code'] ?? 'NotReturned');
+                    break;
+                }
+            }
+        }
+
+        return ['items' => $items, 'errors' => $errors];
+    }
+
+    /**
      * The buy box price if there is one, otherwise the first listing's.
      */
     private function price(array $listings): ?string
@@ -173,6 +239,10 @@ class CreatorsApi
         if ($response->status() === 401) {
             // A token Amazon no longer accepts; the next request gets a new one
             Cache::forget(self::TOKEN_CACHE_KEY);
+        }
+
+        if ($response->status() === 429) {
+            throw new CreatorsApiRateLimitException($this->failureMessage(429, ''));
         }
 
         if (!$response->successful()) {

@@ -16,6 +16,7 @@ use App\Domain\AffiliateCodes\Amazon;
 use App\Domain\AffiliateCodes\AsinExtractor;
 use App\Domain\AffiliateCodes\CreatorsApi;
 use App\Domain\AffiliateCodes\CreatorsApiException;
+use App\Domain\AffiliateCodes\ProductTitleCheck;
 use App\Domain\AffiliateCodes\TopRatedGaps;
 use App\Domain\Game\Repository as GameRepository;
 use App\Domain\Game\Repository\GameAffiliateRepository;
@@ -37,6 +38,7 @@ class AffiliatesController extends Controller
         private Amazon $affiliateAmazon,
         private TopRatedGaps $topRatedGaps,
         private CreatorsApi $creatorsApi,
+        private ProductTitleCheck $productTitleCheck,
     )
     {
     }
@@ -63,37 +65,13 @@ class AffiliatesController extends Controller
         }
 
         foreach ($results as &$result) {
-            $result['consoleWarning'] = $this->consoleWarning($result['title'], $isSwitch2);
+            $result['consoleWarning'] = $this->productTitleCheck->consoleWarning($result['title'], $isSwitch2);
             // Untagged, so staff checking a product don't click through the affiliate tag
             $result['viewUrl'] = 'https://www.amazon.com/dp/'.rawurlencode($result['asin']);
         }
         unset($result);
 
         return response()->json(['keywords' => $keywords, 'results' => $results]);
-    }
-
-    /**
-     * Flags a product whose title names the other console, e.g. a Switch 2 edition found for a
-     * Switch 1 game. Null when the title doesn't suggest a mismatch.
-     */
-    private function consoleWarning(?string $title, bool $gameIsSwitch2): ?string
-    {
-        if ($title === null) {
-            return null;
-        }
-
-        $namesSwitch2 = (bool) preg_match('/switch\s*2/i', $title);
-        $namesSwitch1 = (bool) preg_match('/switch(?!\s*2)/i', $title);
-
-        if (!$gameIsSwitch2 && $namesSwitch2) {
-            return 'Switch 2';
-        }
-
-        if ($gameIsSwitch2 && $namesSwitch1 && !$namesSwitch2) {
-            return 'Switch 1';
-        }
-
-        return null;
     }
 
     /**
@@ -248,6 +226,16 @@ class AffiliatesController extends Controller
         $bindings['AmazonSearchUs'] = $this->affiliateAmazon->staffSearchUrl($gameData, 'us');
 
         $bindings['AffiliateStatusList'] = AmazonAffiliateStatus::options();
+
+        // The cached game can predate the last link check, so read the result fresh
+        $fresh = $this->repoGame->findWithoutCache($gameId);
+        $bindings['UsCheckResult'] = $fresh?->amazon_us_check_result;
+        $bindings['UsCheckedAt'] = $fresh?->amazon_us_checked_at;
+        $bindings['UsCheckMarkedOk'] = $fresh && $fresh->amazon_us_asin
+            && $fresh->amazon_us_check_ok_asin === $fresh->amazon_us_asin;
+        $bindings['FindMatchUrl'] = $this->creatorsApi->isConfigured()
+            ? route('staff.games.affiliates.findMatch', ['gameId' => $gameId])
+            : null;
 
         return view('staff.games.affiliates.edit', $bindings);
     }
