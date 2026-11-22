@@ -20,9 +20,9 @@ return [
     // Shown in the page title: "Nintendo Switch buyer's guide 2026 (US)"
     'year' => '2026',
 
-    // Shown under the heading: "Updated 7 November 2026 for Black Friday and the holidays."
+    // Shown under the heading: "Updated 15 November 2026 for Black Friday and the holidays."
     // Change the note with the season, e.g. leave it empty after Christmas.
-    'updated' => '2026-11-07',
+    'updated' => '2026-11-15',
     'updated_note' => 'for Black Friday and the holidays',
 
     // Deals at the top of the US page: guide items Amazon US has on offer, from the hourly
