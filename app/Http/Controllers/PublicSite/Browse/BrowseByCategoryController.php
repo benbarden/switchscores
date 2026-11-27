@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
 use App\Domain\View\PageBuilders\PublicPageBuilder;
 use App\Domain\Category\Repository as CategoryRepository;
+use App\Domain\Category\Repository\CategoryBrowseRepository;
 use App\Models\Console;
 
 class BrowseByCategoryController extends Controller
 {
     public function __construct(
         private PublicPageBuilder $pageBuilder,
-        private CategoryRepository $repoCategory
+        private CategoryRepository $repoCategory,
+        private CategoryBrowseRepository $repoCategoryBrowse
     ) {
     }
 
@@ -32,7 +34,7 @@ class BrowseByCategoryController extends Controller
         $pageTitle = 'Browse games by category';
         $bindings = $this->pageBuilder->build($pageTitle, PublicBreadcrumbs::browseCategoryLanding())->bindings;
 
-        $bindings['CategoryList'] = $this->repoCategory->topLevelCategories();
+        $bindings['CategoryList'] = $this->repoCategoryBrowse->topLevelWithGameCounts();
 
         return view('public.browse.by-category.landing', $bindings);
     }

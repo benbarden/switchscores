@@ -27,13 +27,13 @@
                         </td>
                         <td class="text-center">
                             <h2 style="font-size: 20px; margin: 5px 0;">
-                                {{ item.games.count }}
+                                {{ item.games_count }}
                             </h2>
                         </td>
                     </tr>
                     {% if item.children %}
                         {% for itemChild in item.children %}
-                            {% set gamesCount = itemChild.games.count %}
+                            {% set gamesCount = itemChild.games_count %}
                             {% if gamesCount > 0 %}
                                 <tr>
                                     <td>
