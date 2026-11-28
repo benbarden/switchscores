@@ -19,8 +19,11 @@ class VerifyEmail extends Mailable
 
     public function envelope(): Envelope
     {
+        // If no no-reply address is set, Laravel's default From is used.
+        $noreplyAddress = config('services.contact.noreply_address');
+
         return new Envelope(
-            from: new Address('noreply@switchscores.com', 'Switch Scores'),
+            from: $noreplyAddress ? new Address($noreplyAddress, 'Switch Scores') : null,
             subject: self::SUBJECT_LINE,
         );
     }

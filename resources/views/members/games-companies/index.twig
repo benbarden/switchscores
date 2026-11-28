@@ -15,14 +15,14 @@
                     we've been able to take you right to the games company dashboard.
                     Please send questions or feedback to Ben via
                     <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
-                    <a href="mailto:ben@switchscores.com">email</a>.
+                    <a href="{{ route('members.feedback.show', {'from': 'games-companies'}) }}">the feedback form</a>.
                 </div>
             {% else %}
                 <p>
                     Thanks for checking out the Games company dashboard!
                     Please send questions or feedback to Ben via
                     <a href="https://twitter.com/switchscores" target="_blank">Twitter</a> or
-                    <a href="mailto:ben@switchscores.com">email</a>.
+                    <a href="{{ route('members.feedback.show', {'from': 'games-companies'}) }}">the feedback form</a>.
                 </p>
             {% endif %}
 

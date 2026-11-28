@@ -19,11 +19,12 @@ class InviteByEmail extends Mailable
 
     public function envelope(): Envelope
     {
+        // Replies go to the site's contact mailbox. If it isn't set, Laravel's default From is used.
+        $contactAddress = config('services.contact.notify_address');
+
         return new Envelope(
-            from: new Address('ben@switchscores.com', 'Ben at Switch Scores'),
-            replyTo: [
-                new Address('ben@switchscores.com', 'ben@switchscores.com'),
-            ],
+            from: $contactAddress ? new Address($contactAddress, 'Ben at Switch Scores') : null,
+            replyTo: $contactAddress ? [new Address($contactAddress, 'Switch Scores')] : [],
             subject: 'Invitation to join Switch Scores',
         );
     }
@@ -33,7 +34,7 @@ class InviteByEmail extends Mailable
         return new Content(
             view: 'emails.staff.games-companies.invite-by-email',
             with: [
-                'InviteCode' => $this->inviteCode->invite_code
+                'InviteCode' => $this->inviteCode->invite_code,
             ]
         );
     }

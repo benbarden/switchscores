@@ -52,6 +52,10 @@ Route::prefix('members')->middleware(['auth'])->name('members.')->group(function
 
         // Featured games
         Route::match(['get', 'post'], '/featured-games/add/{gameId}', 'Members\FeaturedGameController@add')->name('featured-games.add');
+
+        // Feedback form (sends to the site's contact mailbox, so no address is shown)
+        Route::get('/feedback', 'Members\FeedbackController@show')->name('feedback.show');
+        Route::post('/feedback', 'Members\FeedbackController@submit')->middleware('throttle:5,60')->name('feedback.submit');
     });
 
     // Campaigns

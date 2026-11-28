@@ -16,6 +16,12 @@
             <th>Email</th>
             <td><a href="mailto:{{ Submission.email }}">{{ Submission.email }}</a></td>
         </tr>
+        {% if Submission.user_id %}
+        <tr>
+            <th>Member</th>
+            <td><a href="{{ route('owner.user.view', {'userId': Submission.user_id}) }}">View user #{{ Submission.user_id }}</a></td>
+        </tr>
+        {% endif %}
         <tr>
             <th>Reason</th>
             <td>{{ RequestTypeOptions[Submission.request_type]|default(Submission.request_type) }}</td>

@@ -24,13 +24,25 @@ class ContactNotification extends Mailable
         return $type ? $type->label() : $this->submission->request_type;
     }
 
+    private function isMemberFeedback(): bool
+    {
+        $type = ContactRequestType::tryFrom($this->submission->request_type);
+
+        return $type && $type->isMemberFeedback();
+    }
+
     public function envelope(): Envelope
     {
+        // Member feedback labels already start "Member feedback: ...".
+        $subject = $this->isMemberFeedback()
+            ? 'Switch Scores '.lcfirst($this->requestTypeLabel())
+            : 'Switch Scores contact form: '.$this->requestTypeLabel();
+
         return new Envelope(
             replyTo: [
                 new Address($this->submission->email, $this->submission->name),
             ],
-            subject: 'Switch Scores contact form: '.$this->requestTypeLabel(),
+            subject: $subject,
         );
     }
 
@@ -41,6 +53,7 @@ class ContactNotification extends Mailable
             with: [
                 'Submission' => $this->submission,
                 'RequestTypeLabel' => $this->requestTypeLabel(),
+                'IsMemberFeedback' => $this->isMemberFeedback(),
             ]
         );
     }

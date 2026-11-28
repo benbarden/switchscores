@@ -27,7 +27,7 @@ class ContactController extends Controller
 
         $bindings['SubmissionList'] = $this->repoContact->getAllSubmissions();
         $bindings['StatusOptions'] = ContactStatus::options();
-        $bindings['RequestTypeOptions'] = ContactRequestType::options();
+        $bindings['RequestTypeOptions'] = ContactRequestType::allLabels();
 
         return view('staff.contact.index', $bindings);
     }
@@ -42,7 +42,7 @@ class ContactController extends Controller
 
         $bindings['Submission'] = $submission;
         $bindings['BlockDomain'] = $this->repoContact->domainForEmail($submission->email);
-        $bindings['RequestTypeOptions'] = ContactRequestType::options();
+        $bindings['RequestTypeOptions'] = ContactRequestType::allLabels();
 
         return view('staff.contact.show', $bindings);
     }

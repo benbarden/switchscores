@@ -1,0 +1,52 @@
+{% extends 'theme/member-b5/layout-default.twig' %}
+
+{% import 'ui/components/form/submit.twig' as formsubmit %}
+
+{% block page_inner %}
+
+{% if MsgSuccess %}
+    <div class="alert alert-success" role="alert">
+        <strong>Thanks for your feedback!</strong> It's been sent to Ben, who'll reply to your
+        account's email address if a reply is needed.
+    </div>
+{% endif %}
+
+<p>
+    Questions, ideas, or something not working? Let us know here. We'll reply to the email
+    address on your account if a reply is needed.
+</p>
+
+{% include 'ui/components/alerts/form-errors.twig' %}
+
+<form role="form" method="post" action="{{ route('members.feedback.submit') }}">
+    {{ csrf_field() }}
+
+    <div class="row mb-3">
+        <label for="request_type" class="col-md-2 col-form-label">About</label>
+        <div class="col-md-6">
+            <select id="request_type" name="request_type" class="form-select" required>
+                {% for value, label in FeedbackOptions %}
+                    <option value="{{ value }}" {{ (old('request_type') ?: SelectedType) == value ? 'selected' : '' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="message" class="col-md-2 col-form-label">Message</label>
+        <div class="col-md-6">
+            <textarea id="message" name="message" class="form-control" rows="8" minlength="10" maxlength="5000" required>{{ old('message') }}</textarea>
+        </div>
+    </div>
+
+    {# Honeypot - hidden from real users, must stay empty #}
+    <div style="position:absolute; left:-9999px;" aria-hidden="true">
+        <label for="website">Leave this field blank</label>
+        <input id="website" type="text" name="website" tabindex="-1" autocomplete="off" value="">
+    </div>
+
+    {{ formsubmit.renderB5('Send feedback') }}
+
+</form>
+
+{% endblock page_inner %}

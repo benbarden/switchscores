@@ -1,15 +1,22 @@
 <html>
 <head>
-    <title>New contact form submission</title>
+    {% set heading = IsMemberFeedback ? 'New member feedback' : 'New contact form submission' %}
+    <title>{{ heading }}</title>
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #2c3e50;">New contact form submission</h1>
+        <h1 style="color: #2c3e50;">{{ heading }}</h1>
         <table style="width: 100%; border-collapse: collapse;">
             <tr>
                 <td style="padding: 6px 0; font-weight: bold; width: 140px; vertical-align: top;">Name</td>
                 <td style="padding: 6px 0;">{{ Submission.name }}</td>
             </tr>
+            {% if Submission.user_id %}
+            <tr>
+                <td style="padding: 6px 0; font-weight: bold; vertical-align: top;">Member</td>
+                <td style="padding: 6px 0;"><a href="{{ route('owner.user.view', {'userId': Submission.user_id}) }}">View user #{{ Submission.user_id }}</a></td>
+            </tr>
+            {% endif %}
             <tr>
                 <td style="padding: 6px 0; font-weight: bold; vertical-align: top;">Email</td>
                 <td style="padding: 6px 0;"><a href="mailto:{{ Submission.email }}">{{ Submission.email }}</a></td>

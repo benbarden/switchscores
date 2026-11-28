@@ -47,9 +47,14 @@ return [
         'secret' => env('TURNSTILE_SECRET'),
     ],
 
-    // Where contact form notifications are sent.
+    // Site email addresses. Kept in .env so none are hard-coded in code or templates.
+    // - notify_address: the site's contact mailbox. Contact form and member feedback messages
+    //   go here, and emails the site sends on Ben's behalf use it as From and Reply-To.
+    //   The site shows no email address; public contact is via the contact form.
+    // - noreply_address: From address for automated emails that shouldn't get replies.
     'contact' => [
-        'notify_address' => env('CONTACT_NOTIFY_ADDRESS', 'ben@switchscores.com'),
+        'notify_address' => env('CONTACT_NOTIFY_ADDRESS'),
+        'noreply_address' => env('MAIL_NOREPLY_ADDRESS'),
     ],
 
     // Outbound relay (a Cloudflare Worker) for requests that sites refuse from the server's

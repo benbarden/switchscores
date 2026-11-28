@@ -7,15 +7,12 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as Controller;
-use Illuminate\Support\Facades\Mail;
 
-use App\Domain\Contact\ContactNotification;
-use App\Domain\Contact\Repository as ContactRepository;
+use App\Domain\Contact\SubmissionRecorder;
 use App\Domain\Contact\TurnstileVerifier;
 use App\Domain\View\Breadcrumbs\PublicBreadcrumbs;
 use App\Domain\View\PageBuilders\PublicPageBuilder;
 use App\Enums\ContactRequestType;
-use App\Enums\ContactStatus;
 
 class ContactController extends Controller
 {
@@ -33,7 +30,7 @@ class ContactController extends Controller
 
     public function __construct(
         private PublicPageBuilder $pageBuilder,
-        private ContactRepository $repoContact,
+        private SubmissionRecorder $submissionRecorder,
         private TurnstileVerifier $turnstileVerifier
     )
     {
@@ -70,26 +67,14 @@ class ContactController extends Controller
                 ->withErrors(['turnstile' => 'Spam check failed. Please try again.']);
         }
 
-        $email = $request->post('email');
-        $isBlocked = $this->repoContact->isBlocked($email);
-
-        // Always store the submission - flagged and hidden if blocked, so the
-        // sender gets no signal and doesn't just switch address.
-        $submission = $this->repoContact->createSubmission([
+        $this->submissionRecorder->record([
             'name' => $request->post('name'),
-            'email' => $email,
+            'email' => $request->post('email'),
             'request_type' => $request->post('request_type'),
             'message' => $request->post('message'),
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'status' => $isBlocked ? ContactStatus::BLOCKED->value : ContactStatus::NEW->value,
         ]);
-
-        // Only notify on genuine, non-blocked submissions.
-        if (!$isBlocked) {
-            Mail::to(config('services.contact.notify_address'))
-                ->send(new ContactNotification($submission));
-        }
 
         return redirect(route('contact.success'));
     }

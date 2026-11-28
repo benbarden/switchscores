@@ -18,6 +18,7 @@ class ContactSubmission extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'name',
         'email',
         'request_type',
